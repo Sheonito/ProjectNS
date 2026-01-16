@@ -1,4 +1,4 @@
-using Percent111.ProjectNS.DI.System;
+using Percent111.ProjectNS.DI;
 using Percent111.ProjectNS.Event;
 using UnityEngine;
 namespace Percent111.ProjectNS.Scene

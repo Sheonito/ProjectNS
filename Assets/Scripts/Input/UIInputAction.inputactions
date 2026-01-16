@@ -1258,102 +1258,9 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "PopUI",
-                    "type": "Button",
-                    "id": "93614fc6-bb6c-48f2-9ed1-5de09f8e51d4",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "LeftClick",
-                    "type": "Button",
-                    "id": "80439e78-d359-45dc-9bfe-6e3c74413d87",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "OpenTestEditor",
-                    "type": "Button",
-                    "id": "73e5257d-c981-43b7-a159-9251d33c6a02",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "160f2d68-ee3d-4857-adc9-d9b2f917dff8",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "PopUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "017e1170-9b96-4c65-a1db-d520594a072b",
-                    "path": "<SwitchProControllerHID>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Switch",
-                    "action": "PopUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "4722a14c-2940-4790-b922-088f2a80450f",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";DefaultGamePad",
-                    "action": "PopUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "46d4b43e-7ffc-49f4-8d70-3ecc878db6dd",
-                    "path": "<XInputController>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Xbox",
-                    "action": "PopUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9a91e489-c683-48fa-a43f-63c094ef14e4",
-                    "path": "<DualSenseGamepadHID>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";DualSense",
-                    "action": "PopUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a0b413e3-ac41-4d8d-9a0b-ecfae116c879",
-                    "path": "<DualShockGamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";DualShock",
-                    "action": "PopUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "a0ac8e9a-3809-4995-8ac0-546d85d81dcf",
@@ -1582,28 +1489,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "AnyKey",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1a145389-ba0e-4ad3-ab89-65b3e96b17ea",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "LeftClick",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "595c10d2-4aee-4ca8-a361-8f56339256ab",
-                    "path": "<Keyboard>/f1",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "OpenTestEditor",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

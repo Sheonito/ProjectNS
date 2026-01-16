@@ -1,6 +1,6 @@
-using Percent111.ProjectNS.UI.Button.System;
 using System;
-namespace Percent111.ProjectNS.UI.Popup.System
+
+namespace Percent111.ProjectNS.UI
 {
     public interface IChoicePopup
     {

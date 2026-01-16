@@ -1,4 +1,4 @@
-namespace Percent111.ProjectNS.UI.View.System
+namespace Percent111.ProjectNS.UI
 {
     public class PageView : View
     {

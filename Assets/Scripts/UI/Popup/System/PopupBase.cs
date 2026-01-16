@@ -1,13 +1,12 @@
 ﻿using System;
-using Percent111.ProjectNS.UI.Layout.System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Percent111.ProjectNS.UI.Popup.System
+namespace Percent111.ProjectNS.UI
 {
     #if UNITY_EDITOR
-    [RequireComponent(typeof(View.System.View))]
+    [RequireComponent(typeof(View))]
     #endif
     public class PopupBase : MonoBehaviour
     {
@@ -22,11 +21,11 @@ namespace Percent111.ProjectNS.UI.Popup.System
         [SerializeField] protected float fadeDuration = 0.5f;
         [SerializeField] protected float fadeInValue =1f;
 
-        protected View.System.View _view;
+        protected View _view;
 
         protected virtual void Awake()
         {
-            _view = GetComponent<View.System.View>();
+            _view = GetComponent<View>();
         }
 
         public virtual void Show()

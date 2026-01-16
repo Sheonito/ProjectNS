@@ -1,7 +1,7 @@
-using Percent111.ProjectNS.DI.Implements;
-using Percent111.ProjectNS.DI.System;
-using Percent111.ProjectNS.FSM.System;
-namespace Percent111.ProjectNS.FSM.States
+using Percent111.ProjectNS.DI;
+using Percent111.ProjectNS.FSM;
+
+namespace Percent111.ProjectNS.FSM
 {
     public class SampleState : IState
     {

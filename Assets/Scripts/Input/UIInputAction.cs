@@ -1344,102 +1344,9 @@ public partial class @UIInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""PopUI"",
-                    ""type"": ""Button"",
-                    ""id"": ""93614fc6-bb6c-48f2-9ed1-5de09f8e51d4"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""LeftClick"",
-                    ""type"": ""Button"",
-                    ""id"": ""80439e78-d359-45dc-9bfe-6e3c74413d87"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""OpenTestEditor"",
-                    ""type"": ""Button"",
-                    ""id"": ""73e5257d-c981-43b7-a159-9251d33c6a02"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""160f2d68-ee3d-4857-adc9-d9b2f917dff8"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""PopUI"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""017e1170-9b96-4c65-a1db-d520594a072b"",
-                    ""path"": ""<SwitchProControllerHID>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Switch"",
-                    ""action"": ""PopUI"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4722a14c-2940-4790-b922-088f2a80450f"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";DefaultGamePad"",
-                    ""action"": ""PopUI"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""46d4b43e-7ffc-49f4-8d70-3ecc878db6dd"",
-                    ""path"": ""<XInputController>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Xbox"",
-                    ""action"": ""PopUI"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""9a91e489-c683-48fa-a43f-63c094ef14e4"",
-                    ""path"": ""<DualSenseGamepadHID>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";DualSense"",
-                    ""action"": ""PopUI"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a0b413e3-ac41-4d8d-9a0b-ecfae116c879"",
-                    ""path"": ""<DualShockGamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";DualShock"",
-                    ""action"": ""PopUI"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""a0ac8e9a-3809-4995-8ac0-546d85d81dcf"",
@@ -1670,28 +1577,6 @@ public partial class @UIInputAction: IInputActionCollection2, IDisposable
                     ""action"": ""AnyKey"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1a145389-ba0e-4ad3-ab89-65b3e96b17ea"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""LeftClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""595c10d2-4aee-4ca8-a361-8f56339256ab"",
-                    ""path"": ""<Keyboard>/f1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KeyboardMouse"",
-                    ""action"": ""OpenTestEditor"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1790,9 +1675,6 @@ public partial class @UIInputAction: IInputActionCollection2, IDisposable
         // Global
         m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
         m_Global_AnyKey = m_Global.FindAction("AnyKey", throwIfNotFound: true);
-        m_Global_PopUI = m_Global.FindAction("PopUI", throwIfNotFound: true);
-        m_Global_LeftClick = m_Global.FindAction("LeftClick", throwIfNotFound: true);
-        m_Global_OpenTestEditor = m_Global.FindAction("OpenTestEditor", throwIfNotFound: true);
     }
 
     ~@UIInputAction()
@@ -2189,9 +2071,6 @@ public partial class @UIInputAction: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Global;
     private List<IGlobalActions> m_GlobalActionsCallbackInterfaces = new List<IGlobalActions>();
     private readonly InputAction m_Global_AnyKey;
-    private readonly InputAction m_Global_PopUI;
-    private readonly InputAction m_Global_LeftClick;
-    private readonly InputAction m_Global_OpenTestEditor;
     /// <summary>
     /// Provides access to input actions defined in input action map "Global".
     /// </summary>
@@ -2207,18 +2086,6 @@ public partial class @UIInputAction: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Global/AnyKey".
         /// </summary>
         public InputAction @AnyKey => m_Wrapper.m_Global_AnyKey;
-        /// <summary>
-        /// Provides access to the underlying input action "Global/PopUI".
-        /// </summary>
-        public InputAction @PopUI => m_Wrapper.m_Global_PopUI;
-        /// <summary>
-        /// Provides access to the underlying input action "Global/LeftClick".
-        /// </summary>
-        public InputAction @LeftClick => m_Wrapper.m_Global_LeftClick;
-        /// <summary>
-        /// Provides access to the underlying input action "Global/OpenTestEditor".
-        /// </summary>
-        public InputAction @OpenTestEditor => m_Wrapper.m_Global_OpenTestEditor;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -2248,15 +2115,6 @@ public partial class @UIInputAction: IInputActionCollection2, IDisposable
             @AnyKey.started += instance.OnAnyKey;
             @AnyKey.performed += instance.OnAnyKey;
             @AnyKey.canceled += instance.OnAnyKey;
-            @PopUI.started += instance.OnPopUI;
-            @PopUI.performed += instance.OnPopUI;
-            @PopUI.canceled += instance.OnPopUI;
-            @LeftClick.started += instance.OnLeftClick;
-            @LeftClick.performed += instance.OnLeftClick;
-            @LeftClick.canceled += instance.OnLeftClick;
-            @OpenTestEditor.started += instance.OnOpenTestEditor;
-            @OpenTestEditor.performed += instance.OnOpenTestEditor;
-            @OpenTestEditor.canceled += instance.OnOpenTestEditor;
         }
 
         /// <summary>
@@ -2271,15 +2129,6 @@ public partial class @UIInputAction: IInputActionCollection2, IDisposable
             @AnyKey.started -= instance.OnAnyKey;
             @AnyKey.performed -= instance.OnAnyKey;
             @AnyKey.canceled -= instance.OnAnyKey;
-            @PopUI.started -= instance.OnPopUI;
-            @PopUI.performed -= instance.OnPopUI;
-            @PopUI.canceled -= instance.OnPopUI;
-            @LeftClick.started -= instance.OnLeftClick;
-            @LeftClick.performed -= instance.OnLeftClick;
-            @LeftClick.canceled -= instance.OnLeftClick;
-            @OpenTestEditor.started -= instance.OnOpenTestEditor;
-            @OpenTestEditor.performed -= instance.OnOpenTestEditor;
-            @OpenTestEditor.canceled -= instance.OnOpenTestEditor;
         }
 
         /// <summary>
@@ -2512,26 +2361,5 @@ public partial class @UIInputAction: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAnyKey(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "PopUI" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnPopUI(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "LeftClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnLeftClick(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "OpenTestEditor" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnOpenTestEditor(InputAction.CallbackContext context);
     }
 }

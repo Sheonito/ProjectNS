@@ -3,7 +3,7 @@ using System.Linq;
 using Percent111.ProjectNS.Common;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-namespace Percent111.ProjectNS.UI.Layout.System
+namespace Percent111.ProjectNS.UI
 {
     public class LayoutManager : SingletonMonoBehaviour<LayoutManager>
     {

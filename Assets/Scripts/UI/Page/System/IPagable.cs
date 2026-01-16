@@ -1,4 +1,4 @@
-namespace Percent111.ProjectNS.UI.Page.System
+namespace Percent111.ProjectNS.UI
 {
     public interface IPagable
     {

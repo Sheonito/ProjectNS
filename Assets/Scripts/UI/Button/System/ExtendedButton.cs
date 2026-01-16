@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace Percent111.ProjectNS.UI.Button.System
+namespace Percent111.ProjectNS.UI
 {
     public enum ExtendedButtonType
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Percent111.ProjectNS.DI.System
+namespace Percent111.ProjectNS.DI
 {
     // 컨테이너 등록 및 Resolve 담당
     public static class DIResolver

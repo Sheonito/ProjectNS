@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace Percent111.ProjectNS.UI.View.System
+namespace Percent111.ProjectNS.UI
 {
 #if UNITY_EDITOR
     [RequireComponent(typeof(CanvasGroup))]

@@ -1,7 +1,8 @@
-﻿using UnityEditor;
+﻿using Percent111.ProjectNS.UI.Toggles;
+using UnityEditor;
 using UnityEditor.UI;
 
-namespace Percent111.ProjectNS.UI.Toggles.Editor
+namespace Percent111.ProjectNS.UI
 {
     [CustomEditor(typeof(DropdownToggle))]
     public class DropdownToggleEditor : ToggleEditor

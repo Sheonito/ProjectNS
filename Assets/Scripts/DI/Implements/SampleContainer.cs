@@ -1,9 +1,8 @@
 using System;
-using Percent111.ProjectNS.DI.System;
-using Percent111.ProjectNS.FSM.States;
-using Percent111.ProjectNS.UI.Button.System;
+using Percent111.ProjectNS.FSM;
+using Percent111.ProjectNS.UI;
 
-namespace Percent111.ProjectNS.DI.Implements
+namespace Percent111.ProjectNS.DI
 {
     public class SampleContainer : DIContainerBase
     {

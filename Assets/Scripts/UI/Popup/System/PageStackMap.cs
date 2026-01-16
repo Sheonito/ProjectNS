@@ -1,6 +1,6 @@
-using Percent111.ProjectNS.UI.Page.System;
 using System.Collections.Generic;
-namespace Percent111.ProjectNS.UI.Popup.System
+
+namespace Percent111.ProjectNS.UI
 {
     public class PageStackMap
     {

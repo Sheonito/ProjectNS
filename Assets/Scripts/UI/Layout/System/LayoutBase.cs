@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Percent111.ProjectNS.UI.Popup.System;
-using Percent111.ProjectNS.UI.View.System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Percent111.ProjectNS.UI.Layout.System
+namespace Percent111.ProjectNS.UI
 {
-    [RequireComponent(typeof(View.System.View))]
+    [RequireComponent(typeof(View))]
     public class LayoutBase : MonoBehaviour
 
     {
@@ -25,7 +23,7 @@ namespace Percent111.ProjectNS.UI.Layout.System
         [SerializeField] private List<PopupBase> _popups;
 
 
-        protected View.System.View _view;
+        protected View _view;
 
         private bool _isInit;
 
@@ -48,7 +46,7 @@ namespace Percent111.ProjectNS.UI.Layout.System
             _isInit = true;
 
 
-            _view = GetComponent<View.System.View>();
+            _view = GetComponent<View>();
         }
 
         public virtual void Show(bool isShowImmediately = false)

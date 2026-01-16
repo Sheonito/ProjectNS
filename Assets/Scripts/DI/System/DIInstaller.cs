@@ -3,9 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-using Percent111.ProjectNS.DI.Implements;
-
-namespace Percent111.ProjectNS.DI.System
+namespace Percent111.ProjectNS.DI
 {
     public class DIInstaller : MonoBehaviour
     {

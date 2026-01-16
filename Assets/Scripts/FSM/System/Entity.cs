@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Percent111.ProjectNS.FSM.System
+namespace Percent111.ProjectNS.FSM
 {
 
     public class Entity : MonoBehaviour

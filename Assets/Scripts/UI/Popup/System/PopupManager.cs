@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Percent111.ProjectNS.Common;
-using Percent111.ProjectNS.UI.Layout.System;
-using Percent111.ProjectNS.UI.Page.System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-namespace Percent111.ProjectNS.UI.Popup.System
+
+namespace Percent111.ProjectNS.UI
 {
     public class PopupManager : SingletonMonoBehaviour<PopupManager>
     {

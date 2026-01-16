@@ -1,8 +1,6 @@
-﻿using Percent111.ProjectNS.UI.Popup.System;
-using Percent111.ProjectNS.UI.View.System;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Percent111.ProjectNS.UI.Page.System
+namespace Percent111.ProjectNS.UI
 {
 #if UNITY_EDITOR
     [RequireComponent(typeof(PageView))]

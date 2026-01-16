@@ -1,8 +1,7 @@
-﻿using Percent111.ProjectNS.UI.Layout.System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace Percent111.ProjectNS.UI.Layout.Editor
+namespace Percent111.ProjectNS.UI
 {
     [CustomEditor(typeof(LayoutManager))]
     public class LayoutManagerEditor : UnityEditor.Editor

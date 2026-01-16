@@ -287,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_Actions: {fileID: -944628639613478452, guid: 5e64e02a4d1bff14d9fde410beef7d76, type: 3}
   m_NotificationBehavior: 0
   m_UIInputModule: {fileID: 604274071}
   m_DeviceLostEvent:
@@ -302,7 +302,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_DefaultActionMap: UI
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &604274071
@@ -5249,28 +5249,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 7352510165875163730}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce2fde63171b7b34c861f7fcbbd056e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d9aeb4013e1e5146883c06bebe65f93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _runSpeed: 8
-  _airSpeed: 6
-  _groundAcceleration: 50
-  _groundDeceleration: 60
-  _airAcceleration: 30
-  _airDeceleration: 20
+  _maxHp: 100
+  _currentHp: 100
+  _runSpeed: 12
+  _airSpeed: 10
+  _groundAcceleration: 80
+  _groundDeceleration: 100
+  _airAcceleration: 40
+  _airDeceleration: 30
   _turnSpeedMultiplier: 2
-  _jumpForce: 15
-  _gravity: -40
-  _maxFallSpeed: -25
-  _coyoteTime: 0.1
-  _jumpBufferTime: 0.1
+  _jumpForce: 18
+  _gravity: -50
+  _maxFallSpeed: -30
+  _coyoteTime: 0.08
   _jumpCutMultiplier: 0.4
-  _groundCheckDistance: 0.1
+  _groundCheckDistance: 0.15
   _groundCheckOffset: 0
   _groundLayer:
     serializedVersion: 2
     m_Bits: 1
-  _wallCheckDistance: 0.5
+  _wallCheckDistance: 0.3
+  _wallCheckHeight: 0.3
 --- !u!212 &8396113827451210038
 SpriteRenderer:
   m_ObjectHideFlags: 0

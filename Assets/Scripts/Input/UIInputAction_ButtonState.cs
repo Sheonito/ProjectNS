@@ -81,29 +81,7 @@ using UnityEngine.InputSystem.Utilities;
 
     public enum InputActionType
     {
-        ProgressStory,
-        MoveMenuLeft,
-        MoveMenuRight,
         AnyKey,
-        StopSkip,
-        ChangeCursorIcon,
-        PopPopup,
-        HideUI,
-        ShowSave,
-        ShowLoad,
-        SetActiveSound,
-        SkipStory,
-        ShowSetting,
-        ShowTimeline,
-        ShowControlGuide,
-        ShowBackLog,
-        ProgressMessage,
-        SkipTitleEnter,
-        ChatProgressButton,
-        ChatProgressMouse,
-        PopUI,
-        QuickSave,
-        QuickLoad,
         Auto,
         Navigate,
         Submit,
@@ -117,10 +95,7 @@ using UnityEngine.InputSystem.Utilities;
         TrackedDeviceOrientation,
         MoveLeft,
         MoveRight,
-        DeleteSave,
-        OnOffSideMenu,
-        Mute,
-        ResetSound,
-        LeftClick,
-        OpenTestEditor
+        Move,
+        Fire,
+        Jump
     }
