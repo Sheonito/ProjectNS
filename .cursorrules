@@ -1,0 +1,42 @@
+# Cursor 프로젝트 규칙
+
+이 문서는 프로젝트의 코딩 규칙과 작업 가이드를 정의합니다. 세부 코딩 규칙과 운영 문서는 Docs 폴더를 참조하세요.
+
+## ⚠️ 필수 사전 작업 (코드 작업 전 반드시 수행)
+
+코드 작업 전에 **반드시** 다음 순서로 문서를 읽어야 합니다:
+
+1. **Docs/CodingRules/Manager.md** - RuleMap 확인 및 관련 규칙 문서 식별
+2. **RuleMap에서 제안된 규칙 문서들** - 작업 대상에 맞는 규칙 문서 읽기
+
+## 필수 문서
+- 코딩 규칙(필수): Docs/CodingRules/Manager.md
+- 기획 문서: Docs/기획서/기획서.md
+
+## RuleMap 자동 적용
+파일 경로에 따라 다음 규칙 문서를 자동으로 참조:
+- `/Unit/`, `/Player/` → `03-Namespaces.md`, `02-Naming.md`, `01-Core-Style.md`
+- `/FSM/` → `10-FSM.md`, `03-Namespaces.md`
+- `/DI/` → `11-DI.md`, `03-Namespaces.md`
+- `/UI/` → `05-UI-Patterns.md`, `03-Namespaces.md`
+- `/Editor/` → `03-Namespaces.md`
+
+## 작업 전 체크리스트
+코드 작성/수정 전에:
+1. ✅ Manager.md의 RuleMap 확인
+2. ✅ 관련 규칙 문서 읽기 (특히 03-Namespaces.md)
+3. ✅ TL;DR 체크리스트 확인
+4. ✅ 네임스페이스 depth 검증 (최대 3단계)
+
+## 금지 사항
+- 규칙 문서를 읽지 않고 코드 작성 금지
+- Manager.md의 RuleMap 무시 금지
+
+## Scope
+- 이 규칙의 적용 범위는 레포 전체입니다.
+- 코딩 규칙 변경/확장은 Manager.md를 수정해 반영합니다.
+
+## Notes
+- 에이전트의 기본 응답 언어는 한국어입니다.
+- **코드 작성/수정 전에 반드시 Manager.md의 RuleMap을 확인하고 관련 규칙 문서를 읽어야 합니다.**
+- 네임스페이스는 **최대 3단계 depth**를 준수해야 합니다: `Percent111.ProjectNS[.Sub]`
