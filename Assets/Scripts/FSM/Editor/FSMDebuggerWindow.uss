@@ -1,0 +1,149 @@
+/* 루트 컨테이너 */
+.root-container {
+    flex-grow: 1;
+    padding: 8px;
+    background-color: #2d2d2d;
+}
+
+/* 헤더 */
+.header {
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: #3d3d3d;
+    border-radius: 4px;
+}
+
+.title {
+    font-size: 18px;
+    -unity-font-style: bold;
+    color: #ffffff;
+    -unity-text-align: middle-center;
+}
+
+/* 섹션 공통 */
+.section {
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: #383838;
+    border-radius: 4px;
+}
+
+.section-title {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: #aaaaaa;
+    margin-bottom: 8px;
+}
+
+/* FSM 드롭다운 */
+.fsm-dropdown {
+    margin-top: 4px;
+}
+
+/* 빈 메시지 */
+.empty-message {
+    padding: 16px;
+    margin-bottom: 8px;
+    background-color: #383838;
+    border-radius: 4px;
+    color: #888888;
+    -unity-text-align: middle-center;
+    -unity-font-style: italic;
+}
+
+/* 상태 정보 행 */
+.state-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 4px;
+    padding: 4px;
+    background-color: #2d2d2d;
+    border-radius: 2px;
+}
+
+.state-label {
+    width: 100px;
+    color: #aaaaaa;
+}
+
+.state-value {
+    flex-grow: 1;
+    color: #ffffff;
+    -unity-font-style: bold;
+}
+
+.current-state {
+    color: #4fc3f7;
+}
+
+/* 히스토리 섹션 */
+.history-section {
+    flex-grow: 1;
+    min-height: 200px;
+}
+
+.history-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.clear-button {
+    padding: 4px 12px;
+    background-color: #5a5a5a;
+    border-radius: 2px;
+    border-width: 0;
+}
+
+.clear-button:hover {
+    background-color: #6a6a6a;
+}
+
+/* 히스토리 스크롤 뷰 */
+.history-scroll-view {
+    flex-grow: 1;
+    background-color: #2d2d2d;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+/* 히스토리 아이템 */
+.history-item {
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 8px;
+    margin-bottom: 2px;
+    background-color: #383838;
+    border-radius: 2px;
+}
+
+.history-item:hover {
+    background-color: #404040;
+}
+
+.history-timestamp {
+    width: 100px;
+    color: #888888;
+    font-size: 11px;
+}
+
+.history-fsm-name {
+    width: 120px;
+    color: #81c784;
+    font-size: 11px;
+    -unity-font-style: bold;
+}
+
+.history-transition {
+    flex-grow: 1;
+    color: #ffffff;
+}
+
+/* 히스토리 빈 메시지 */
+.history-empty {
+    padding: 16px;
+    color: #666666;
+    -unity-text-align: middle-center;
+    -unity-font-style: italic;
+}

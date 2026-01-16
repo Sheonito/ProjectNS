@@ -43,7 +43,7 @@ namespace Waving.Di
                 _estimatedDamageText, _stayButton,
                 _hitButton, showdownContainer, _player, _enemy, _playerTotalGage, _enemyTotalGage, _coinText,
                 _estimatedFactorText);
-            new SampleContainer(_playerDeck, _stayButton, _hitButton);
+            new PlayerTurnContainer(_playerDeck, _stayButton, _hitButton);
             new EnemyTurnContainer(_enemyDeck);
             new PlayerAssetContainer(_itemInventory, _coinText);
             new SpecialCardRuleContainer(_player, _playerDeck, _enemyDeck);

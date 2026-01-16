@@ -6,7 +6,7 @@ namespace Waving.Di
     {
         protected virtual void Awake()
         {
-            DIContainerBase.TryInjectAll(this);
+            DIResolver.Inject(this);
         }
     }   
 }

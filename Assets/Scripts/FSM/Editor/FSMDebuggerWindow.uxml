@@ -1,0 +1,47 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement name="root-container" class="root-container">
+        <!-- 헤더 -->
+        <ui:VisualElement name="header" class="header">
+            <ui:Label text="FSM Debugger" name="title" class="title" />
+        </ui:VisualElement>
+        
+        <!-- FSM 선택 영역 -->
+        <ui:VisualElement name="fsm-selector" class="section">
+            <ui:Label text="FSM 선택" class="section-title" />
+            <ui:DropdownField name="fsm-dropdown" class="fsm-dropdown" />
+        </ui:VisualElement>
+        
+        <!-- 빈 메시지 -->
+        <ui:Label name="empty-message" text="플레이 모드에서 FSM이 초기화되면 여기에 표시됩니다." class="empty-message" />
+        
+        <!-- 현재 상태 정보 -->
+        <ui:VisualElement name="state-info" class="section">
+            <ui:Label text="상태 정보" class="section-title" />
+            
+            <ui:VisualElement class="state-row">
+                <ui:Label text="현재 상태:" class="state-label" />
+                <ui:Label name="current-state-value" text="(없음)" class="state-value current-state" />
+            </ui:VisualElement>
+            
+            <ui:VisualElement class="state-row">
+                <ui:Label text="이전 상태:" class="state-label" />
+                <ui:Label name="previous-state-value" text="(없음)" class="state-value" />
+            </ui:VisualElement>
+            
+            <ui:VisualElement class="state-row">
+                <ui:Label text="글로벌 상태:" class="state-label" />
+                <ui:Label name="global-state-value" text="(없음)" class="state-value" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        
+        <!-- 히스토리 영역 -->
+        <ui:VisualElement name="history-section" class="section history-section">
+            <ui:VisualElement class="history-header">
+                <ui:Label text="상태 전환 히스토리" class="section-title" />
+                <ui:Button name="clear-history-button" text="초기화" class="clear-button" />
+            </ui:VisualElement>
+            
+            <ui:ScrollView name="history-scroll-view" class="history-scroll-view" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
