@@ -1,6 +1,6 @@
 using System;
 
-namespace Waving.Di
+namespace Percent111.ProjectNS.DI.System
 {
     public abstract class DIContainerBase
     {

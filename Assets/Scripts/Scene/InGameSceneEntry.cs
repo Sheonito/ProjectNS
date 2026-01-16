@@ -1,9 +1,7 @@
+using Percent111.ProjectNS.DI.System;
+using Percent111.ProjectNS.Event;
 using UnityEngine;
-using Waving.BlackSpin.Event;
-using Waving.Common.Event;
-using Waving.Di;
-
-namespace Waving.Scene
+namespace Percent111.ProjectNS.Scene
 {
     public class InGameSceneEntry : ISceneEntry
     {

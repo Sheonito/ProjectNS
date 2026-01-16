@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Aftertime.SecretSome.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Waving.BlackSpin.DI;
 
-namespace Waving.Di
+using Percent111.ProjectNS.DI.Implements;
+
+namespace Percent111.ProjectNS.DI.System
 {
     public class DIInstaller : MonoBehaviour
     {

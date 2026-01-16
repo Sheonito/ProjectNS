@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Waving.Common
+namespace Percent111.ProjectNS.Common
 {
     public class SpriteGroup : MonoBehaviour
     {

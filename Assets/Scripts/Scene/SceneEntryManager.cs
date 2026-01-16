@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Aftertime.StorylineEngine;
+using Percent111.ProjectNS.Common;
+
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Waving.BlackSpin.Common;
 
-namespace Waving.Scene
+namespace Percent111.ProjectNS.Scene
 {
     using Scene = UnityEngine.SceneManagement.Scene;
     using SceneInfo = SceneTable.SceneInfo;
@@ -109,3 +109,4 @@ namespace Waving.Scene
         }
     }
 }
+

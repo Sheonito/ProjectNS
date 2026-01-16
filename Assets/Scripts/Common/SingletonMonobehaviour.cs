@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Aftertime.StorylineEngine
+namespace Percent111.ProjectNS.Common
 {
     public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
     {

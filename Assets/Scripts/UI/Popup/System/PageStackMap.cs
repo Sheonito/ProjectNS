@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using Aftertime.SecretSome.UI.Page;
-
-namespace Aftertime.SecretSome.UI.Popup
+using Percent111.ProjectNS.UI.Page.System;
+using System.Collections.Generic;
+namespace Percent111.ProjectNS.UI.Popup.System
 {
     public class PageStackMap
     {
@@ -85,3 +84,4 @@ namespace Aftertime.SecretSome.UI.Popup
         }
     }   
 }
+

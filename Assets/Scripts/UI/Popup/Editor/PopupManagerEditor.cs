@@ -1,7 +1,8 @@
-﻿using UnityEditor;
+﻿using Percent111.ProjectNS.UI.Popup.System;
+using UnityEditor;
 using UnityEngine;
 
-namespace Aftertime.SecretSome.UI.Popup
+namespace Percent111.ProjectNS.UI.Popup.Editor
 {
     [CustomEditor(typeof(PopupManager))]
     public class PopupManagerEditor : UnityEditor.Editor

@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SRPG;
 using UnityEngine;
 
-public class StateTransition
+namespace Percent111.ProjectNS.FSM
 {
-    public IState nextState;
-    public Func<bool> condition;
+
+    public class StateTransition
+    {
+        public IState nextState;
+        public Func<bool> condition;
+    }
 }

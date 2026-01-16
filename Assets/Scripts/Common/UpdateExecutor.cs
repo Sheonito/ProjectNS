@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Aftertime.SecretSome.Common
+namespace Percent111.ProjectNS.Common
 {
     public class UpdateExecutor : MonoBehaviour
     {

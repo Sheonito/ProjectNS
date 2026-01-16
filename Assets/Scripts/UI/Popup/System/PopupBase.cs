@@ -1,13 +1,13 @@
 ﻿using System;
-using Aftertime.SecretSome.UI.Layout;
+using Percent111.ProjectNS.UI.Layout.System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Aftertime.SecretSome.UI.Popup
+namespace Percent111.ProjectNS.UI.Popup.System
 {
     #if UNITY_EDITOR
-    [RequireComponent(typeof(View))]
+    [RequireComponent(typeof(View.System.View))]
     #endif
     public class PopupBase : MonoBehaviour
     {
@@ -22,11 +22,11 @@ namespace Aftertime.SecretSome.UI.Popup
         [SerializeField] protected float fadeDuration = 0.5f;
         [SerializeField] protected float fadeInValue =1f;
 
-        protected View _view;
+        protected View.System.View _view;
 
         protected virtual void Awake()
         {
-            _view = GetComponent<View>();
+            _view = GetComponent<View.System.View>();
         }
 
         public virtual void Show()

@@ -1,5 +1,5 @@
 
-namespace Waving.Scene
+namespace Percent111.ProjectNS.Scene
 {
     public class TitleSceneEntry : ISceneEntry
     {

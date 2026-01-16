@@ -1,6 +1,6 @@
 using System;
 
-namespace Waving.Common.Event
+namespace Percent111.ProjectNS.Event
 {
     public interface IEvent
     {

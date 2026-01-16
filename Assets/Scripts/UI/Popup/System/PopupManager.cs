@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Aftertime.SecretSome.UI.Layout;
-using Aftertime.SecretSome.UI.Page;
-using Aftertime.StorylineEngine;
+using Percent111.ProjectNS.Common;
+using Percent111.ProjectNS.UI.Layout.System;
+using Percent111.ProjectNS.UI.Page.System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
-namespace Aftertime.SecretSome.UI.Popup
+namespace Percent111.ProjectNS.UI.Popup.System
 {
     public class PopupManager : SingletonMonoBehaviour<PopupManager>
     {
@@ -200,3 +199,4 @@ namespace Aftertime.SecretSome.UI.Popup
         }
     }
 }
+

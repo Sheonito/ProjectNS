@@ -1,6 +1,4 @@
-﻿using Aftertime.SecretSome.UI.Page;
-
-namespace Aftertime.SecretSome.UI
+namespace Percent111.ProjectNS.UI.Page.System
 {
     public interface IPagable
     {

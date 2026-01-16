@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Aftertime.TeachingAssistantLife.UI
+namespace Percent111.ProjectNS.Common
 {
     public class CanvasScaler : UnityEngine.UI.CanvasScaler
     {

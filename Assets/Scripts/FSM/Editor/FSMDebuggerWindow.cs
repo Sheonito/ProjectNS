@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Waving.BlackSpin.FSM.Editor
+namespace Percent111.ProjectNS.FSM.Editor
 {
     public class FSMDebuggerWindow : EditorWindow
     {
@@ -236,7 +236,7 @@ namespace Waving.BlackSpin.FSM.Editor
                 return;
             }
             
-            StateMachine.Runtime.StateMachine instance = _selectedDebugData.Instance;
+            StateMachine instance = _selectedDebugData.Instance;
             
             string currentState = instance.CurState?.GetType().Name ?? "(없음)";
             string previousState = instance.PreState?.GetType().Name ?? "(없음)";

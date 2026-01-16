@@ -1,5 +1,4 @@
 using System;
-using Aftertime.SecretSome.UI;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -7,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace Aftertime.SecretSome
+namespace Percent111.ProjectNS.UI.View.System
 {
 #if UNITY_EDITOR
     [RequireComponent(typeof(CanvasGroup))]
@@ -20,9 +19,6 @@ namespace Aftertime.SecretSome
         public event Action onReset = delegate { };
 
         protected CanvasGroup _canvasGroup;
-        protected Navigation _activeNavigation;
-        protected Navigation _inActiveNavigation;
-
 
         protected virtual void Awake()
         {

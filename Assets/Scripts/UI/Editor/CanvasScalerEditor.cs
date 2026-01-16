@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine.UI;
 
-namespace Aftertime.SecretSome.Common
+namespace Percent111.ProjectNS.UI.Editor
 {
     [CustomEditor(typeof(CanvasScaler), true)]
     public class CanvasScalerEditor : UnityEditor.UI.CanvasScalerEditor

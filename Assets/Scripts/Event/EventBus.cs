@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Waving.Common.Event
+namespace Percent111.ProjectNS.Event
 {
     public static class EventBus
     {

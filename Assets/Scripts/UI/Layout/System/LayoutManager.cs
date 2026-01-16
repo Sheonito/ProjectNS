@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using Aftertime.StorylineEngine;
+using Percent111.ProjectNS.Common;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-
-namespace Aftertime.SecretSome.UI.Layout
+namespace Percent111.ProjectNS.UI.Layout.System
 {
     public class LayoutManager : SingletonMonoBehaviour<LayoutManager>
     {

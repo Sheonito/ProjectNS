@@ -1,9 +1,9 @@
 using System;
-using Aftertime.SecretSome.UI;
-using Waving.BlackSpin.FSM;
-using Waving.Di;
+using Percent111.ProjectNS.DI.System;
+using Percent111.ProjectNS.FSM.States;
+using Percent111.ProjectNS.UI.Button.System;
 
-namespace Waving.BlackSpin.DI
+namespace Percent111.ProjectNS.DI.Implements
 {
     public class SampleContainer : DIContainerBase
     {

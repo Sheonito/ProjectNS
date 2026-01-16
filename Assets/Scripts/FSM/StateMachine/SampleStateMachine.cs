@@ -1,8 +1,6 @@
+using Percent111.ProjectNS.FSM.States;
 using System.Collections.Generic;
-using SRPG;
-using Waving.BlackSpin.FSM;
-
-namespace StateMachine.Runtime
+namespace Percent111.ProjectNS.FSM
 {
     public class SampleStateMachine : StateMachine
     {

@@ -1,9 +1,13 @@
+using Percent111.ProjectNS.UI.Button.System;
 using System;
-using Aftertime.SecretSome.UI;
-
-public interface IChoicePopup
+namespace Percent111.ProjectNS.UI.Popup.System
 {
-    public void ShowSelect(string selectTitle);
-    public void RegisterSelectEvent(string selectTitle, Action onClick);
-    public ExtendedButton GetSelectButton(string selectTitle);
+    public interface IChoicePopup
+    {
+        public void ShowSelect(string selectTitle);
+        public void RegisterSelectEvent(string selectTitle, Action onClick);
+        public ExtendedButton GetSelectButton(string selectTitle);
+    }
 }
+
+

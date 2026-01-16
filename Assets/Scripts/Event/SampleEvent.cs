@@ -1,9 +1,7 @@
+using Percent111.ProjectNS.FSM.States;
 using System;
 using System.Collections.Generic;
-using Waving.BlackSpin.FSM;
-using Waving.Common.Event;
-
-namespace Waving.BlackSpin.Event
+namespace Percent111.ProjectNS.Event
 {
     public class SampleEvent : IEvent
     {

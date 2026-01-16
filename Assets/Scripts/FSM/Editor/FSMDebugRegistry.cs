@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using SRPG;
-using StateMachine.Runtime;
 using UnityEditor;
-using UnityEngine;
 
-namespace Waving.BlackSpin.FSM.Editor
+namespace Percent111.ProjectNS.FSM.Editor
 {
     // 상태 변경 히스토리 데이터
     public class StateChangeRecord
@@ -18,12 +15,12 @@ namespace Waving.BlackSpin.FSM.Editor
     // 개별 FSM의 디버그 데이터
     public class FSMDebugData
     {
-        public StateMachine.Runtime.StateMachine Instance;
+        public StateMachine Instance;
         public string Name;
         public List<StateChangeRecord> History;
         public int MaxHistoryCount;
         
-        public FSMDebugData(StateMachine.Runtime.StateMachine instance, int maxHistoryCount = 100)
+        public FSMDebugData(StateMachine instance, int maxHistoryCount = 100)
         {
             Instance = instance;
             Name = instance.Name;
@@ -60,7 +57,7 @@ namespace Waving.BlackSpin.FSM.Editor
     [InitializeOnLoad]
     public static class FSMDebugRegistry
     {
-        private static Dictionary<StateMachine.Runtime.StateMachine, FSMDebugData> _debugDataMap;
+        private static Dictionary<StateMachine, FSMDebugData> _debugDataMap;
         
         public static event Action OnRegistryChanged;
         
@@ -68,16 +65,16 @@ namespace Waving.BlackSpin.FSM.Editor
         
         static FSMDebugRegistry()
         {
-            _debugDataMap = new Dictionary<StateMachine.Runtime.StateMachine, FSMDebugData>();
+            _debugDataMap = new Dictionary<StateMachine, FSMDebugData>();
             
-            StateMachine.Runtime.StateMachine.OnInstanceCreated += OnInstanceCreated;
-            StateMachine.Runtime.StateMachine.OnInstanceDestroyed += OnInstanceDestroyed;
+            StateMachine.OnInstanceCreated += OnInstanceCreated;
+            StateMachine.OnInstanceDestroyed += OnInstanceDestroyed;
             
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
         
         // FSM 인스턴스 생성 시 호출
-        private static void OnInstanceCreated(StateMachine.Runtime.StateMachine instance)
+        private static void OnInstanceCreated(StateMachine instance)
         {
             if (instance == null || _debugDataMap.ContainsKey(instance))
                 return;
@@ -91,7 +88,7 @@ namespace Waving.BlackSpin.FSM.Editor
         }
         
         // FSM 인스턴스 파괴 시 호출
-        private static void OnInstanceDestroyed(StateMachine.Runtime.StateMachine instance)
+        private static void OnInstanceDestroyed(StateMachine instance)
         {
             if (instance == null || !_debugDataMap.ContainsKey(instance))
                 return;
@@ -102,7 +99,7 @@ namespace Waving.BlackSpin.FSM.Editor
         }
         
         // 상태 변경 시 호출
-        private static void OnStateChanged(StateMachine.Runtime.StateMachine instance, IState fromState, IState toState)
+        private static void OnStateChanged(StateMachine instance, IState fromState, IState toState)
         {
             if (!_debugDataMap.TryGetValue(instance, out FSMDebugData debugData))
                 return;
@@ -129,7 +126,7 @@ namespace Waving.BlackSpin.FSM.Editor
         }
         
         // 특정 FSM의 디버그 데이터 반환
-        public static FSMDebugData GetDebugData(StateMachine.Runtime.StateMachine instance)
+        public static FSMDebugData GetDebugData(StateMachine instance)
         {
             _debugDataMap.TryGetValue(instance, out FSMDebugData debugData);
             return debugData;

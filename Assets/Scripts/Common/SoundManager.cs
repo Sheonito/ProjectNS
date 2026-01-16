@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace Aftertime.StorylineEngine
+namespace Percent111.ProjectNS.Common
 {
     public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {

@@ -2,10 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using SRPG;
 using UnityEngine;
 
-namespace StateMachine.Runtime
+namespace Percent111.ProjectNS.FSM
 {
     public class StateMachine
     {

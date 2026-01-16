@@ -1,5 +1,5 @@
 ﻿using System;
-using Aftertime.StorylineEngine;
+using Percent111.ProjectNS.Common;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace Aftertime.SecretSome.UI
+namespace Percent111.ProjectNS.UI.Button.System
 {
     public enum ExtendedButtonType
     {
@@ -19,7 +19,7 @@ namespace Aftertime.SecretSome.UI
         SpriteColorAndText,
     }
 
-    public class ExtendedButton : Button
+    public class ExtendedButton : UnityEngine.UI.Button
     {
         public TextMeshProUGUI TextMeshPro => _textMeshPro;
         public RectTransform RectTransform { get; private set; }

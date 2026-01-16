@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEditor.UI;
 
-namespace Aftertime.SecretSome.UI.Editor
+namespace Percent111.ProjectNS.UI.Button.System.Editor
 {
     [CustomEditor(typeof(ExtendedButton))]
     [CanEditMultipleObjects]

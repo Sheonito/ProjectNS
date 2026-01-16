@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Percent111.ProjectNS.Common;
+using Percent111.ProjectNS.Scene;
 using UnityEngine;
-using Waving.Scene;
-
-namespace Waving.BlackSpin.Content
+namespace Percent111.ProjectNS.Contents
 {
     public class ContentRunner : MonoBehaviour
     {

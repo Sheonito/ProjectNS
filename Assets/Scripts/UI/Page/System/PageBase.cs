@@ -1,9 +1,8 @@
-﻿using Aftertime.SecretSome.UI.Popup;
-using Aftertime.TeachingAssistantLife.UI;
+﻿using Percent111.ProjectNS.UI.Popup.System;
+using Percent111.ProjectNS.UI.View.System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-namespace Aftertime.SecretSome.UI.Page
+namespace Percent111.ProjectNS.UI.Page.System
 {
 #if UNITY_EDITOR
     [RequireComponent(typeof(PageView))]
@@ -64,15 +63,6 @@ namespace Aftertime.SecretSome.UI.Page
             _fadeOutDuration = duration;
             Hide(true);
             _fadeOutDuration = originDuration;
-        }
-
-        public void ActivateLastSelectedObject()
-        {
-            if (UIInputAction.Instance.IsAnyMousePressed())
-                return;
-            
-            if (_view.LastSelected != null)
-                EventSystem.current.SetSelectedGameObject(_view.LastSelected.gameObject);
         }
     }
 }

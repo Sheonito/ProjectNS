@@ -1,4 +1,4 @@
-namespace Waving.Scene
+namespace Percent111.ProjectNS.Scene
 {
     public interface ISceneEntry
     {

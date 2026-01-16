@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Waving.Scene
+namespace Percent111.ProjectNS.Scene
 {
     [CreateAssetMenu(menuName = "Waving/Scene/SceneTable")]
     public class SceneTable : ScriptableObject

@@ -1,9 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Waving.Common;
-
-namespace Waving.BlackSpin.Content
+namespace Percent111.ProjectNS.Contents
 {
     public enum ContentState
     {
@@ -24,3 +22,4 @@ namespace Waving.BlackSpin.Content
         public void ResumeContent();
     }
 }
+

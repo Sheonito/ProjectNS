@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SRPG
+namespace Percent111.ProjectNS.FSM
 {
     public delegate void OnEnter();
 

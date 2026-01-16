@@ -1,8 +1,7 @@
-using SRPG;
-using Waving.BlackSpin.DI;
-using Waving.Di;
-
-namespace Waving.BlackSpin.FSM
+using Percent111.ProjectNS.DI.Implements;
+using Percent111.ProjectNS.DI.System;
+using Percent111.ProjectNS.FSM.System;
+namespace Percent111.ProjectNS.FSM.States
 {
     public class SampleState : IState
     {

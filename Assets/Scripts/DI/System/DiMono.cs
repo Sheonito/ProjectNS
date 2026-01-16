@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Waving.Di
+namespace Percent111.ProjectNS.DI.System
 {
     public class DIMono : MonoBehaviour
     {

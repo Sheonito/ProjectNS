@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Aftertime.SecretSome.UI
+namespace Percent111.ProjectNS.UI.Toggles
 {
     public class DropdownToggle : Toggle
     {
