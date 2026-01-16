@@ -26,11 +26,11 @@
 1. ✅ Manager.md의 RuleMap 확인
 2. ✅ 관련 규칙 문서 읽기 (특히 03-Namespaces.md)
 3. ✅ TL;DR 체크리스트 확인
-4. ✅ 네임스페이스 depth 검증 (최대 3단계)
 
 ## 금지 사항
 - 규칙 문서를 읽지 않고 코드 작성 금지
 - Manager.md의 RuleMap 무시 금지
+- **새로운 규칙 추가 시**: `.cursorrules`에 직접 추가하지 말고 `Docs/CodingRules/` 폴더의 적절한 문서에 추가 (예: 금지 사항은 `07-Forbidden.md`, 네이밍 규칙은 `02-Naming.md`)
 
 ## Scope
 - 이 규칙의 적용 범위는 레포 전체입니다.
@@ -39,4 +39,4 @@
 ## Notes
 - 에이전트의 기본 응답 언어는 한국어입니다.
 - **코드 작성/수정 전에 반드시 Manager.md의 RuleMap을 확인하고 관련 규칙 문서를 읽어야 합니다.**
-- 네임스페이스는 **최대 3단계 depth**를 준수해야 합니다: `Percent111.ProjectNS[.Sub]`
+- **세부 규칙은 `Docs/CodingRules/` 폴더의 문서를 참조하세요** (예: 쌍방참조 금지, private 변수 노출 금지 등은 `07-Forbidden.md` 참조)
