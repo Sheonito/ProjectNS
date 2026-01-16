@@ -7,15 +7,9 @@ using Aftertime.StorylineEngine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Waving.MyTinyStreamer.UI;
 
 namespace Aftertime.SecretSome.UI.Popup
 {
-    public enum PopupType
-    {
-        NameCreate
-    }
-
     public class PopupManager : SingletonMonoBehaviour<PopupManager>
     {
         public PageStackMap PageStackMap { get; private set; }
@@ -56,16 +50,6 @@ namespace Aftertime.SecretSome.UI.Popup
             popup.Show();
 
             return popup;
-        }
-
-        public NoticePopup PushNoticePopup(string message,Action onClickAction = null, Selectable firstSelected = null)
-        {
-            Push<NoticePopup>();
-            
-            NoticePopup noticePopup = GetPopup<NoticePopup>();
-            noticePopup.ShowMessage(message,onClickAction);
-            
-            return noticePopup;
         }
 
         public PopupBase Pop()

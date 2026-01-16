@@ -4,14 +4,19 @@ using Waving.Di;
 
 namespace Waving.BlackSpin.FSM
 {
-    public class SampleState : DIClass,IState
+    public class SampleState : IState
     {
         public OnEnter onEnter { get; set; }
         public OnExecute onExecute { get; set; }
         public OnExit onExit { get; set; }
         
-        [Inject] private SampleContainer _container;
-        
+        private SampleContainer _container;
+
+        public SampleState()
+        {
+            _container = DIResolver.Resolve<SampleContainer>();
+        }
+
         public void Enter()
         {
         }

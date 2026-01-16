@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Waving.BlackSpin.FSM;
 using Waving.Common.Event;
 
 namespace Waving.BlackSpin.Event
@@ -12,7 +13,7 @@ namespace Waving.BlackSpin.Event
         public int HP { get; private set; }
         public Type DamagedType { get; private set; }
         
-        public DamagedEvent(bool isDraw,List<int> damages, int attackTotal,int hp, Type damagedType)
+        public SampleEvent(bool isDraw,List<int> damages, int attackTotal,int hp, Type damagedType)
         {
             IsDraw = isDraw;
             Damages = damages;
@@ -23,8 +24,7 @@ namespace Waving.BlackSpin.Event
 
         public Type GetPublishType()
         {
-            // return typeof(ShowdownState);
-            return null;
+            return typeof(SampleState);
         }
     }
    

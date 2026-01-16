@@ -38,7 +38,7 @@ namespace Waving.Di
             return null;
         }
         
-        // 어트리뷰트 기반 주입 (기존 방식 호환)
+        // 종속 주입
         public static void Inject(object instance)
         {
             Type instanceType = instance.GetType();

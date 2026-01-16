@@ -36,7 +36,6 @@ namespace Waving.Scene
         public override void Initialize()
         {
             base.Initialize();
-            _sceneTable = GetSceneTable();
             _entries = CreateSceneEntries();
         }
 
@@ -45,12 +44,6 @@ namespace Waving.Scene
             return _entries[_sceneTable.GetSceneInfo(sceneType)];
         }
 
-        private SceneTable GetSceneTable()
-        {
-            string path = Define.SceneTablePath;
-            SceneTable sceneTable = Resources.Load<SceneTable>(path);
-            return sceneTable;
-        }
 
         private Dictionary<SceneInfo, ISceneEntry> CreateSceneEntries()
         {
