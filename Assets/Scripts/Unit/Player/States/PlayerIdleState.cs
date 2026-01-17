@@ -34,21 +34,31 @@ namespace Percent111.ProjectNS.Player
                 return;
             }
 
-            // 공격 입력 - 마우스 Y 위치에 따라 자동 전환 (캐릭터 중심 기준)
+            // 공격 입력
             if (IsAttackPressed())
             {
                 Vector2 playerPos = _movement.GetPosition();
-                MouseVerticalPosition mousePos = GetMouseVerticalPosition(playerPos, _settings.characterCenterOffset);
 
-                if (mousePos == MouseVerticalPosition.Above)
+                // 적이 공격 범위 내에 있으면 제자리 공격
+                if (IsEnemyInAttackRange(playerPos, _settings.attackRange, _settings.enemyLayer))
                 {
-                    // 마우스가 위에 있으면 대각선 점프 공격
-                    RequestStateChange(PlayerStateType.JumpAttack);
+                    RequestStateChange(PlayerStateType.Attack);
                 }
                 else
                 {
-                    // 마우스가 아래에 있으면 슬래시 공격 (살짝 대시 포함)
-                    RequestStateChange(PlayerStateType.Attack);
+                    // 적이 없으면 마우스 Y 위치에 따라 자동 전환 (캐릭터 중심 기준)
+                    MouseVerticalPosition mousePos = GetMouseVerticalPosition(playerPos, _settings.characterCenterOffset);
+
+                    if (mousePos == MouseVerticalPosition.Above)
+                    {
+                        // 마우스가 위에 있으면 대각선 점프 공격
+                        RequestStateChange(PlayerStateType.JumpAttack);
+                    }
+                    else
+                    {
+                        // 마우스가 아래에 있으면 슬래시 공격 (살짝 대시 포함)
+                        RequestStateChange(PlayerStateType.Attack);
+                    }
                 }
                 return;
             }

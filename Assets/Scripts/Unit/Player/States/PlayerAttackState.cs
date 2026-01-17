@@ -26,7 +26,6 @@ namespace Percent111.ProjectNS.Player
             base.Enter();
             _attackTimer = 0;
             _hasHit = false;
-            _isSlashing = true;
             _startPosition = _movement.GetPosition();
 
             // 수평 입력 초기화 (이전 입력 제거)
@@ -36,6 +35,10 @@ namespace Percent111.ProjectNS.Player
             Vector2 playerPos = _movement.GetPosition();
             _attackDirection = GetMouseHorizontalDirection(playerPos);
             _movement.SetFacingDirection(_attackDirection);
+
+            // 적이 공격 범위 내에 있으면 제자리 공격, 없으면 슬래시 대시
+            bool hasEnemyInRange = IsEnemyInAttackRange(playerPos, _settings.attackRange, _settings.enemyLayer);
+            _isSlashing = !hasEnemyInRange && _movement.IsGrounded();
 
             // 공격 이벤트 발행 (사운드, 이펙트 등)
             EventBus.Publish(this, new PlayerAttackEvent());

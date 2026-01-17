@@ -114,5 +114,12 @@ namespace Percent111.ProjectNS.Player
             Vector2 mouseWorld = GetMouseWorldPosition();
             return mouseWorld.x > playerPosition.x ? 1 : -1;
         }
+
+        // 공격 범위 내에 적이 있는지 확인
+        protected bool IsEnemyInAttackRange(Vector2 playerPosition, float attackRange, LayerMask enemyLayer)
+        {
+            Collider2D hit = Physics2D.OverlapCircle(playerPosition, attackRange, enemyLayer);
+            return hit != null;
+        }
     }
 }
