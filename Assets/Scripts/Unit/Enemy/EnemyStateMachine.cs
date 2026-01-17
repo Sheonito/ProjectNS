@@ -19,11 +19,13 @@ namespace Percent111.ProjectNS.Enemy
     public class EnemyStateMachine : StateMachine
     {
         private Dictionary<EnemyStateType, IState> _states;
+        private EnemyMovement _ownerMovement;
         public EnemyStateType CurrentStateType { get; private set; }
 
-        public EnemyStateMachine()
+        public EnemyStateMachine(EnemyMovement ownerMovement)
         {
             _states = new Dictionary<EnemyStateType, IState>();
+            _ownerMovement = ownerMovement;
             CurrentStateType = EnemyStateType.Idle;
         }
 
@@ -44,12 +46,20 @@ namespace Percent111.ProjectNS.Enemy
         // 상태 전환 요청 이벤트 핸들러 (State에서 요청)
         private void OnChangeStateRequest(EnemyChangeStateRequestEvent evt)
         {
+            // 자신의 이벤트만 처리
+            if (evt.Owner != _ownerMovement)
+                return;
+
             ChangeState(evt.RequestedState);
         }
 
         // 강제 상태 전환 이벤트 핸들러 (Enemy에서 요청)
         private void OnForceStateChange(EnemyForceStateChangeEvent evt)
         {
+            // 자신의 이벤트만 처리
+            if (evt.Owner != _ownerMovement)
+                return;
+
             ChangeState(evt.RequestedState);
         }
 
@@ -78,8 +88,8 @@ namespace Percent111.ProjectNS.Enemy
                 CurrentStateType = stateType;
                 ChangeState(state);
 
-                // 상태 변경 이벤트 발행
-                EventBus.Publish(this, new EnemyStateChangedEvent(previousStateType, stateType));
+                // 상태 변경 이벤트 발행 (소유자 정보 포함)
+                EventBus.Publish(this, new EnemyStateChangedEvent(previousStateType, stateType, _ownerMovement));
             }
         }
     }

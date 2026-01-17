@@ -7,10 +7,12 @@ namespace Percent111.ProjectNS.Enemy
     public class EnemyChangeStateRequestEvent : IEvent
     {
         public EnemyStateType RequestedState { get; private set; }
+        public EnemyMovement Owner { get; private set; }
 
-        public EnemyChangeStateRequestEvent(EnemyStateType requestedState)
+        public EnemyChangeStateRequestEvent(EnemyStateType requestedState, EnemyMovement owner)
         {
             RequestedState = requestedState;
+            Owner = owner;
         }
 
         public Type GetPublishType()
@@ -23,10 +25,12 @@ namespace Percent111.ProjectNS.Enemy
     public class EnemyForceStateChangeEvent : IEvent
     {
         public EnemyStateType RequestedState { get; private set; }
+        public EnemyMovement Owner { get; private set; }
 
-        public EnemyForceStateChangeEvent(EnemyStateType requestedState)
+        public EnemyForceStateChangeEvent(EnemyStateType requestedState, EnemyMovement owner)
         {
             RequestedState = requestedState;
+            Owner = owner;
         }
 
         public Type GetPublishType()
@@ -40,11 +44,13 @@ namespace Percent111.ProjectNS.Enemy
     {
         public EnemyStateType PreviousState { get; private set; }
         public EnemyStateType CurrentState { get; private set; }
+        public EnemyMovement Owner { get; private set; }
 
-        public EnemyStateChangedEvent(EnemyStateType previousState, EnemyStateType currentState)
+        public EnemyStateChangedEvent(EnemyStateType previousState, EnemyStateType currentState, EnemyMovement owner)
         {
             PreviousState = previousState;
             CurrentState = currentState;
+            Owner = owner;
         }
 
         public Type GetPublishType()
@@ -73,10 +79,12 @@ namespace Percent111.ProjectNS.Enemy
     public class EnemyAttackEvent : IEvent
     {
         public int Damage { get; private set; }
+        public EnemyMovement Owner { get; private set; }
 
-        public EnemyAttackEvent(int damage)
+        public EnemyAttackEvent(int damage, EnemyMovement owner)
         {
             Damage = damage;
+            Owner = owner;
         }
 
         public Type GetPublishType()

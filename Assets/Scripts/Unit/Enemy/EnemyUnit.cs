@@ -58,12 +58,20 @@ namespace Percent111.ProjectNS.Enemy
         // 상태 변경 이벤트 핸들러
         private void OnEnemyStateChanged(EnemyStateChangedEvent evt)
         {
+            // 자신의 이벤트만 처리
+            if (evt.Owner != _movement)
+                return;
+
             // 상태 변경 시 필요한 처리 (사운드, 이펙트 등)
         }
 
         // 공격 이벤트 핸들러
         private void OnEnemyAttack(EnemyAttackEvent evt)
         {
+            // 자신의 이벤트만 처리
+            if (evt.Owner != _movement)
+                return;
+
             // 공격 판정 처리 (플레이어에게 데미지)
             if (_movement.IsInAttackRange())
             {
@@ -81,7 +89,7 @@ namespace Percent111.ProjectNS.Enemy
         // 상태 머신 초기화
         private void CreateStateMachine()
         {
-            _stateMachine = new EnemyStateMachine();
+            _stateMachine = new EnemyStateMachine(_movement);
 
             EnemyIdleState idleState = new EnemyIdleState(_movement, _stateSettings);
             EnemyPatrolState patrolState = new EnemyPatrolState(_movement, _stateSettings);
@@ -105,7 +113,7 @@ namespace Percent111.ProjectNS.Enemy
         {
             if (_animator != null)
             {
-                _enemyAnimator = new EnemyAnimator(_animator);
+                _enemyAnimator = new EnemyAnimator(_animator, _movement);
             }
         }
 
@@ -129,7 +137,7 @@ namespace Percent111.ProjectNS.Enemy
             // 피격 상태로 전환
             if (!IsDead)
             {
-                EventBus.Publish(this, new EnemyForceStateChangeEvent(EnemyStateType.Damaged));
+                EventBus.Publish(this, new EnemyForceStateChangeEvent(EnemyStateType.Damaged, _movement));
             }
         }
 
@@ -138,7 +146,7 @@ namespace Percent111.ProjectNS.Enemy
         {
             Debug.Log($"Enemy Dead: {gameObject.name}");
             EventBus.Publish(this, new EnemyDeathEvent());
-            EventBus.Publish(this, new EnemyForceStateChangeEvent(EnemyStateType.Death));
+            EventBus.Publish(this, new EnemyForceStateChangeEvent(EnemyStateType.Death, _movement));
         }
 
         // 플레이어 Transform 설정 (외부에서 호출)

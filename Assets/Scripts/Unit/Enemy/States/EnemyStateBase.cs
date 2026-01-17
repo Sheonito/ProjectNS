@@ -38,16 +38,16 @@ namespace Percent111.ProjectNS.Enemy
             onExit?.Invoke();
         }
 
-        // 상태 전환 요청 (EventBus 사용)
+        // 상태 전환 요청 (EventBus 사용, 소유자 정보 포함)
         protected void RequestStateChange(EnemyStateType targetState)
         {
-            EventBus.Publish(this, new EnemyChangeStateRequestEvent(targetState));
+            EventBus.Publish(this, new EnemyChangeStateRequestEvent(targetState, _movement));
         }
 
-        // 공격 이벤트 발행
+        // 공격 이벤트 발행 (소유자 정보 포함)
         protected void PublishAttackEvent(int damage)
         {
-            EventBus.Publish(this, new EnemyAttackEvent(damage));
+            EventBus.Publish(this, new EnemyAttackEvent(damage, _movement));
         }
     }
 }

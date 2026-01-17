@@ -18,12 +18,14 @@ namespace Percent111.ProjectNS.Enemy
         }
 
         private readonly Animator _animator;
+        private readonly EnemyMovement _ownerMovement;
         private readonly Dictionary<EnemyStateType, string> _stateToAnimation;
 
         // 생성자
-        public EnemyAnimator(Animator animator)
+        public EnemyAnimator(Animator animator, EnemyMovement ownerMovement)
         {
             _animator = animator;
+            _ownerMovement = ownerMovement;
             _stateToAnimation = new Dictionary<EnemyStateType, string>
             {
                 { EnemyStateType.Idle, AnimationNames.Idle },
@@ -50,6 +52,10 @@ namespace Percent111.ProjectNS.Enemy
         // 상태 변경 이벤트 핸들러
         private void OnEnemyStateChanged(EnemyStateChangedEvent evt)
         {
+            // 자신의 이벤트만 처리
+            if (evt.Owner != _ownerMovement)
+                return;
+
             PlayAnimation(evt.CurrentState);
         }
 
