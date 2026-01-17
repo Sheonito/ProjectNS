@@ -116,6 +116,7 @@ MonoBehaviour:
   _maxHp: 100
   _currentHp: 100
   _movementSettings: {fileID: 11400000, guid: c4e697c8d906998488e326ace582e659, type: 2}
+  _stateSettings: {fileID: 11400000, guid: 0b09d9072059b824dbf6be72c8f0e82e, type: 2}
   _animator: {fileID: 9191914429057805368}
 --- !u!1 &263264095947701582
 GameObject:

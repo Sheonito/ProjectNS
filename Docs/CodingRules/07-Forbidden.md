@@ -6,6 +6,7 @@
 - **쌍방참조(양방향 참조) 금지**: A → B 참조 시 B → A 참조 불가. EventBus를 통해 통신해야 함
 - private 변수를 public 프로퍼티로 노출 금지 (필요시 메서드 또는 이벤트 사용)
 - `UniTaskCompletionSource` 금지
+- **Coroutine 금지**: 비동기 처리는 무조건 UniTask 사용
 
 ## 쌍방참조 금지 상세
 
@@ -95,5 +96,82 @@ public class PlayerAnimator
         }
         _animator.Play(name);
     }
+}
+```
+
+## Coroutine 금지 상세
+
+모든 비동기 처리는 UniTask를 사용합니다. Coroutine은 취소 처리가 어렵고 반환값 처리가 불편합니다.
+
+### 금지 예시
+```csharp
+// ❌ 금지: Coroutine 사용
+private IEnumerator FadeOut()
+{
+    float elapsed = 0f;
+    while (elapsed < duration)
+    {
+        elapsed += Time.deltaTime;
+        yield return null;
+    }
+}
+
+// 호출
+StartCoroutine(FadeOut());
+```
+
+### 올바른 사용법
+```csharp
+// ✅ 허용: UniTask 사용 (복잡한 비동기 로직)
+private async UniTaskVoid LoadDataAsync()
+{
+    CancellationToken token = _cts.Token;
+    await someAsyncOperation(token);
+}
+
+// 호출
+LoadDataAsync().Forget();
+```
+
+## DOTween 사용 규칙
+
+Fade, 이동, 스케일 등 간단한 트윈 애니메이션은 DOTween을 사용합니다.
+
+### 금지 예시
+```csharp
+// ❌ 금지: Fade를 UniTask/Coroutine으로 구현
+private async UniTaskVoid FadeOutAsync()
+{
+    float elapsed = 0f;
+    while (elapsed < duration)
+    {
+        elapsed += Time.deltaTime;
+        float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
+        _sprite.color = new Color(1f, 1f, 1f, alpha);
+        await UniTask.Yield();
+    }
+}
+```
+
+### 올바른 사용법
+```csharp
+// ✅ 허용: DOTween 사용
+private void FadeOut()
+{
+    _sprite.DOFade(0f, duration)
+        .SetEase(Ease.OutQuad)
+        .OnComplete(OnFadeComplete);
+}
+
+// ✅ 허용: 여러 트윈을 동시에 실행
+private void FadeOutGroup()
+{
+    Sequence sequence = DOTween.Sequence();
+    foreach (SpriteRenderer sprite in _spriteGroup)
+    {
+        sequence.Join(sprite.DOFade(0f, duration));
+    }
+    sequence.SetEase(Ease.OutQuad)
+            .OnComplete(OnFadeComplete);
 }
 ```

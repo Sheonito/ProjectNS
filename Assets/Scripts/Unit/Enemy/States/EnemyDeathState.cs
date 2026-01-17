@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Percent111.ProjectNS.Enemy
@@ -14,31 +15,18 @@ namespace Percent111.ProjectNS.Enemy
             _settings = settings;
         }
 
-        public override void Enter()
+        public override async void Enter()
         {
             base.Enter();
             _deathTimer = 0;
             _isDeathComplete = false;
             _movement.Stop();
-        }
-
-        public override void Execute()
-        {
-            base.Execute();
-
-            if (_isDeathComplete) return;
 
             _deathTimer += Time.deltaTime;
 
-            // 사망 애니메이션 완료 후 처리
-            if (_deathTimer >= _settings.deathDuration)
-            {
-                _isDeathComplete = true;
-                // 오브젝트 비활성화 또는 풀링 반환은 Enemy에서 처리
-            }
+            await UniTask.WaitForSeconds(_settings.deathDuration);
+            _isDeathComplete = true;
+            PublishDeathCompleteEvent();
         }
-
-        // 사망 완료 여부
-        public bool IsDeathComplete() => _isDeathComplete;
     }
 }

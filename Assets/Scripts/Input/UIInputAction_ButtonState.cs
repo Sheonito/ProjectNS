@@ -97,5 +97,7 @@ using UnityEngine.InputSystem.Utilities;
         MoveRight,
         Move,
         Fire,
-        Jump
+        Jump,
+        Attack,
+        DashAttack,
     }

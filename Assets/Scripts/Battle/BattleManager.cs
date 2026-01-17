@@ -81,6 +81,7 @@ namespace Percent111.ProjectNS.Battle
         private void InitializeStageManager()
         {
             _stageManager = new StageManager(_stageSettings, _enemyPool, _enemySpawnPoints);
+            _stageManager.SubscribeEvents();
 
             _stageManager.OnStageStarted += OnStageStarted;
             _stageManager.OnStageCleared += OnStageCleared;
@@ -139,6 +140,7 @@ namespace Percent111.ProjectNS.Battle
         {
             if (_stageManager != null)
             {
+                _stageManager.UnsubscribeEvents();
                 _stageManager.OnStageStarted -= OnStageStarted;
                 _stageManager.OnStageCleared -= OnStageCleared;
                 _stageManager.OnAllStagesCleared -= OnAllStagesCleared;

@@ -119,4 +119,36 @@ namespace Percent111.ProjectNS.Enemy
             return typeof(EnemyUnit);
         }
     }
+
+    // 적 사망 완료 이벤트 (State → Enemy, Fade 시작 트리거)
+    public class EnemyDeathCompleteEvent : IEvent
+    {
+        public EnemyMovement Owner { get; private set; }
+
+        public EnemyDeathCompleteEvent(EnemyMovement owner)
+        {
+            Owner = owner;
+        }
+
+        public Type GetPublishType()
+        {
+            return typeof(EnemyStateBase);
+        }
+    }
+
+    // 적 Pool 반환 요청 이벤트 (Enemy → StageManager)
+    public class EnemyReturnToPoolEvent : IEvent
+    {
+        public EnemyUnit Enemy { get; private set; }
+
+        public EnemyReturnToPoolEvent(EnemyUnit enemy)
+        {
+            Enemy = enemy;
+        }
+
+        public Type GetPublishType()
+        {
+            return typeof(EnemyUnit);
+        }
+    }
 }

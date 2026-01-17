@@ -33,13 +33,14 @@ default -> 01-Core-Style.md, 02-Naming.md, 03-Namespaces.md, 07-Forbidden.md
 TL;DR 체크리스트
 - Namespaces: 111Percent.ProjectNS[.Sub]
 - Naming: public/클래스 PascalCase, local/param camelCase, [SerializeField] private는 `_` 접두어
-- Async: UniTask + CancellationToken 파라미터, 이벤트 대신 반환값(bool/enum) 선호
+- **Async: 비동기는 무조건 UniTask 사용 (Coroutine 금지), CancellationToken 파라미터 필수**
+- **Tween: Fade/이동/스케일 등 간단한 트윈 애니메이션은 DOTween 사용**
 - UI: Show/Hide/Reset/Init/Update 접두사, Presenter→View 단방향 참조, Popup은 Function을 참조하지 않음
 - Data: 조회/변환/필터링은 LINQ 우선, 직렬화는 Newtonsoft.Json
 - FSM: StateMachine 상속, IState 구현, StateTransition 사용
 - DI: DIResolver.Resolve<T>() 및 DIResolver.Inject() 사용
 - EventBus: IEvent 구현, 구독/해제 필수, GetPublishType() 타입 일치
-- Forbidden: sealed, ??, var(필요 시 예외), UniTaskCompletionSource, 양방향 참조 금지
+- Forbidden: sealed, ??, var(필요 시 예외), UniTaskCompletionSource, 양방향 참조 금지, **Coroutine 금지**
 - Comments: 모든 함수 위 한글 요약 1~2줄, UTF-8 저장
 
 FAQ

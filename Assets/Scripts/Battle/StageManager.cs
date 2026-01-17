@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Percent111.ProjectNS.Enemy;
+using Percent111.ProjectNS.Event;
 using UnityEngine;
 
 namespace Percent111.ProjectNS.Battle
@@ -33,6 +34,38 @@ namespace Percent111.ProjectNS.Battle
             _spawnPoints = spawnPoints;
             _activeEnemies = new List<EnemyUnit>();
             _currentStage = 0;
+        }
+
+        // 이벤트 구독 (BattleManager에서 호출)
+        public void SubscribeEvents()
+        {
+            EventBus.Subscribe<EnemyReturnToPoolEvent>(OnEnemyReturnToPool);
+        }
+
+        // 이벤트 구독 해제 (BattleManager에서 호출)
+        public void UnsubscribeEvents()
+        {
+            EventBus.Unsubscribe<EnemyReturnToPoolEvent>(OnEnemyReturnToPool);
+        }
+
+        // 적 Pool 반환 이벤트 핸들러
+        private void OnEnemyReturnToPool(EnemyReturnToPoolEvent evt)
+        {
+            EnemyUnit enemy = evt.Enemy;
+
+            _remainingEnemies--;
+            _activeEnemies.Remove(enemy);
+
+            // 상태 초기화 후 Pool 반환
+            enemy.ResetForPool();
+            _enemyPool.Despawn(enemy, EnemyType.Melee); // TODO: EnemyUnit에서 Type 가져오기
+
+            Debug.Log($"Enemy returned to pool! Remaining: {_remainingEnemies}");
+
+            if (IsStageCleared)
+            {
+                HandleStageClear();
+            }
         }
 
         // 스테이지 시작

@@ -8,6 +8,7 @@ namespace Percent111.ProjectNS.Player
     public class PlayerUnit : Unit
     {
         [SerializeField] private PlayerMovementSettings _movementSettings;
+        [SerializeField] private PlayerStateSettings _stateSettings;
         [SerializeField] private Animator _animator;
 
         private PlayerMovement _movement;
@@ -82,10 +83,14 @@ namespace Percent111.ProjectNS.Player
             PlayerIdleState idleState = new PlayerIdleState(_movement);
             PlayerMoveState moveState = new PlayerMoveState(_movement);
             PlayerJumpState jumpState = new PlayerJumpState(_movement);
+            PlayerAttackState attackState = new PlayerAttackState(_movement, _stateSettings);
+            PlayerDashAttackState dashAttackState = new PlayerDashAttackState(_movement, _stateSettings);
 
             _stateMachine.RegisterState(PlayerStateType.Idle, idleState);
             _stateMachine.RegisterState(PlayerStateType.Move, moveState);
             _stateMachine.RegisterState(PlayerStateType.Jump, jumpState);
+            _stateMachine.RegisterState(PlayerStateType.Attack, attackState);
+            _stateMachine.RegisterState(PlayerStateType.DashAttack, dashAttackState);
 
             _stateMachine.InitWithState(PlayerStateType.Idle);
         }

@@ -49,5 +49,11 @@ namespace Percent111.ProjectNS.Enemy
         {
             EventBus.Publish(this, new EnemyAttackEvent(damage, _movement));
         }
+
+        // 사망 완료 이벤트 발행 (소유자 정보 포함)
+        protected void PublishDeathCompleteEvent()
+        {
+            EventBus.Publish(this, new EnemyDeathCompleteEvent(_movement));
+        }
     }
 }

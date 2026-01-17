@@ -45,6 +45,20 @@ namespace Percent111.ProjectNS.Player
                 _movement.CutJump();
             }
 
+            // 대시공격 입력 (공중에서도 가능)
+            if (IsDashAttackPressed())
+            {
+                RequestStateChange(PlayerStateType.DashAttack);
+                return;
+            }
+
+            // 공격 입력 (공중에서도 가능)
+            if (IsAttackPressed())
+            {
+                RequestStateChange(PlayerStateType.Attack);
+                return;
+            }
+
             // 착지하면 상태 전환
             if (_movement.IsGrounded() && _movement.GetVelocity().y <= 0)
             {

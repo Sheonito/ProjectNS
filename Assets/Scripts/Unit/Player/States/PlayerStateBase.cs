@@ -49,6 +49,16 @@ namespace Percent111.ProjectNS.Player
             return _inputAction.GetButton(InputActionType.Jump);
         }
 
+        protected bool IsAttackPressed()
+        {
+            return _inputAction.GetButtonDown(InputActionType.Attack);
+        }
+
+        protected bool IsDashAttackPressed()
+        {
+            return _inputAction.GetButtonDown(InputActionType.DashAttack);
+        }
+
         // 상태 전환 요청 (EventBus 사용, StateMachine 직접 참조 없음)
         protected void RequestStateChange(PlayerStateType targetState)
         {

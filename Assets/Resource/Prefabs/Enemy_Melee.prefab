@@ -2805,6 +2805,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2080581485110012445}
+  - component: {fileID: 4517885136884495892}
   m_Layer: 7
   m_Name: Root
   m_TagString: Untagged
@@ -2830,6 +2831,49 @@ Transform:
   - {fileID: 987548645166005282}
   m_Father: {fileID: 1857061548910849383}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -3.285}
+--- !u!114 &4517885136884495892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6636699316506038208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cd0b9854af31e84d9fe64308767eb85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alpha: 1
+  _spriteRenderers:
+  - {fileID: 8453442945752474211}
+  - {fileID: 4983830181668863269}
+  - {fileID: 8619100018204650007}
+  - {fileID: 7185702538303487297}
+  - {fileID: 5930918682905012999}
+  - {fileID: 3188129866226629293}
+  - {fileID: 129268746162867466}
+  - {fileID: 8186346745946272034}
+  - {fileID: 4530297805188352521}
+  - {fileID: 7260869715177287726}
+  - {fileID: 7457227276017152052}
+  - {fileID: 7560533077183877431}
+  - {fileID: 520161554127953702}
+  - {fileID: 3087021791405618141}
+  - {fileID: 3236937873282740619}
+  - {fileID: 7695214542434299840}
+  - {fileID: 1734247414006010138}
+  - {fileID: 1760755263509569891}
+  - {fileID: 2670174892195190778}
+  - {fileID: 7074696214982640906}
+  - {fileID: 4686575817964893282}
+  - {fileID: 1326528046422601553}
+  - {fileID: 1388667505175527683}
+  - {fileID: 8709766284946389086}
+  - {fileID: 820676971321015070}
+  - {fileID: 5611075195633503539}
+  - {fileID: 6573884608477255168}
+  - {fileID: 8669880422639399727}
+  - {fileID: 2128184612601706894}
 --- !u!1 &6876996361077041466
 GameObject:
   m_ObjectHideFlags: 0
@@ -4033,6 +4077,8 @@ MonoBehaviour:
   _movementSettings: {fileID: 11400000, guid: 2a003c6e19f962347b933d54820ef48b, type: 2}
   _stateSettings: {fileID: 11400000, guid: 547797dda015ca145955295b89dbaabe, type: 2}
   _animator: {fileID: 3647894075147242100}
+  _spriteGroup: {fileID: 4517885136884495892}
+  _fadeDuration: 0.5
 --- !u!61 &5842456257071947433
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ namespace Percent111.ProjectNS.Player
             public const string Idle = "IDLE";
             public const string Move = "MOVE";
             public const string Attack = "ATTACK";
+            public const string DashAttack = "DASHATTACK";
             public const string Damaged = "DAMAGED";
             public const string Death = "DEATH";
             public const string Jump = "JUMP";
@@ -31,6 +32,7 @@ namespace Percent111.ProjectNS.Player
                 { PlayerStateType.Move, AnimationNames.Move },
                 { PlayerStateType.Jump, AnimationNames.Jump },
                 { PlayerStateType.Attack, AnimationNames.Attack },
+                { PlayerStateType.DashAttack, AnimationNames.DashAttack },
                 { PlayerStateType.Damaged, AnimationNames.Damaged },
                 { PlayerStateType.Death, AnimationNames.Death }
             };

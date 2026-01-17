@@ -191,11 +191,18 @@ namespace Percent111.ProjectNS.Player
         public bool IsGrounded() => _isGrounded;
         public int GetFacingDirection() => _facingDirection;
         public bool WasJustLanded() => _isGrounded && !_wasGrounded;
+        public Vector3 GetPosition() => _transform.position;
 
         // 외부에서 속도 설정 (대시베기 등에서 사용)
         public void SetVelocity(Vector2 velocity)
         {
             _velocity = velocity;
+        }
+
+        // 외부에서 위치 설정 (대시베기 등에서 사용)
+        public void SetPosition(Vector3 position)
+        {
+            _transform.position = position;
         }
 
         // 디버그용 Gizmo 그리기 (Player에서 호출)

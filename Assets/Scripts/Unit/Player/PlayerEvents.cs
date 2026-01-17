@@ -88,4 +88,29 @@ namespace Percent111.ProjectNS.Player
             return typeof(PlayerUnit);
         }
     }
+
+    // 플레이어 공격 이벤트 (State → Player, 사운드/이펙트용)
+    public class PlayerAttackEvent : IEvent
+    {
+        public Type GetPublishType()
+        {
+            return typeof(PlayerStateBase);
+        }
+    }
+
+    // 플레이어 대시공격 이벤트 (State → Player, 사운드/이펙트용)
+    public class PlayerDashAttackEvent : IEvent
+    {
+        public int Direction { get; private set; }
+
+        public PlayerDashAttackEvent(int direction)
+        {
+            Direction = direction;
+        }
+
+        public Type GetPublishType()
+        {
+            return typeof(PlayerStateBase);
+        }
+    }
 }

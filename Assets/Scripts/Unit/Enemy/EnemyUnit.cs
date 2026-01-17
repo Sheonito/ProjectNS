@@ -1,3 +1,5 @@
+using DG.Tweening;
+using Percent111.ProjectNS.Common;
 using Percent111.ProjectNS.Event;
 using Percent111.ProjectNS.Player;
 using UnityEngine;
@@ -12,6 +14,8 @@ namespace Percent111.ProjectNS.Enemy
         [SerializeField] private EnemyMovementSettings _movementSettings;
         [SerializeField] private EnemyStateSettings _stateSettings;
         [SerializeField] private Animator _animator;
+        [SerializeField] private SpriteGroup _spriteGroup;
+        [SerializeField] private float _fadeDuration = 0.5f;
 
         private EnemyMovement _movement;
         private Transform _playerTransform;
@@ -46,6 +50,7 @@ namespace Percent111.ProjectNS.Enemy
         {
             EventBus.Subscribe<EnemyStateChangedEvent>(OnEnemyStateChanged);
             EventBus.Subscribe<EnemyAttackEvent>(OnEnemyAttack);
+            EventBus.Subscribe<EnemyDeathCompleteEvent>(OnEnemyDeathComplete);
         }
 
         // 이벤트 구독 해제
@@ -53,6 +58,7 @@ namespace Percent111.ProjectNS.Enemy
         {
             EventBus.Unsubscribe<EnemyStateChangedEvent>(OnEnemyStateChanged);
             EventBus.Unsubscribe<EnemyAttackEvent>(OnEnemyAttack);
+            EventBus.Unsubscribe<EnemyDeathCompleteEvent>(OnEnemyDeathComplete);
         }
 
         // 상태 변경 이벤트 핸들러
@@ -78,6 +84,53 @@ namespace Percent111.ProjectNS.Enemy
                 PlayerUnit player = _playerTransform?.GetComponent<PlayerUnit>();
                 player?.OnDamaged(evt.Damage);
             }
+        }
+
+        // 사망 완료 이벤트 핸들러
+        private void OnEnemyDeathComplete(EnemyDeathCompleteEvent evt)
+        {
+            // 자신의 이벤트만 처리
+            if (evt.Owner != _movement)
+                return;
+
+            // Fade Out 시작 (DOTween)
+            FadeOutAndReturnToPool();
+        }
+
+        // Fade Out 후 Pool 반환 (DOTween)
+        private async void FadeOutAndReturnToPool()
+        {
+            await _spriteGroup.DOFade(0, _fadeDuration);
+            OnFadeComplete();
+        }
+
+        // Fade 완료 콜백
+        private void OnFadeComplete()
+        {
+            // 색상 복구 (Pool에서 재사용 시 필요)
+            RestoreSpriteColors();
+
+            // Pool 반환 이벤트 발행
+            EventBus.Publish(this, new EnemyReturnToPoolEvent(this));
+        }
+
+        // Sprite 색상 복구
+        private void RestoreSpriteColors()
+        {
+            _spriteGroup.DOFade(1, _fadeDuration);
+        }
+
+        // Pool에서 재사용 시 초기화
+        public void ResetForPool()
+        {
+            // HP 복구
+            _currentHp = MaxHp;
+
+            // 색상 복구
+            RestoreSpriteColors();
+
+            // 상태 초기화
+            _stateMachine.InitWithState(EnemyStateType.Idle);
         }
 
         // Movement 생성

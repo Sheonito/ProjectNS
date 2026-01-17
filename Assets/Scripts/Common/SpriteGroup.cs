@@ -42,6 +42,7 @@ namespace Percent111.ProjectNS.Common
         private void OnValidate()
         {
             ChangeSpriteRendererAlpha();
+            
         }
 #endif
 

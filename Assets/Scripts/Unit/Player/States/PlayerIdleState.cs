@@ -25,6 +25,20 @@ namespace Percent111.ProjectNS.Player
 
             float horizontalInput = GetHorizontalInput();
 
+            // 대시공격 입력 (우선순위 높음)
+            if (IsDashAttackPressed())
+            {
+                RequestStateChange(PlayerStateType.DashAttack);
+                return;
+            }
+
+            // 공격 입력
+            if (IsAttackPressed())
+            {
+                RequestStateChange(PlayerStateType.Attack);
+                return;
+            }
+
             // 이동 입력 시 Move 상태로 전환
             if (Mathf.Abs(horizontalInput) > 0.01f)
             {
