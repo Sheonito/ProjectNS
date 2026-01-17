@@ -41,6 +41,9 @@ namespace Percent111.ProjectNS.Player
             _isRecovering = false;
             _isCooldownBlocked = false;
 
+            // 수평 입력 초기화 (이전 입력 제거)
+            _movement.SetHorizontalInput(0);
+
             // 쿨타임 체크
             if (IsOnCooldown())
             {
@@ -57,6 +60,9 @@ namespace Percent111.ProjectNS.Player
             // 대시 방향 결정 (마우스 방향)
             _dashDirection = GetMouseHorizontalDirection(_startPosition);
             _movement.SetFacingDirection(_dashDirection);
+
+            // 속도 초기화 (대시 중에는 별도로 위치 제어)
+            _movement.SetVelocity(Vector2.zero);
 
             // 무적 상태 설정
             SetInvincible(true);

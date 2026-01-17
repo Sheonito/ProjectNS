@@ -29,6 +29,9 @@ namespace Percent111.ProjectNS.Player
             _isSlashing = true;
             _startPosition = _movement.GetPosition();
 
+            // 수평 입력 초기화 (이전 입력 제거)
+            _movement.SetHorizontalInput(0);
+
             // 마우스 방향에 따라 플레이어 방향 설정
             Vector2 playerPos = _movement.GetPosition();
             _attackDirection = GetMouseHorizontalDirection(playerPos);
