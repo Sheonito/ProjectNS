@@ -1,0 +1,46 @@
+namespace Percent111.ProjectNS.Enemy
+{
+    // 적 추적 상태
+    public class EnemyChaseState : EnemyStateBase
+    {
+        public EnemyChaseState(EnemyMovement movement) : base(movement)
+        {
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+        }
+
+        public override void Execute()
+        {
+            base.Execute();
+
+            _movement.UpdateDetection();
+
+            // 플레이어 놓침 - 대기로 전환
+            if (!_movement.IsPlayerDetected())
+            {
+                RequestStateChange(EnemyStateType.Idle);
+                return;
+            }
+
+            // 공격 가능 시 공격
+            if (_movement.CanAttack())
+            {
+                RequestStateChange(EnemyStateType.Attack);
+                return;
+            }
+
+            // 플레이어 방향으로 이동
+            _movement.MoveTowardsPlayer();
+            _movement.UpdatePhysics();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            _movement.Stop();
+        }
+    }
+}

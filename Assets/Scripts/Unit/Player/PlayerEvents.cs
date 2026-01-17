@@ -76,7 +76,7 @@ namespace Percent111.ProjectNS.Player
 
         public Type GetPublishType()
         {
-            return typeof(Player);
+            return typeof(PlayerUnit);
         }
     }
 
@@ -85,7 +85,7 @@ namespace Percent111.ProjectNS.Player
     {
         public Type GetPublishType()
         {
-            return typeof(Player);
+            return typeof(PlayerUnit);
         }
     }
 }

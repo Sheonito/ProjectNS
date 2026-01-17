@@ -5,7 +5,7 @@ namespace Percent111.ProjectNS.Player
 {
     using Unit = Percent111.ProjectNS.Unit.Unit;
 
-    public class Player : Unit
+    public class PlayerUnit : Unit
     {
         [SerializeField] private PlayerMovementSettings _movementSettings;
         [SerializeField] private Animator _animator;

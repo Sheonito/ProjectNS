@@ -1,0 +1,46 @@
+using UnityEngine;
+
+namespace Percent111.ProjectNS.Enemy
+{
+    // 적 대기 상태
+    public class EnemyIdleState : EnemyStateBase
+    {
+        private float _idleTimer;
+        private float _idleDuration;
+
+        public EnemyIdleState(EnemyMovement movement, float idleDuration = 2f) : base(movement)
+        {
+            _idleDuration = idleDuration;
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            _idleTimer = 0;
+            _movement.Stop();
+        }
+
+        public override void Execute()
+        {
+            base.Execute();
+
+            _movement.UpdateDetection();
+            _movement.UpdatePhysics();
+
+            // 플레이어 발견 시 추적
+            if (_movement.IsPlayerDetected())
+            {
+                RequestStateChange(EnemyStateType.Chase);
+                return;
+            }
+
+            // 일정 시간 후 순찰
+            _idleTimer += Time.deltaTime;
+            if (_idleTimer >= _idleDuration)
+            {
+                RequestStateChange(EnemyStateType.Patrol);
+                return;
+            }
+        }
+    }
+}
