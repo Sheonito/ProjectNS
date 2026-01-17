@@ -5,12 +5,12 @@ namespace Percent111.ProjectNS.Enemy
     // 적 대기 상태
     public class EnemyIdleState : EnemyStateBase
     {
+        private readonly EnemyStateSettings _settings;
         private float _idleTimer;
-        private float _idleDuration;
 
-        public EnemyIdleState(EnemyMovement movement, float idleDuration = 2f) : base(movement)
+        public EnemyIdleState(EnemyMovement movement, EnemyStateSettings settings) : base(movement)
         {
-            _idleDuration = idleDuration;
+            _settings = settings;
         }
 
         public override void Enter()
@@ -36,7 +36,7 @@ namespace Percent111.ProjectNS.Enemy
 
             // 일정 시간 후 순찰
             _idleTimer += Time.deltaTime;
-            if (_idleTimer >= _idleDuration)
+            if (_idleTimer >= _settings.idleDuration)
             {
                 RequestStateChange(EnemyStateType.Patrol);
                 return;

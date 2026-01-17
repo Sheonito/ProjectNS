@@ -5,13 +5,13 @@ namespace Percent111.ProjectNS.Enemy
     // 적 순찰 상태
     public class EnemyPatrolState : EnemyStateBase
     {
+        private readonly EnemyStateSettings _settings;
         private int _patrolDirection = 1;
         private float _patrolTimer;
-        private float _patrolDuration;
 
-        public EnemyPatrolState(EnemyMovement movement, float patrolDuration = 3f) : base(movement)
+        public EnemyPatrolState(EnemyMovement movement, EnemyStateSettings settings) : base(movement)
         {
-            _patrolDuration = patrolDuration;
+            _settings = settings;
         }
 
         public override void Enter()
@@ -41,7 +41,7 @@ namespace Percent111.ProjectNS.Enemy
 
             // 일정 시간 후 대기
             _patrolTimer += Time.deltaTime;
-            if (_patrolTimer >= _patrolDuration)
+            if (_patrolTimer >= _settings.patrolDuration)
             {
                 RequestStateChange(EnemyStateType.Idle);
                 return;

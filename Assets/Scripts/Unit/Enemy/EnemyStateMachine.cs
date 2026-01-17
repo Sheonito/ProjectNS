@@ -19,12 +19,12 @@ namespace Percent111.ProjectNS.Enemy
     public class EnemyStateMachine : StateMachine
     {
         private Dictionary<EnemyStateType, IState> _states;
-        private EnemyStateType _currentStateType;
+        public EnemyStateType CurrentStateType { get; private set; }
 
         public EnemyStateMachine()
         {
             _states = new Dictionary<EnemyStateType, IState>();
-            _currentStateType = EnemyStateType.Idle;
+            CurrentStateType = EnemyStateType.Idle;
         }
 
         // 이벤트 구독 (Enemy에서 호출)
@@ -44,13 +44,13 @@ namespace Percent111.ProjectNS.Enemy
         // 상태 전환 요청 이벤트 핸들러 (State에서 요청)
         private void OnChangeStateRequest(EnemyChangeStateRequestEvent evt)
         {
-            ChangeStateInternal(evt.RequestedState);
+            ChangeState(evt.RequestedState);
         }
 
         // 강제 상태 전환 이벤트 핸들러 (Enemy에서 요청)
         private void OnForceStateChange(EnemyForceStateChangeEvent evt)
         {
-            ChangeStateInternal(evt.RequestedState);
+            ChangeState(evt.RequestedState);
         }
 
         // 상태 등록
@@ -64,29 +64,23 @@ namespace Percent111.ProjectNS.Enemy
         {
             if (_states.TryGetValue(stateType, out IState state))
             {
-                _currentStateType = stateType;
+                CurrentStateType = stateType;
                 Init(state);
             }
         }
 
         // 내부 상태 변경 (이벤트 발행)
-        private void ChangeStateInternal(EnemyStateType stateType)
+        private void ChangeState(EnemyStateType stateType)
         {
             if (_states.TryGetValue(stateType, out IState state))
             {
-                EnemyStateType previousStateType = _currentStateType;
-                _currentStateType = stateType;
+                EnemyStateType previousStateType = CurrentStateType;
+                CurrentStateType = stateType;
                 ChangeState(state);
 
                 // 상태 변경 이벤트 발행
                 EventBus.Publish(this, new EnemyStateChangedEvent(previousStateType, stateType));
             }
-        }
-
-        // 현재 상태 타입 반환
-        public EnemyStateType GetCurrentStateType()
-        {
-            return _currentStateType;
         }
     }
 }

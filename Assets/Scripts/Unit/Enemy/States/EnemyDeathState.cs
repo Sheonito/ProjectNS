@@ -5,13 +5,13 @@ namespace Percent111.ProjectNS.Enemy
     // 적 사망 상태
     public class EnemyDeathState : EnemyStateBase
     {
-        private float _deathDuration;
+        private readonly EnemyStateSettings _settings;
         private float _deathTimer;
         private bool _isDeathComplete;
 
-        public EnemyDeathState(EnemyMovement movement, float deathDuration = 1f) : base(movement)
+        public EnemyDeathState(EnemyMovement movement, EnemyStateSettings settings) : base(movement)
         {
-            _deathDuration = deathDuration;
+            _settings = settings;
         }
 
         public override void Enter()
@@ -31,7 +31,7 @@ namespace Percent111.ProjectNS.Enemy
             _deathTimer += Time.deltaTime;
 
             // 사망 애니메이션 완료 후 처리
-            if (_deathTimer >= _deathDuration)
+            if (_deathTimer >= _settings.deathDuration)
             {
                 _isDeathComplete = true;
                 // 오브젝트 비활성화 또는 풀링 반환은 Enemy에서 처리

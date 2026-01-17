@@ -5,15 +5,13 @@ namespace Percent111.ProjectNS.Enemy
     // 적 공격 상태
     public class EnemyAttackState : EnemyStateBase
     {
-        private float _attackDuration;
+        private readonly EnemyStateSettings _settings;
         private float _attackTimer;
-        private int _attackDamage;
         private bool _hasAttacked;
 
-        public EnemyAttackState(EnemyMovement movement, float attackDuration = 0.5f, int attackDamage = 10) : base(movement)
+        public EnemyAttackState(EnemyMovement movement, EnemyStateSettings settings) : base(movement)
         {
-            _attackDuration = attackDuration;
-            _attackDamage = attackDamage;
+            _settings = settings;
         }
 
         public override void Enter()
@@ -33,14 +31,14 @@ namespace Percent111.ProjectNS.Enemy
             _attackTimer += Time.deltaTime;
 
             // 공격 타이밍 (중간쯤)
-            if (!_hasAttacked && _attackTimer >= _attackDuration * 0.5f)
+            if (!_hasAttacked && _attackTimer >= _settings.attackDuration * 0.5f)
             {
                 _hasAttacked = true;
-                PublishAttackEvent(_attackDamage);
+                PublishAttackEvent(_settings.attackDamage);
             }
 
             // 공격 완료
-            if (_attackTimer >= _attackDuration)
+            if (_attackTimer >= _settings.attackDuration)
             {
                 // 플레이어가 여전히 범위 내이고 탐지 중이면 추적
                 if (_movement.IsPlayerDetected())

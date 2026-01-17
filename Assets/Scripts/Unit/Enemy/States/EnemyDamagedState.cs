@@ -5,12 +5,12 @@ namespace Percent111.ProjectNS.Enemy
     // 적 피격 상태
     public class EnemyDamagedState : EnemyStateBase
     {
-        private float _damagedDuration;
+        private readonly EnemyStateSettings _settings;
         private float _damagedTimer;
 
-        public EnemyDamagedState(EnemyMovement movement, float damagedDuration = 0.3f) : base(movement)
+        public EnemyDamagedState(EnemyMovement movement, EnemyStateSettings settings) : base(movement)
         {
-            _damagedDuration = damagedDuration;
+            _settings = settings;
         }
 
         public override void Enter()
@@ -27,7 +27,7 @@ namespace Percent111.ProjectNS.Enemy
             _damagedTimer += Time.deltaTime;
 
             // 피격 경직 완료
-            if (_damagedTimer >= _damagedDuration)
+            if (_damagedTimer >= _settings.damagedDuration)
             {
                 // 플레이어 탐지 중이면 추적, 아니면 대기
                 _movement.UpdateDetection();

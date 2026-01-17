@@ -4031,6 +4031,7 @@ MonoBehaviour:
   _maxHp: 100
   _currentHp: 100
   _movementSettings: {fileID: 11400000, guid: 2a003c6e19f962347b933d54820ef48b, type: 2}
+  _stateSettings: {fileID: 11400000, guid: 547797dda015ca145955295b89dbaabe, type: 2}
   _animator: {fileID: 3647894075147242100}
 --- !u!61 &5842456257071947433
 BoxCollider2D:

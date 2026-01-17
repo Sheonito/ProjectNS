@@ -115,26 +115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxHp: 100
   _currentHp: 100
-  _movementSettings:
-    runSpeed: 12
-    airSpeed: 10
-    groundAcceleration: 80
-    groundDeceleration: 100
-    airAcceleration: 40
-    airDeceleration: 30
-    turnSpeedMultiplier: 2
-    jumpForce: 18
-    gravity: -50
-    maxFallSpeed: -30
-    coyoteTime: 0.08
-    jumpCutMultiplier: 0.4
-    groundCheckDistance: 0.15
-    groundCheckOffset: 0
-    groundLayer:
-      serializedVersion: 2
-      m_Bits: 256
-    wallCheckDistance: 0.3
-    wallCheckHeight: 0.3
+  _movementSettings: {fileID: 11400000, guid: c4e697c8d906998488e326ace582e659, type: 2}
   _animator: {fileID: 9191914429057805368}
 --- !u!1 &263264095947701582
 GameObject:

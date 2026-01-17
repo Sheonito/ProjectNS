@@ -10,6 +10,7 @@ namespace Percent111.ProjectNS.Enemy
     public class EnemyUnit : Unit
     {
         [SerializeField] private EnemyMovementSettings _movementSettings;
+        [SerializeField] private EnemyStateSettings _stateSettings;
         [SerializeField] private Animator _animator;
 
         private EnemyMovement _movement;
@@ -82,12 +83,12 @@ namespace Percent111.ProjectNS.Enemy
         {
             _stateMachine = new EnemyStateMachine();
 
-            EnemyIdleState idleState = new EnemyIdleState(_movement);
-            EnemyPatrolState patrolState = new EnemyPatrolState(_movement);
+            EnemyIdleState idleState = new EnemyIdleState(_movement, _stateSettings);
+            EnemyPatrolState patrolState = new EnemyPatrolState(_movement, _stateSettings);
             EnemyChaseState chaseState = new EnemyChaseState(_movement);
-            EnemyAttackState attackState = new EnemyAttackState(_movement);
-            EnemyDamagedState damagedState = new EnemyDamagedState(_movement);
-            EnemyDeathState deathState = new EnemyDeathState(_movement);
+            EnemyAttackState attackState = new EnemyAttackState(_movement, _stateSettings);
+            EnemyDamagedState damagedState = new EnemyDamagedState(_movement, _stateSettings);
+            EnemyDeathState deathState = new EnemyDeathState(_movement, _stateSettings);
 
             _stateMachine.RegisterState(EnemyStateType.Idle, idleState);
             _stateMachine.RegisterState(EnemyStateType.Patrol, patrolState);
@@ -110,14 +111,17 @@ namespace Percent111.ProjectNS.Enemy
 
         private void Update()
         {
-            if (IsDead) return;
+            if (IsDead)
+                return;
+
             _stateMachine.Execute();
         }
 
         // 데미지 처리 (이벤트 발행)
         public override void OnDamaged(int damage)
         {
-            if (IsDead) return;
+            if (IsDead)
+                return;
 
             base.OnDamaged(damage);
             EventBus.Publish(this, new EnemyDamageEvent(damage, CurrentHp));
@@ -150,10 +154,12 @@ namespace Percent111.ProjectNS.Enemy
             _movement.SetSeparationVelocity(force);
         }
 
+#if UNITY_EDITOR
         // 디버그 시각화
         private void OnDrawGizmosSelected()
         {
-            _movement?.DrawGizmos();
+            _movement.DrawGizmos();
         }
+#endif
     }
 }

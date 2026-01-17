@@ -119,6 +119,7 @@ namespace Percent111.ProjectNS.Enemy
                 _loseTargetTimer -= Time.deltaTime;
                 return _loseTargetTimer > 0;
             }
+
             return false;
         }
 
@@ -153,7 +154,8 @@ namespace Percent111.ProjectNS.Enemy
         private void CheckGround()
         {
             Vector2 origin = (Vector2)_transform.position + Vector2.down * _settings.groundCheckOffset;
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, _settings.groundCheckDistance, _settings.groundLayer);
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, _settings.groundCheckDistance,
+                _settings.groundLayer);
 
             _isGrounded = hit.collider != null;
 
@@ -288,12 +290,12 @@ namespace Percent111.ProjectNS.Enemy
             _transform.localScale = scale;
         }
 
-        // 외부 접근용 메서드
-        public Vector2 GetVelocity() => _velocity;
-        public bool IsGrounded() => _isGrounded;
-        public int GetFacingDirection() => _facingDirection;
-        public bool IsPlayerDetected() => _isPlayerDetected;
-        public Transform GetPlayerTransform() => _playerTransform;
+        public bool IsPlayerDetected()
+        {
+            return _isPlayerDetected;
+        }
+
+#if UNITY_EDITOR
 
         // 디버그용 Gizmo 그리기
         public void DrawGizmos()
@@ -325,5 +327,7 @@ namespace Percent111.ProjectNS.Enemy
             Gizmos.color = _isGrounded ? Color.green : Color.red;
             Gizmos.DrawLine(groundOrigin, groundOrigin + Vector2.down * _settings.groundCheckDistance);
         }
+
+#endif
     }
 }
