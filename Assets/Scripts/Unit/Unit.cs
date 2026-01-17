@@ -19,7 +19,7 @@ namespace Percent111.ProjectNS.Unit
         }
 
         // 데미지 처리
-        public virtual void TakeDamage(int damage)
+        public virtual void OnDamaged(int damage)
         {
             _currentHp -= damage;
             if (_currentHp <= 0)

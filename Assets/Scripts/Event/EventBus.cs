@@ -123,11 +123,12 @@ namespace Percent111.ProjectNS.Event
             }
 
             Type ownerType = GetPublisherType(owner);
-            var allowedType = payload.GetPublishType();
-            var eventType = typeof(TEvent);
+            Type allowedType = payload.GetPublishType();
+            Type eventType = typeof(TEvent);
 
-            if (ownerType != allowedType)
-                throw new InvalidOperationException($"{ownerType.Name} can only publish events of type {allowedType.Name}.");
+            // 상속 관계도 허용 (PlayerIdleState는 PlayerStateBase를 상속하므로 허용)
+            if (!allowedType.IsAssignableFrom(ownerType))
+                throw new InvalidOperationException($"{ownerType.Name} cannot publish {eventType.Name}. Only {allowedType.Name} or its subclasses can publish this event.");
 
             if (!_subscriptions.TryGetValue(eventType, out List<Subscription> listeners) || listeners.Count == 0)
             {

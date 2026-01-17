@@ -3,48 +3,27 @@ using UnityEngine;
 
 namespace Percent111.ProjectNS.Player
 {
-    // 플레이어 유닛 클래스 (State와 EventBus로 통신, 직접 참조 없음)
-    public class Player : Unit.Unit
+    using Unit = Percent111.ProjectNS.Unit.Unit;
+
+    public class Player : Unit
     {
-        [Header("이동 속도")]
-        [SerializeField] private float _runSpeed = 12f;
-        [SerializeField] private float _airSpeed = 10f;
-
-        [Header("가속/감속 (카타나 제로 스타일: 빠른 가속, 즉각적인 정지)")]
-        [SerializeField] private float _groundAcceleration = 80f;
-        [SerializeField] private float _groundDeceleration = 100f;
-        [SerializeField] private float _airAcceleration = 40f;
-        [SerializeField] private float _airDeceleration = 30f;
-        [SerializeField] private float _turnSpeedMultiplier = 2f;
-
-        [Header("점프")]
-        [SerializeField] private float _jumpForce = 18f;
-        [SerializeField] private float _gravity = -50f;
-        [SerializeField] private float _maxFallSpeed = -30f;
-        [SerializeField] private float _coyoteTime = 0.08f;
-        [SerializeField] private float _jumpCutMultiplier = 0.4f;
-
-        [Header("지면 감지")]
-        [SerializeField] private float _groundCheckDistance = 0.15f;
-        [SerializeField] private float _groundCheckOffset = 0.5f;
-        [SerializeField] private LayerMask _groundLayer = 1;
-
-        [Header("벽 감지")]
-        [SerializeField] private float _wallCheckDistance = 0.3f;
-        [SerializeField] private float _wallCheckHeight = 0.3f;
+        [SerializeField] private PlayerMovementSettings _movementSettings;
+        [SerializeField] private Animator _animator;
 
         private PlayerMovement _movement;
         private PlayerStateMachine _stateMachine;
+        private PlayerAnimator _playerAnimator;
         private UIInputAction _inputAction;
 
         protected override void Awake()
         {
             base.Awake();
-            
+
             _inputAction = UIInputAction.Instance;
-            
+
             CreateMovement();
             CreateStateMachine();
+            CreateAnimator();
         }
 
         private void OnEnable()
@@ -52,6 +31,7 @@ namespace Percent111.ProjectNS.Player
             _inputAction.Player.Enable();
             SubscribeEvents();
             _stateMachine.SubscribeEvents();
+            _playerAnimator.SubscribeEvents();
         }
 
         private void OnDisable()
@@ -59,6 +39,7 @@ namespace Percent111.ProjectNS.Player
             _inputAction.Player.Disable();
             UnsubscribeEvents();
             _stateMachine.UnsubscribeEvents();
+            _playerAnimator.UnsubscribeEvents();
         }
 
         // 이벤트 구독
@@ -79,7 +60,6 @@ namespace Percent111.ProjectNS.Player
         private void OnPlayerStateChanged(PlayerStateChangedEvent evt)
         {
             // 상태 변경 시 필요한 처리 (애니메이션, 사운드 등)
-            Debug.Log($"Player State: {evt.PreviousState} → {evt.CurrentState}");
         }
 
         // 점프 이벤트 핸들러
@@ -91,11 +71,7 @@ namespace Percent111.ProjectNS.Player
         // PlayerMovement 생성 및 설정
         private void CreateMovement()
         {
-            _movement = new PlayerMovement(transform, _groundLayer);
-            _movement.SetMovementSettings(_runSpeed, _airSpeed, _groundAcceleration, _groundDeceleration, _airAcceleration, _airDeceleration, _turnSpeedMultiplier);
-            _movement.SetJumpSettings(_jumpForce, _gravity, _maxFallSpeed, _coyoteTime, _jumpCutMultiplier);
-            _movement.SetGroundCheckSettings(_groundCheckDistance, _groundCheckOffset);
-            _movement.SetWallCheckSettings(_wallCheckDistance, _wallCheckHeight);
+            _movement = new PlayerMovement(transform, _movementSettings);
         }
 
         // 상태 머신 초기화 (Movement를 State에 전달)
@@ -114,15 +90,21 @@ namespace Percent111.ProjectNS.Player
             _stateMachine.InitWithState(PlayerStateType.Idle);
         }
 
+        // PlayerAnimator 생성
+        private void CreateAnimator()
+        {
+            _playerAnimator = new PlayerAnimator(_animator);
+        }
+
         private void Update()
         {
             _stateMachine.Execute();
         }
 
         // 데미지 처리 (이벤트 발행)
-        public override void TakeDamage(int damage)
+        public override void OnDamaged(int damage)
         {
-            base.TakeDamage(damage);
+            base.OnDamaged(damage);
             EventBus.Publish(this, new PlayerDamageEvent(damage, CurrentHp));
         }
 

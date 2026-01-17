@@ -9,7 +9,10 @@ namespace Percent111.ProjectNS.Player
     {
         Idle,
         Move,
-        Jump
+        Jump,
+        Attack,
+        Damaged,
+        Death
     }
 
     // 플레이어 전용 상태 머신 (State로부터 이벤트 구독, State 직접 참조 없음)

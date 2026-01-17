@@ -69,3 +69,31 @@ public void SetHorizontalInput(float input)
 // ✅ 또는 이벤트를 통해 통신
 EventBus.Publish(this, new MovementRequestEvent(input));
 ```
+
+## 불필요한 null 처리 금지 상세
+
+생성자에서 초기화되거나 항상 유효한 참조에 대한 불필요한 null 체크는 코드를 복잡하게 만들고 가독성을 해칩니다.
+
+### 금지 예시
+```csharp
+// ❌ 금지: 생성자에서 초기화된 readonly 필드에 대한 null 체크
+public class PlayerAnimator
+{
+    private readonly Animator _animator;
+
+    public PlayerAnimator(Animator animator)
+    {
+        _animator = animator; // 생성자에서 초기화
+    }
+
+    public void PlayAnimation(string name)
+    {
+        if (_animator == null) // 불필요한 null 체크
+        {
+            Debug.LogWarning("Animator is null");
+            return;
+        }
+        _animator.Play(name);
+    }
+}
+```
