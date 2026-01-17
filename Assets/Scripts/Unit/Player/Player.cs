@@ -15,6 +15,7 @@ namespace Percent111.ProjectNS.Player
         private PlayerStateMachine _stateMachine;
         private PlayerAnimator _playerAnimator;
         private UIInputAction _inputAction;
+        private bool _isInvincible;
 
         protected override void Awake()
         {
@@ -48,6 +49,7 @@ namespace Percent111.ProjectNS.Player
         {
             EventBus.Subscribe<PlayerStateChangedEvent>(OnPlayerStateChanged);
             EventBus.Subscribe<PlayerJumpEvent>(OnPlayerJump);
+            EventBus.Subscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
         }
 
         // 이벤트 구독 해제
@@ -55,6 +57,7 @@ namespace Percent111.ProjectNS.Player
         {
             EventBus.Unsubscribe<PlayerStateChangedEvent>(OnPlayerStateChanged);
             EventBus.Unsubscribe<PlayerJumpEvent>(OnPlayerJump);
+            EventBus.Unsubscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
         }
 
         // 상태 변경 이벤트 핸들러
@@ -69,6 +72,12 @@ namespace Percent111.ProjectNS.Player
             // 점프 시 필요한 처리 (사운드, 이펙트 등)
         }
 
+        // 무적 상태 변경 이벤트 핸들러
+        private void OnPlayerInvincible(PlayerInvincibleEvent evt)
+        {
+            _isInvincible = evt.IsInvincible;
+        }
+
         // PlayerMovement 생성 및 설정
         private void CreateMovement()
         {
@@ -80,16 +89,18 @@ namespace Percent111.ProjectNS.Player
         {
             _stateMachine = new PlayerStateMachine();
 
-            PlayerIdleState idleState = new PlayerIdleState(_movement);
-            PlayerMoveState moveState = new PlayerMoveState(_movement);
-            PlayerJumpState jumpState = new PlayerJumpState(_movement);
+            PlayerIdleState idleState = new PlayerIdleState(_movement, _stateSettings);
+            PlayerMoveState moveState = new PlayerMoveState(_movement, _stateSettings);
+            PlayerJumpState jumpState = new PlayerJumpState(_movement, _stateSettings);
             PlayerAttackState attackState = new PlayerAttackState(_movement, _stateSettings);
+            PlayerJumpAttackState jumpAttackState = new PlayerJumpAttackState(_movement, _stateSettings);
             PlayerDashAttackState dashAttackState = new PlayerDashAttackState(_movement, _stateSettings);
 
             _stateMachine.RegisterState(PlayerStateType.Idle, idleState);
             _stateMachine.RegisterState(PlayerStateType.Move, moveState);
             _stateMachine.RegisterState(PlayerStateType.Jump, jumpState);
             _stateMachine.RegisterState(PlayerStateType.Attack, attackState);
+            _stateMachine.RegisterState(PlayerStateType.JumpAttack, jumpAttackState);
             _stateMachine.RegisterState(PlayerStateType.DashAttack, dashAttackState);
 
             _stateMachine.InitWithState(PlayerStateType.Idle);
@@ -109,6 +120,12 @@ namespace Percent111.ProjectNS.Player
         // 데미지 처리 (이벤트 발행)
         public override void OnDamaged(int damage)
         {
+            // 무적 상태면 데미지 무시
+            if (_isInvincible)
+            {
+                return;
+            }
+
             base.OnDamaged(damage);
             EventBus.Publish(this, new PlayerDamageEvent(damage, CurrentHp));
         }

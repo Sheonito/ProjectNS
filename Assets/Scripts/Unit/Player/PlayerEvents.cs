@@ -113,4 +113,20 @@ namespace Percent111.ProjectNS.Player
             return typeof(PlayerStateBase);
         }
     }
+
+    // 플레이어 무적 상태 변경 이벤트 (State → Player)
+    public class PlayerInvincibleEvent : IEvent
+    {
+        public bool IsInvincible { get; private set; }
+
+        public PlayerInvincibleEvent(bool isInvincible)
+        {
+            IsInvincible = isInvincible;
+        }
+
+        public Type GetPublishType()
+        {
+            return typeof(PlayerStateBase);
+        }
+    }
 }

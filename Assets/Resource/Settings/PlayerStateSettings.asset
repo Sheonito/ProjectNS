@@ -12,13 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94378669c2e5f7d4ca1b0064d47de5ad, type: 3}
   m_Name: PlayerStateSettings
   m_EditorClassIdentifier: 
+  characterCenterOffset: 0.5
   attackDuration: 0.4
   attackDamage: 10
   attackHitTiming: 0.2
   attackRange: 1.5
+  slashDashDistance: 1.5
+  slashDashDuration: 0.15
+  jumpAttackForwardSpeed: 10
+  jumpAttackJumpMultiplier: 0.5
   dashDistance: 5
-  dashDuration: 0.3
+  dashDuration: 0.15
   dashDamage: 15
+  dashRecoveryTime: 0.15
+  dashCooldown: 1
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128

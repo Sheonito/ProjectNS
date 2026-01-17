@@ -32,6 +32,7 @@ namespace Percent111.ProjectNS.Player
                 { PlayerStateType.Move, AnimationNames.Move },
                 { PlayerStateType.Jump, AnimationNames.Jump },
                 { PlayerStateType.Attack, AnimationNames.Attack },
+                { PlayerStateType.JumpAttack, AnimationNames.Attack },
                 { PlayerStateType.DashAttack, AnimationNames.DashAttack },
                 { PlayerStateType.Damaged, AnimationNames.Damaged },
                 { PlayerStateType.Death, AnimationNames.Death }

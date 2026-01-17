@@ -11,6 +11,7 @@ namespace Percent111.ProjectNS.Player
         Move,
         Jump,
         Attack,
+        JumpAttack,
         DashAttack,
         Damaged,
         Death

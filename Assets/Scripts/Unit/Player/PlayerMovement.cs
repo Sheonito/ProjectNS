@@ -83,6 +83,19 @@ namespace Percent111.ProjectNS.Player
             }
         }
 
+        // 대각선 점프 실행 (점프 공격용)
+        public void DiagonalJump(float jumpMultiplier, float forwardSpeed)
+        {
+            if (CanJump())
+            {
+                _velocity.y = _settings.jumpForce * jumpMultiplier;
+                _velocity.x = forwardSpeed;
+                _coyoteTimer = 0;
+                _jumpCutApplied = false;
+                _isGrounded = false;
+            }
+        }
+
         // 점프 컷 (버튼을 떼면 낮은 점프)
         public void CutJump()
         {
@@ -192,6 +205,17 @@ namespace Percent111.ProjectNS.Player
         public int GetFacingDirection() => _facingDirection;
         public bool WasJustLanded() => _isGrounded && !_wasGrounded;
         public Vector3 GetPosition() => _transform.position;
+
+        // 방향 설정 (마우스 공격 등에서 사용)
+        public void SetFacingDirection(int direction)
+        {
+            if (direction == 0) return;
+            _facingDirection = direction > 0 ? 1 : -1;
+
+            Vector3 scale = _transform.localScale;
+            scale.x = -_facingDirection;
+            _transform.localScale = scale;
+        }
 
         // 외부에서 속도 설정 (대시베기 등에서 사용)
         public void SetVelocity(Vector2 velocity)

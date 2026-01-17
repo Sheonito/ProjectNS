@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Percent111.ProjectNS.Player
 {
-    // 플레이어 대시베기 상태
+    // 플레이어 대시베기 상태 (쿨타임 적용)
     public class PlayerDashAttackState : PlayerStateBase
     {
         private readonly PlayerMovement _movement;
@@ -13,6 +13,12 @@ namespace Percent111.ProjectNS.Player
         private int _dashDirection;
         private Vector3 _startPosition;
         private bool _hasHit;
+        private bool _isDashing;
+        private bool _isRecovering;
+        private bool _isCooldownBlocked;
+
+        // 쿨타임 관리 (static)
+        private static float _lastDashTime = -999f;
 
         public PlayerDashAttackState(PlayerMovement movement, PlayerStateSettings settings) : base()
         {
@@ -20,15 +26,40 @@ namespace Percent111.ProjectNS.Player
             _settings = settings;
         }
 
+        // 쿨타임 체크 (외부에서 호출 가능)
+        public bool IsOnCooldown()
+        {
+            return Time.time - _lastDashTime < _settings.dashCooldown;
+        }
+
         public override void Enter()
         {
             base.Enter();
             _dashTimer = 0;
             _hasHit = false;
+            _isDashing = true;
+            _isRecovering = false;
+            _isCooldownBlocked = false;
+
+            // 쿨타임 체크
+            if (IsOnCooldown())
+            {
+                _isCooldownBlocked = true;
+                _isDashing = false;
+                return;
+            }
+
+            // 쿨타임 시작
+            _lastDashTime = Time.time;
+
             _startPosition = _movement.GetPosition();
 
-            // 대시 방향 결정 (현재 바라보는 방향)
-            _dashDirection = _movement.GetFacingDirection();
+            // 대시 방향 결정 (마우스 방향)
+            _dashDirection = GetMouseHorizontalDirection(_startPosition);
+            _movement.SetFacingDirection(_dashDirection);
+
+            // 무적 상태 설정
+            SetInvincible(true);
 
             // 대시공격 이벤트 발행 (사운드, 이펙트 등)
             EventBus.Publish(this, new PlayerDashAttackEvent(_dashDirection));
@@ -38,29 +69,9 @@ namespace Percent111.ProjectNS.Player
         {
             base.Execute();
 
-            _dashTimer += Time.deltaTime;
-            float progress = _dashTimer / _settings.dashDuration;
-
-            // 대시 이동 (Lerp로 부드럽게)
-            if (progress < 1f)
+            // 쿨타임으로 차단된 경우 바로 상태 전환
+            if (_isCooldownBlocked)
             {
-                Vector3 targetPosition = _startPosition + Vector3.right * _dashDirection * _settings.dashDistance;
-                Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, progress);
-                _movement.SetPosition(currentPosition);
-
-                // 대시 중 공격 판정 (1회만, 1명만)
-                if (!_hasHit)
-                {
-                    PerformDashAttackHit();
-                }
-            }
-
-            // 대시 완료
-            if (_dashTimer >= _settings.dashDuration)
-            {
-                // 착지 여부에 따라 상태 전환
-                _movement.UpdatePhysics();
-
                 if (!_movement.IsGrounded())
                 {
                     RequestStateChange(PlayerStateType.Jump);
@@ -70,6 +81,57 @@ namespace Percent111.ProjectNS.Player
                     RequestStateChange(PlayerStateType.Idle);
                 }
                 return;
+            }
+
+            _dashTimer += Time.deltaTime;
+
+            // 대시 중
+            if (_isDashing)
+            {
+                float progress = _dashTimer / _settings.dashDuration;
+
+                if (progress < 1f)
+                {
+                    Vector3 targetPosition = _startPosition + Vector3.right * _dashDirection * _settings.dashDistance;
+                    Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, progress);
+                    _movement.SetPosition(currentPosition);
+
+                    // 대시 중 공격 판정 (1회만, 1명만)
+                    if (!_hasHit)
+                    {
+                        PerformDashAttackHit();
+                    }
+                }
+                else
+                {
+                    // 대시 완료 → 후딜레이 시작
+                    _isDashing = false;
+                    _isRecovering = true;
+                    _dashTimer = 0;
+
+                    // 무적 해제
+                    SetInvincible(false);
+                }
+                return;
+            }
+
+            // 후딜레이 중
+            if (_isRecovering)
+            {
+                _movement.UpdatePhysics();
+
+                if (_dashTimer >= _settings.dashRecoveryTime)
+                {
+                    // 후딜레이 완료 → 상태 전환
+                    if (!_movement.IsGrounded())
+                    {
+                        RequestStateChange(PlayerStateType.Jump);
+                    }
+                    else
+                    {
+                        RequestStateChange(PlayerStateType.Idle);
+                    }
+                }
             }
         }
 
@@ -102,6 +164,9 @@ namespace Percent111.ProjectNS.Player
         public override void Exit()
         {
             base.Exit();
+
+            // 안전하게 무적 해제 (강제 상태 변경 대비)
+            SetInvincible(false);
         }
     }
 }

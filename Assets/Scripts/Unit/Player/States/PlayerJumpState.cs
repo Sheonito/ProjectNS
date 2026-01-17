@@ -5,12 +5,14 @@ namespace Percent111.ProjectNS.Player
     // 플레이어 점프/낙하 상태 (Movement 필요)
     public class PlayerJumpState : PlayerStateBase
     {
-        private PlayerMovement _movement;
+        private readonly PlayerMovement _movement;
+        private readonly PlayerStateSettings _settings;
         private bool _hasJumped;
 
-        public PlayerJumpState(PlayerMovement movement) : base()
+        public PlayerJumpState(PlayerMovement movement, PlayerStateSettings settings) : base()
         {
             _movement = movement;
+            _settings = settings;
         }
 
         public override void Enter()

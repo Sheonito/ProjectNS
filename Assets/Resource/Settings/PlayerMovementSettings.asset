@@ -19,7 +19,7 @@ MonoBehaviour:
   airAcceleration: 40
   airDeceleration: 30
   turnSpeedMultiplier: 2
-  jumpForce: 18
+  jumpForce: 15
   gravity: -50
   maxFallSpeed: -30
   coyoteTime: 0.08

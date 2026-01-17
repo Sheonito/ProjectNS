@@ -4,18 +4,17 @@ using UnityEngine;
 
 namespace Percent111.ProjectNS.Player
 {
-    // 플레이어 공격 상태 (슬래시 공격 - 살짝 대시 포함)
-    public class PlayerAttackState : PlayerStateBase
+    // 플레이어 점프 공격 상태 (대각선 점프 + 공격)
+    public class PlayerJumpAttackState : PlayerStateBase
     {
         private readonly PlayerMovement _movement;
         private readonly PlayerStateSettings _settings;
         private float _attackTimer;
         private bool _hasHit;
-        private int _attackDirection;
-        private Vector3 _startPosition;
-        private bool _isSlashing;
+        private bool _hasJumped;
+        private int _jumpDirection;
 
-        public PlayerAttackState(PlayerMovement movement, PlayerStateSettings settings) : base()
+        public PlayerJumpAttackState(PlayerMovement movement, PlayerStateSettings settings) : base()
         {
             _movement = movement;
             _settings = settings;
@@ -26,13 +25,20 @@ namespace Percent111.ProjectNS.Player
             base.Enter();
             _attackTimer = 0;
             _hasHit = false;
-            _isSlashing = true;
-            _startPosition = _movement.GetPosition();
+            _hasJumped = false;
 
             // 마우스 방향에 따라 플레이어 방향 설정
             Vector2 playerPos = _movement.GetPosition();
-            _attackDirection = GetMouseHorizontalDirection(playerPos);
-            _movement.SetFacingDirection(_attackDirection);
+            _jumpDirection = GetMouseHorizontalDirection(playerPos);
+            _movement.SetFacingDirection(_jumpDirection);
+
+            // 대각선 점프 실행 (점프력 약간 낮춤 + 전방 이동 속도 설정)
+            if (_movement.CanJump())
+            {
+                _movement.DiagonalJump(_settings.jumpAttackJumpMultiplier, _jumpDirection * _settings.jumpAttackForwardSpeed);
+                _hasJumped = true;
+                PublishJumpEvent();
+            }
 
             // 공격 이벤트 발행 (사운드, 이펙트 등)
             EventBus.Publish(this, new PlayerAttackEvent());
@@ -42,22 +48,10 @@ namespace Percent111.ProjectNS.Player
         {
             base.Execute();
 
-            _attackTimer += Time.deltaTime;
+            // 대각선 점프 중에는 입력 무시, 물리만 업데이트
+            _movement.UpdatePhysics();
 
-            // 슬래시 대시 중 (살짝 앞으로 이동)
-            if (_isSlashing && _attackTimer < _settings.slashDashDuration)
-            {
-                float progress = _attackTimer / _settings.slashDashDuration;
-                Vector3 targetPosition = _startPosition + Vector3.right * _attackDirection * _settings.slashDashDistance;
-                Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, progress);
-                _movement.SetPosition(currentPosition);
-            }
-            else
-            {
-                _isSlashing = false;
-                // 슬래시 완료 후 물리 업데이트
-                _movement.UpdatePhysics();
-            }
+            _attackTimer += Time.deltaTime;
 
             // 공격 판정 타이밍
             if (!_hasHit && _attackTimer >= _settings.attackHitTiming)
@@ -73,12 +67,11 @@ namespace Percent111.ProjectNS.Player
                 return;
             }
 
-            // 공격 완료
+            // 공격 완료 후 착지 여부에 따라 상태 전환
             if (_attackTimer >= _settings.attackDuration)
             {
                 float horizontalInput = GetHorizontalInput();
 
-                // 입력에 따라 상태 전환
                 if (!_movement.IsGrounded())
                 {
                     RequestStateChange(PlayerStateType.Jump);
