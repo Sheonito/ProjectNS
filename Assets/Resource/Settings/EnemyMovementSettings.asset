@@ -39,8 +39,3 @@ MonoBehaviour:
     m_Bits: 256
   gravity: -40
   maxFallSpeed: -20
-  separationRadius: 2
-  separationForce: 5
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 128

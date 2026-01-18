@@ -153,9 +153,24 @@ namespace Percent111.ProjectNS.Enemy
             SetHorizontalInput(0);
         }
 
-        // 지면 감지
+        // 지면 감지 + 땅 뚫기 방지
         private void CheckGround()
         {
+            // 1. 땅 안에 묻혀있는지 확인 (위로 Raycast)
+            Vector2 upOrigin = (Vector2)_transform.position;
+            RaycastHit2D upHit = Physics2D.Raycast(upOrigin, Vector2.up, 1f, _settings.groundLayer);
+
+            if (upHit.collider != null)
+            {
+                // 땅 안에 있음 → 땅 위로 밀어내기
+                float pushUpY = upHit.point.y + _settings.groundCheckOffset + 0.01f;
+                _transform.position = new Vector3(_transform.position.x, pushUpY, _transform.position.z);
+                _velocity.y = 0;
+                _isGrounded = true;
+                return;
+            }
+
+            // 2. 정상적인 지면 감지 (아래로 Raycast)
             Vector2 origin = (Vector2)_transform.position + Vector2.down * _settings.groundCheckOffset;
             RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, _settings.groundCheckDistance,
                 _settings.groundLayer);

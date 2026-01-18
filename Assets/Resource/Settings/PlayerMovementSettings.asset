@@ -22,7 +22,6 @@ MonoBehaviour:
   jumpForce: 15
   gravity: -50
   maxFallSpeed: -30
-  coyoteTime: 0.08
   jumpCutMultiplier: 0.4
   groundCheckDistance: 0.15
   groundCheckOffset: 0.82

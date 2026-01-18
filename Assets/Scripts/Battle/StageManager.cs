@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Event;
 using UnityEngine;
@@ -18,13 +20,23 @@ namespace Percent111.ProjectNS.Battle
         private List<EnemyUnit> _activeEnemies;
         private int _separationFrame;
 
+        // 타이머
+        private float _stageTimer;
+        private bool _isTimerRunning;
+
+        // 스폰 취소 토큰
+        private CancellationTokenSource _spawnCts;
+
         public int CurrentStage => _currentStage;
         public int MaxStage => _settings.maxStage;
         public bool IsStageCleared => _remainingEnemies <= 0;
+        public float RemainingTime => Mathf.Max(0, _stageTimer);
+        public float StageDuration => _settings.stageDuration;
 
         public event Action<int> OnStageStarted;
         public event Action<int> OnStageCleared;
         public event Action OnAllStagesCleared;
+        public event Action<float> OnTimerUpdated;
 
         // 생성자
         public StageManager(StageSettings settings, EnemyPool enemyPool, List<Transform> spawnPoints)
@@ -46,6 +58,11 @@ namespace Percent111.ProjectNS.Battle
         public void UnsubscribeEvents()
         {
             EventBus.Unsubscribe<EnemyReturnToPoolEvent>(OnEnemyReturnToPool);
+
+            // 스폰 취소 및 정리
+            _spawnCts?.Cancel();
+            _spawnCts?.Dispose();
+            _spawnCts = null;
         }
 
         // 적 Pool 반환 이벤트 핸들러
@@ -77,12 +94,21 @@ namespace Percent111.ProjectNS.Battle
                 return;
             }
 
+            // 이전 스폰 취소
+            _spawnCts?.Cancel();
+            _spawnCts?.Dispose();
+            _spawnCts = new CancellationTokenSource();
+
             _currentStage = stageNumber;
             int enemyCount = GetEnemyCountForStage(stageNumber);
 
-            Debug.Log($"Stage {stageNumber} Start! Enemy Count: {enemyCount}");
+            // 타이머 시작
+            _stageTimer = _settings.stageDuration;
+            _isTimerRunning = true;
 
-            SpawnEnemies(enemyCount);
+            Debug.Log($"Stage {stageNumber} Start! Enemy Count: {enemyCount}, Duration: {_settings.stageDuration}s");
+
+            SpawnEnemiesAsync(enemyCount, _spawnCts.Token).Forget();
             OnStageStarted?.Invoke(stageNumber);
         }
 
@@ -104,22 +130,29 @@ namespace Percent111.ProjectNS.Battle
             return _settings.baseEnemyCount + (_settings.enemyIncreasePerStage * (stageNumber - 1));
         }
 
-        // 적 스폰
-        private void SpawnEnemies(int count)
+        // 적 스폰 (interval 적용)
+        private async UniTaskVoid SpawnEnemiesAsync(int count, CancellationToken ct)
         {
             _remainingEnemies = count;
             _activeEnemies.Clear();
 
             for (int i = 0; i < count; i++)
             {
+                if (ct.IsCancellationRequested) return;
+
                 Vector3 spawnPos = GetSpawnPosition(i);
-                // EnemyType type = GetEnemyTypeForStage(i);
-                EnemyType type = EnemyType.Ranged;
+                EnemyType type = GetEnemyTypeForStage(i);
 
                 EnemyUnit enemy = _enemyPool.Spawn(type, spawnPos);
                 if (enemy != null)
                 {
                     _activeEnemies.Add(enemy);
+                }
+
+                // 마지막 적이 아니면 interval 대기
+                if (i < count - 1 && _settings.spawnInterval > 0)
+                {
+                    await UniTask.Delay(TimeSpan.FromSeconds(_settings.spawnInterval), cancellationToken: ct);
                 }
             }
         }
@@ -169,6 +202,12 @@ namespace Percent111.ProjectNS.Battle
         // 스테이지 클리어 처리
         private void HandleStageClear()
         {
+            // 타이머 정지
+            _isTimerRunning = false;
+
+            // 스폰 취소
+            _spawnCts?.Cancel();
+
             Debug.Log($"Stage {_currentStage} Cleared!");
             OnStageCleared?.Invoke(_currentStage);
 
@@ -176,6 +215,11 @@ namespace Percent111.ProjectNS.Battle
             {
                 Debug.Log("Congratulations! All stages cleared!");
                 OnAllStagesCleared?.Invoke();
+            }
+            else
+            {
+                // 다음 스테이지로 자동 이동
+                StartNextStage();
             }
         }
 
@@ -192,6 +236,34 @@ namespace Percent111.ProjectNS.Battle
 
             _activeEnemies.Clear();
             _remainingEnemies = 0;
+        }
+
+        // 타이머 업데이트 (BattleManager에서 매 프레임 호출)
+        public void UpdateTimer()
+        {
+            if (!_isTimerRunning) return;
+
+            _stageTimer -= Time.deltaTime;
+            OnTimerUpdated?.Invoke(_stageTimer);
+
+            // 시간이 다 되면 자동으로 다음 스테이지
+            if (_stageTimer <= 0)
+            {
+                _isTimerRunning = false;
+                HandleStageTimeUp();
+            }
+        }
+
+        // 스테이지 시간 종료 처리
+        private void HandleStageTimeUp()
+        {
+            Debug.Log($"Stage {_currentStage} Time Up!");
+
+            // 남은 적 제거
+            ClearAllEnemies();
+
+            // 스테이지 클리어 처리 (내부에서 다음 스테이지 자동 이동)
+            HandleStageClear();
         }
 
         // 적끼리 밀어내기 업데이트 (BattleManager에서 매 프레임 호출)

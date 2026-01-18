@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Percent111.ProjectNS.DI;
 using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Player;
+using Percent111.ProjectNS.UI;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -32,6 +34,9 @@ namespace Percent111.ProjectNS.Battle
         [Header("Cinemachine")]
         [SerializeField] private CinemachineCamera _cinemachineCamera;
 
+        [Header("UI")]
+        [SerializeField] private StageUI _stageUI;
+
         private PlayerUnit _player;
         private PlayerDataProvider _playerData;
         private EnemyPool _enemyPool;
@@ -40,8 +45,10 @@ namespace Percent111.ProjectNS.Battle
         private Transform _poolParent;
         private Transform _projectilePoolParent;
 
-        private void Awake()
+        private async void Awake()
         {
+            await UniTask.WaitForSeconds(2);
+            
             Initialize();
         }
 
@@ -125,6 +132,12 @@ namespace Percent111.ProjectNS.Battle
             _stageManager.OnStageStarted += OnStageStarted;
             _stageManager.OnStageCleared += OnStageCleared;
             _stageManager.OnAllStagesCleared += OnAllStagesCleared;
+
+            // StageUI 초기화
+            if (_stageUI != null)
+            {
+                _stageUI.Initialize(_stageManager);
+            }
         }
 
         // 전투 시작
@@ -135,7 +148,10 @@ namespace Percent111.ProjectNS.Battle
 
         private void Update()
         {
-            _stageManager?.UpdateEnemySeparation();
+            if (_stageManager == null) return;
+
+            _stageManager.UpdateTimer();
+            _stageManager.UpdateEnemySeparation();
         }
 
         // 스테이지 시작 이벤트 핸들러

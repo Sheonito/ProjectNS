@@ -9,10 +9,16 @@ namespace Percent111.ProjectNS.Battle
     {
         [Header("Stage")]
         public int maxStage = 6;
+        [Tooltip("스테이지 당 시간 (초)")]
+        public float stageDuration = 60f;
 
         [Header("Enemy Count")]
         public int baseEnemyCount = 3;
         public int enemyIncreasePerStage = 2;
+
+        [Header("Spawn")]
+        [Tooltip("적 스폰 간격 (초)")]
+        public float spawnInterval = 0.5f;
 
         [Header("Enemy Type Ratio")]
         [Range(0f, 1f)]
