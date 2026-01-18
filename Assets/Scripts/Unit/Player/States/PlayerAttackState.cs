@@ -13,6 +13,7 @@ namespace Percent111.ProjectNS.Player
         private float _attackTimer;
         private float _attackDuration;
         private float _slashDuration;
+        private float _actualSlashDistance;
         private float _hitTiming;
         private bool _hasHit;
         private int _attackDirection;
@@ -55,6 +56,12 @@ namespace Percent111.ProjectNS.Player
             bool hasEnemyInRange = IsEnemyInAttackRange(playerPos, _settings.attackRange, _settings.enemyLayer);
             _isSlashing = !hasEnemyInRange && _movement.IsGrounded();
 
+            // 슬래시 대시 시 벽 체크
+            if (_isSlashing)
+            {
+                _actualSlashDistance = _movement.GetWallDistance(_attackDirection, _settings.slashDashDistance);
+            }
+
             // 공격 이벤트 발행 (사운드, 이펙트 등)
             EventBus.Publish(this, new PlayerAttackEvent());
         }
@@ -69,7 +76,7 @@ namespace Percent111.ProjectNS.Player
             if (_isSlashing && _attackTimer < _slashDuration)
             {
                 float progress = _attackTimer / _slashDuration;
-                Vector3 targetPosition = _startPosition + Vector3.right * _attackDirection * _settings.slashDashDistance;
+                Vector3 targetPosition = _startPosition + Vector3.right * _attackDirection * _actualSlashDistance;
                 Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, progress);
                 _movement.SetPosition(currentPosition);
             }

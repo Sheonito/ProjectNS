@@ -11,6 +11,7 @@ namespace Percent111.ProjectNS.Player
         private readonly PlayerAnimator _animator;
         private float _backstepTimer;
         private float _backstepDuration;
+        private float _actualBackstepDistance;
         private int _backstepDirection;
         private Vector3 _startPosition;
         private bool _isBackstepping;
@@ -69,6 +70,9 @@ namespace Percent111.ProjectNS.Player
             // 백스텝 방향 (현재 바라보는 방향의 반대)
             _backstepDirection = -_movement.GetFacingDirection();
 
+            // 벽 체크: 벽까지의 거리를 고려해 실제 백스텝 거리 결정
+            _actualBackstepDistance = _movement.GetWallDistance(_backstepDirection, _settings.backstepDistance);
+
             // 속도 초기화
             _movement.SetVelocity(Vector2.zero);
 
@@ -98,7 +102,7 @@ namespace Percent111.ProjectNS.Player
                 {
                     // 이징 적용 (빠르게 시작, 느리게 끝)
                     float easedProgress = 1f - Mathf.Pow(1f - progress, 2f);
-                    Vector3 targetPosition = _startPosition + Vector3.right * _backstepDirection * _settings.backstepDistance;
+                    Vector3 targetPosition = _startPosition + Vector3.right * _backstepDirection * _actualBackstepDistance;
                     Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, easedProgress);
                     _movement.SetPosition(currentPosition);
                 }

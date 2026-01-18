@@ -12,6 +12,7 @@ namespace Percent111.ProjectNS.Player
         private readonly PlayerAnimator _animator;
         private float _dashTimer;
         private float _dashDuration;
+        private float _actualDashDistance;
         private int _dashDirection;
         private Vector3 _startPosition;
         private bool _hasHit;
@@ -73,6 +74,9 @@ namespace Percent111.ProjectNS.Player
             _dashDirection = GetMouseHorizontalDirection(_startPosition);
             _movement.SetFacingDirection(_dashDirection);
 
+            // 벽 체크: 벽까지의 거리를 고려해 실제 대시 거리 결정
+            _actualDashDistance = _movement.GetWallDistance(_dashDirection, _settings.dashDistance);
+
             // 속도 초기화 (대시 중에는 별도로 위치 제어)
             _movement.SetVelocity(Vector2.zero);
 
@@ -110,7 +114,7 @@ namespace Percent111.ProjectNS.Player
 
                 if (progress < 1f)
                 {
-                    Vector3 targetPosition = _startPosition + Vector3.right * _dashDirection * _settings.dashDistance;
+                    Vector3 targetPosition = _startPosition + Vector3.right * _dashDirection * _actualDashDistance;
                     Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, progress);
                     _movement.SetPosition(currentPosition);
 

@@ -229,6 +229,21 @@ namespace Percent111.ProjectNS.Player
             _transform.position = position;
         }
 
+        // 특정 방향으로 벽까지의 거리 반환 (대시/백스텝용)
+        public float GetWallDistance(int direction, float maxDistance)
+        {
+            Vector2 origin = (Vector2)_transform.position + Vector2.up * _settings.wallCheckHeight;
+            Vector2 dir = new Vector2(direction, 0);
+            RaycastHit2D hit = Physics2D.Raycast(origin, dir, maxDistance, _settings.groundLayer);
+
+            if (hit.collider != null)
+            {
+                // 벽까지 거리에서 약간의 여유 공간 확보
+                return Mathf.Max(0, hit.distance - 0.1f);
+            }
+            return maxDistance;
+        }
+
         // Z축 회전 설정 (대각선 공격 등에서 사용)
         public void SetRotation(float angle)
         {
