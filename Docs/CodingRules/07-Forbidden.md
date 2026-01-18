@@ -7,6 +7,7 @@
 - private 변수를 public 프로퍼티로 노출 금지 (필요시 메서드 또는 이벤트 사용)
 - `UniTaskCompletionSource` 금지
 - **Coroutine 금지**: 비동기 처리는 무조건 UniTask 사용
+- **빈 이벤트(구독자 없는 이벤트) 금지**: 발행만 하고 구독하지 않는 이벤트 생성 금지
 
 ## 쌍방참조 금지 상세
 
@@ -173,5 +174,39 @@ private void FadeOutGroup()
     }
     sequence.SetEase(Ease.OutQuad)
             .OnComplete(OnFadeComplete);
+}
+```
+
+## 빈 이벤트(구독자 없는 이벤트) 금지 상세
+
+Publish만 하고 Subscribe하지 않는 이벤트는 불필요한 코드입니다. 이벤트를 생성하기 전에 실제로 구독하는 곳이 있는지 확인해야 합니다.
+
+### 금지 예시
+```csharp
+// ❌ 금지: 발행만 하고 구독하지 않는 이벤트
+public class PlayerDamageEvent : IEvent { ... }
+
+// Player.cs에서 발행
+EventBus.Publish(this, new PlayerDamageEvent(damage, hp));
+
+// 하지만 어디에서도 Subscribe하지 않음
+// EventBus.Subscribe<PlayerDamageEvent>(handler); // 없음
+```
+
+### 올바른 접근
+```csharp
+// ✅ 이벤트 없이 직접 상태 전환
+public void OnDamaged(int damage)
+{
+    ApplyDamage(damage);
+
+    if (IsDead)
+    {
+        EventBus.Publish(this, new PlayerChangeStateRequestEvent(PlayerStateType.Death));
+    }
+    else
+    {
+        EventBus.Publish(this, new PlayerChangeStateRequestEvent(PlayerStateType.Damaged));
+    }
 }
 ```

@@ -33,28 +33,16 @@ namespace Percent111.ProjectNS.Enemy
         public void SubscribeEvents()
         {
             EventBus.Subscribe<EnemyChangeStateRequestEvent>(OnChangeStateRequest);
-            EventBus.Subscribe<EnemyForceStateChangeEvent>(OnForceStateChange);
         }
 
         // 이벤트 구독 해제 (Enemy에서 호출)
         public void UnsubscribeEvents()
         {
             EventBus.Unsubscribe<EnemyChangeStateRequestEvent>(OnChangeStateRequest);
-            EventBus.Unsubscribe<EnemyForceStateChangeEvent>(OnForceStateChange);
         }
 
         // 상태 전환 요청 이벤트 핸들러 (State에서 요청)
         private void OnChangeStateRequest(EnemyChangeStateRequestEvent evt)
-        {
-            // 자신의 이벤트만 처리
-            if (evt.Owner != _ownerMovement)
-                return;
-
-            ChangeState(evt.RequestedState);
-        }
-
-        // 강제 상태 전환 이벤트 핸들러 (Enemy에서 요청)
-        private void OnForceStateChange(EnemyForceStateChangeEvent evt)
         {
             // 자신의 이벤트만 처리
             if (evt.Owner != _ownerMovement)
@@ -79,8 +67,8 @@ namespace Percent111.ProjectNS.Enemy
             }
         }
 
-        // 내부 상태 변경 (이벤트 발행)
-        private void ChangeState(EnemyStateType stateType)
+        // 상태 변경 (외부에서 직접 호출 가능)
+        public void ChangeState(EnemyStateType stateType)
         {
             if (_states.TryGetValue(stateType, out IState state))
             {

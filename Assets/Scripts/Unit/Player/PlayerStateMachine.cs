@@ -43,10 +43,10 @@ namespace Percent111.ProjectNS.Player
             EventBus.Unsubscribe<PlayerChangeStateRequestEvent>(OnChangeStateRequest);
         }
 
-        // 상태 전환 요청 이벤트 핸들러
+        // 상태 전환 요청 이벤트 핸들러 (State에서 요청)
         private void OnChangeStateRequest(PlayerChangeStateRequestEvent evt)
         {
-            ChangeStateInternal(evt.RequestedState);
+            ChangeState(evt.RequestedState);
         }
 
         // 상태 등록
@@ -65,8 +65,8 @@ namespace Percent111.ProjectNS.Player
             }
         }
 
-        // 내부 상태 변경 (이벤트 발행)
-        private void ChangeStateInternal(PlayerStateType stateType)
+        // 상태 변경 (외부에서 직접 호출 가능)
+        public void ChangeState(PlayerStateType stateType)
         {
             if (_states.TryGetValue(stateType, out IState state))
             {

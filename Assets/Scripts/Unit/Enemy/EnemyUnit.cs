@@ -166,28 +166,24 @@ namespace Percent111.ProjectNS.Enemy
             _stateMachine.Execute();
         }
 
-        // 데미지 처리 (이벤트 발행)
-        public override void OnDamaged(int damage)
+        // 데미지 처리 (직접 상태 전환)
+        public void OnDamaged(int damage)
         {
             if (IsDead)
                 return;
 
-            base.OnDamaged(damage);
-            EventBus.Publish(this, new EnemyDamageEvent(damage, CurrentHp));
+            ApplyDamage(damage);
 
-            // 피격 상태로 전환
-            if (!IsDead)
+            // HP에 따라 상태 전환
+            if (IsDead)
             {
-                EventBus.Publish(this, new EnemyForceStateChangeEvent(EnemyStateType.Damaged, _movement));
+                Debug.Log($"Enemy Dead: {gameObject.name}");
+                _stateMachine.ChangeState(EnemyStateType.Death);
             }
-        }
-
-        // 사망 처리
-        protected override void OnDeath()
-        {
-            Debug.Log($"Enemy Dead: {gameObject.name}");
-            EventBus.Publish(this, new EnemyDeathEvent());
-            EventBus.Publish(this, new EnemyForceStateChangeEvent(EnemyStateType.Death, _movement));
+            else
+            {
+                _stateMachine.ChangeState(EnemyStateType.Damaged);
+            }
         }
 
         // 플레이어 Transform 설정 (외부에서 호출)

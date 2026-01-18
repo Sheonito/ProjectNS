@@ -48,38 +48,18 @@ namespace Percent111.ProjectNS.Player
         private void SubscribeEvents()
         {
             EventBus.Subscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
-            EventBus.Subscribe<PlayerDamageEvent>(OnPlayerDamageEvent);
-            EventBus.Subscribe<PlayerDeathEvent>(OnPlayerDeathEvent);
         }
 
         // 이벤트 구독 해제
         private void UnsubscribeEvents()
         {
             EventBus.Unsubscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
-            EventBus.Unsubscribe<PlayerDamageEvent>(OnPlayerDamageEvent);
-            EventBus.Unsubscribe<PlayerDeathEvent>(OnPlayerDeathEvent);
         }
 
         // 무적 상태 변경 이벤트 핸들러
         private void OnPlayerInvincible(PlayerInvincibleEvent evt)
         {
             _isInvincible = evt.IsInvincible;
-        }
-
-        // 데미지 이벤트 핸들러 (Damaged 상태로 전환)
-        private void OnPlayerDamageEvent(PlayerDamageEvent evt)
-        {
-            // 현재 상태가 Death가 아니면 Damaged 상태로 전환
-            if (_stateMachine.GetCurrentStateType() != PlayerStateType.Death)
-            {
-                EventBus.Publish(this, new PlayerChangeStateRequestEvent(PlayerStateType.Damaged));
-            }
-        }
-
-        // 사망 이벤트 핸들러 (Death 상태로 전환)
-        private void OnPlayerDeathEvent(PlayerDeathEvent evt)
-        {
-            EventBus.Publish(this, new PlayerChangeStateRequestEvent(PlayerStateType.Death));
         }
 
         // PlayerMovement 생성 및 설정
@@ -129,8 +109,8 @@ namespace Percent111.ProjectNS.Player
             _stateMachine.Execute();
         }
 
-        // 데미지 처리 (이벤트 발행)
-        public override void OnDamaged(int damage)
+        // 데미지 처리 (직접 상태 전환)
+        public void OnDamaged(int damage)
         {
             // 무적 상태면 데미지 무시
             if (_isInvincible)
@@ -138,15 +118,24 @@ namespace Percent111.ProjectNS.Player
                 return;
             }
 
-            base.OnDamaged(damage);
-            EventBus.Publish(this, new PlayerDamageEvent(damage, CurrentHp));
-        }
+            // 이미 사망 상태면 무시
+            if (_stateMachine.GetCurrentStateType() == PlayerStateType.Death)
+            {
+                return;
+            }
 
-        // 사망 처리 (이벤트 발행)
-        protected override void OnDeath()
-        {
-            Debug.Log("Player Dead");
-            EventBus.Publish(this, new PlayerDeathEvent());
+            ApplyDamage(damage);
+
+            // HP에 따라 상태 전환
+            if (IsDead)
+            {
+                Debug.Log("Player Dead");
+                _stateMachine.ChangeState(PlayerStateType.Death);
+            }
+            else
+            {
+                _stateMachine.ChangeState(PlayerStateType.Damaged);
+            }
         }
 
         // 디버그 시각화

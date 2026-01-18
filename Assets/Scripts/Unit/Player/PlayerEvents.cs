@@ -46,33 +46,6 @@ namespace Percent111.ProjectNS.Player
         }
     }
 
-    // 플레이어 데미지 이벤트 (Player → State)
-    public class PlayerDamageEvent : IEvent
-    {
-        public int Damage { get; private set; }
-        public int CurrentHp { get; private set; }
-
-        public PlayerDamageEvent(int damage, int currentHp)
-        {
-            Damage = damage;
-            CurrentHp = currentHp;
-        }
-
-        public Type GetPublishType()
-        {
-            return typeof(PlayerUnit);
-        }
-    }
-
-    // 플레이어 사망 이벤트 (Player → State)
-    public class PlayerDeathEvent : IEvent
-    {
-        public Type GetPublishType()
-        {
-            return typeof(PlayerUnit);
-        }
-    }
-
     // 플레이어 공격 이벤트 (State → Player, 사운드/이펙트용)
     public class PlayerAttackEvent : IEvent
     {

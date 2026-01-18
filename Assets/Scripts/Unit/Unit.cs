@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Percent111.ProjectNS.Unit
 {
-    // Player와 Enemy의 공통 기본 클래스
+    // Player와 Enemy의 공통 기본 클래스 (HP 관리만 담당, 상태 전환은 각 클래스에서 처리)
     public abstract class Unit : MonoBehaviour
     {
         [Header("기본 스탯")]
@@ -18,19 +18,18 @@ namespace Percent111.ProjectNS.Unit
             _currentHp = _maxHp;
         }
 
-        // 데미지 처리
-        public virtual void OnDamaged(int damage)
+        // HP 감소 처리 (상태 전환은 하위 클래스에서 직접 처리)
+        public void ApplyDamage(int damage)
         {
             _currentHp -= damage;
             if (_currentHp <= 0)
             {
                 _currentHp = 0;
-                OnDeath();
             }
         }
 
         // 회복 처리
-        public virtual void Heal(int amount)
+        public void Heal(int amount)
         {
             _currentHp += amount;
             if (_currentHp > _maxHp)
@@ -38,8 +37,5 @@ namespace Percent111.ProjectNS.Unit
                 _currentHp = _maxHp;
             }
         }
-
-        // 사망 시 호출
-        protected abstract void OnDeath();
     }
 }

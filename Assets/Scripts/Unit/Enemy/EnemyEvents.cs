@@ -21,24 +21,6 @@ namespace Percent111.ProjectNS.Enemy
         }
     }
 
-    // 적 강제 상태 전환 요청 이벤트 (Enemy → StateMachine)
-    public class EnemyForceStateChangeEvent : IEvent
-    {
-        public EnemyStateType RequestedState { get; private set; }
-        public EnemyMovement Owner { get; private set; }
-
-        public EnemyForceStateChangeEvent(EnemyStateType requestedState, EnemyMovement owner)
-        {
-            RequestedState = requestedState;
-            Owner = owner;
-        }
-
-        public Type GetPublishType()
-        {
-            return typeof(EnemyUnit);
-        }
-    }
-
     // 적 상태 변경 완료 이벤트 (StateMachine → Enemy)
     public class EnemyStateChangedEvent : IEvent
     {
@@ -90,33 +72,6 @@ namespace Percent111.ProjectNS.Enemy
         public Type GetPublishType()
         {
             return typeof(EnemyStateBase);
-        }
-    }
-
-    // 적 데미지 이벤트 (Enemy → State)
-    public class EnemyDamageEvent : IEvent
-    {
-        public int Damage { get; private set; }
-        public int CurrentHp { get; private set; }
-
-        public EnemyDamageEvent(int damage, int currentHp)
-        {
-            Damage = damage;
-            CurrentHp = currentHp;
-        }
-
-        public Type GetPublishType()
-        {
-            return typeof(EnemyUnit);
-        }
-    }
-
-    // 적 사망 이벤트 (Enemy → State)
-    public class EnemyDeathEvent : IEvent
-    {
-        public Type GetPublishType()
-        {
-            return typeof(EnemyUnit);
         }
     }
 
