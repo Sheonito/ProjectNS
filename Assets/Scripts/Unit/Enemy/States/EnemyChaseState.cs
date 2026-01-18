@@ -32,6 +32,13 @@ namespace Percent111.ProjectNS.Enemy
                 return;
             }
 
+            // 공격 범위 내에 있으면 Idle로 전환 (쿨타임 대기)
+            if (_movement.IsInAttackRange())
+            {
+                RequestStateChange(EnemyStateType.Idle);
+                return;
+            }
+
             // 플레이어 방향으로 이동
             _movement.MoveTowardsPlayer();
             _movement.UpdatePhysics();

@@ -3137,7 +3137,7 @@ GameObject:
   - component: {fileID: 7183308310911931155}
   - component: {fileID: 1128003437597866870}
   - component: {fileID: 667680865633059525}
-  - component: {fileID: 556321852146701132}
+  - component: {fileID: 7739046815310027296}
   - component: {fileID: 8155303009468395729}
   m_Layer: 7
   m_Name: Enemy_Ranged
@@ -3196,7 +3196,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &556321852146701132
+--- !u!114 &7739046815310027296
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3205,16 +3205,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 6762521769924476996}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42dbd5f9d8a0dbe49bdd8671a45538be, type: 3}
+  m_Script: {fileID: 11500000, guid: f267f4c579f524c459832b36cbfcc934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHp: 100
   _currentHp: 100
-  _movementSettings: {fileID: 11400000, guid: 2a003c6e19f962347b933d54820ef48b, type: 2}
+  _movementSettings: {fileID: 11400000, guid: 435ff00826d275c4e96f9e0d1d63da67, type: 2}
   _stateSettings: {fileID: 11400000, guid: 547797dda015ca145955295b89dbaabe, type: 2}
   _animator: {fileID: 667680865633059525}
   _spriteGroup: {fileID: 5171806541067503569}
   _fadeDuration: 0.5
+  _projectileSettings: {fileID: 11400000, guid: bff61fb3ba5a7dc4db7cc97ab9578524, type: 2}
+  _firePoint: {fileID: 8128521073761755188}
 --- !u!61 &8155303009468395729
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Percent111.ProjectNS.DI;
 using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Player;
 using UnityEngine;
@@ -20,13 +21,20 @@ namespace Percent111.ProjectNS.Battle
         [SerializeField] private StageSettings _stageSettings;
         [SerializeField] private int _preLoadCount = 10;
 
+        [Header("Projectile")]
+        [SerializeField] private Projectile _projectilePrefab;
+        [SerializeField] private int _projectilePreLoadCount = 20;
+
         [Header("Spawn Points")]
         [SerializeField] private List<Transform> _enemySpawnPoints;
 
         private PlayerUnit _player;
+        private PlayerDataProvider _playerData;
         private EnemyPool _enemyPool;
+        private ProjectilePool _projectilePool;
         private StageManager _stageManager;
         private Transform _poolParent;
+        private Transform _projectilePoolParent;
 
         private void Awake()
         {
@@ -36,19 +44,34 @@ namespace Percent111.ProjectNS.Battle
         // 초기화
         private void Initialize()
         {
-            CreatePoolParent();
+            CreatePoolParents();
             SpawnPlayer();
+            InitializeProjectilePool();
             InitializeEnemyPool();
             InitializeStageManager();
             StartBattle();
         }
 
         // 풀 부모 오브젝트 생성
-        private void CreatePoolParent()
+        private void CreatePoolParents()
         {
-            GameObject poolObj = new GameObject("EnemyPool");
-            poolObj.transform.SetParent(transform);
-            _poolParent = poolObj.transform;
+            GameObject enemyPoolObj = new GameObject("EnemyPool");
+            enemyPoolObj.transform.SetParent(transform);
+            _poolParent = enemyPoolObj.transform;
+
+            GameObject projectilePoolObj = new GameObject("ProjectilePool");
+            projectilePoolObj.transform.SetParent(transform);
+            _projectilePoolParent = projectilePoolObj.transform;
+        }
+
+        // 투사체 풀 초기화
+        private void InitializeProjectilePool()
+        {
+            if (_projectilePrefab != null)
+            {
+                _projectilePool = new ProjectilePool(_projectilePrefab, _projectilePoolParent, _projectilePreLoadCount);
+                DIResolver.RegisterInstance(_projectilePool);
+            }
         }
 
         // 플레이어 생성
@@ -57,12 +80,13 @@ namespace Percent111.ProjectNS.Battle
             Vector3 spawnPos = _playerSpawnPoint != null ? _playerSpawnPoint.position : Vector3.zero;
             GameObject playerObj = Instantiate(_playerPrefab, spawnPos, Quaternion.identity);
             _player = playerObj.GetComponent<PlayerUnit>();
+            _playerData = _player.CreateDataProvider();
         }
 
         // 적 풀 초기화
         private void InitializeEnemyPool()
         {
-            _enemyPool = new EnemyPool(_poolParent, _player.transform);
+            _enemyPool = new EnemyPool(_poolParent, _playerData);
 
             if (_meleeEnemyPrefab != null)
             {
@@ -146,7 +170,9 @@ namespace Percent111.ProjectNS.Battle
                 _stageManager.OnAllStagesCleared -= OnAllStagesCleared;
             }
 
-            _enemyPool?.ClearAll();
+            _enemyPool.ClearAll();
+            _projectilePool.ClearAll();
+            DIResolver.UnregisterInstance<ProjectilePool>();
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Percent111.ProjectNS.DI
     public static class DIResolver
     {
         private static List<DIContainerBase> _containers = new List<DIContainerBase>();
+        private static Dictionary<Type, object> _instances = new Dictionary<Type, object>();
         
         // 컨테이너 등록
         public static void Register(DIContainerBase container)
@@ -24,9 +25,28 @@ namespace Percent111.ProjectNS.DI
             _containers.Remove(container);
         }
         
-        // 타입으로 컨테이너 직접 가져오기
-        public static T Resolve<T>() where T : DIContainerBase
+        // 일반 인스턴스 등록
+        public static void RegisterInstance<T>(T instance) where T : class
         {
+            _instances[typeof(T)] = instance;
+        }
+        
+        // 일반 인스턴스 해제
+        public static void UnregisterInstance<T>() where T : class
+        {
+            _instances.Remove(typeof(T));
+        }
+        
+        // 타입으로 컨테이너 직접 가져오기
+        public static T Resolve<T>() where T : class
+        {
+            // 일반 인스턴스에서 먼저 찾기
+            if (_instances.TryGetValue(typeof(T), out object instance))
+            {
+                return instance as T;
+            }
+            
+            // DIContainerBase에서 찾기
             foreach (DIContainerBase container in _containers)
             {
                 if (container is T typedContainer)
@@ -80,6 +100,7 @@ namespace Percent111.ProjectNS.DI
         public static void Clear()
         {
             _containers.Clear();
+            _instances.Clear();
         }
         
         // 등록된 컨테이너 개수

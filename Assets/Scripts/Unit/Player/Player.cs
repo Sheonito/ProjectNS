@@ -17,6 +17,9 @@ namespace Percent111.ProjectNS.Player
         private UIInputAction _inputAction;
         private bool _isInvincible;
 
+        // 무적 상태 여부 (투사체 통과 판정용)
+        public bool IsInvincible => _isInvincible;
+
         protected override void Awake()
         {
             base.Awake();
@@ -136,6 +139,12 @@ namespace Percent111.ProjectNS.Player
             {
                 _stateMachine.ChangeState(PlayerStateType.Damaged);
             }
+        }
+
+        // PlayerDataProvider 생성 (외부에서 호출)
+        public PlayerDataProvider CreateDataProvider()
+        {
+            return new PlayerDataProvider(_movement, OnDamaged);
         }
 
         // 디버그 시각화

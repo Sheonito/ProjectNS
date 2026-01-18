@@ -1055,6 +1055,8 @@ MonoBehaviour:
   _rangedEnemyPrefab: {fileID: 6762521769924476996, guid: 2536b3a58cc2c024ca62424df3ebfd9c, type: 3}
   _stageSettings: {fileID: 11400000, guid: 6073a41dc8244b54487769f9c6d114bf, type: 2}
   _preLoadCount: 10
+  _projectilePrefab: {fileID: -7656240996345980237, guid: b12bd3805225ce740aa2f421bfc40fab, type: 3}
+  _projectilePreLoadCount: 20
   _enemySpawnPoints:
   - {fileID: 1913803100}
 --- !u!4 &1884111599

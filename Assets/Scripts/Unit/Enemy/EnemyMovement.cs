@@ -1,4 +1,5 @@
 using Percent111.ProjectNS.Event;
+using Percent111.ProjectNS.Player;
 using UnityEngine;
 
 namespace Percent111.ProjectNS.Enemy
@@ -14,8 +15,8 @@ namespace Percent111.ProjectNS.Enemy
         private bool _isGrounded;
         private int _facingDirection = 1;
 
-        // 플레이어 탐지 관련
-        private Transform _playerTransform;
+        // 플레이어 데이터 (읽기 전용)
+        private PlayerDataProvider _playerData;
         private bool _isPlayerDetected;
         private bool _wasPlayerDetected;
         private float _loseTargetTimer;
@@ -33,10 +34,10 @@ namespace Percent111.ProjectNS.Enemy
             _settings = settings;
         }
 
-        // 플레이어 Transform 설정 (Enemy에서 호출)
-        public void SetPlayerTransform(Transform playerTransform)
+        // 플레이어 데이터 설정 (Enemy에서 호출)
+        public void SetPlayerData(PlayerDataProvider playerData)
         {
-            _playerTransform = playerTransform;
+            _playerData = playerData;
         }
 
         // 물리 업데이트 (State에서 매 프레임 호출)
@@ -67,9 +68,10 @@ namespace Percent111.ProjectNS.Enemy
         // 카타나 제로 스타일 플레이어 탐지 (기본: 360도 거리 기반)
         private bool DetectPlayer()
         {
-            if (_playerTransform == null) return false;
+            if (_playerData == null) return false;
 
-            Vector2 toPlayer = (Vector2)_playerTransform.position - (Vector2)_transform.position;
+            Vector2 playerPos = _playerData.Position;
+            Vector2 toPlayer = playerPos - (Vector2)_transform.position;
             float distance = toPlayer.magnitude;
 
             // 탐지 거리 초과
@@ -132,9 +134,9 @@ namespace Percent111.ProjectNS.Enemy
         // 플레이어 방향으로 이동 입력 설정
         public void MoveTowardsPlayer()
         {
-            if (_playerTransform == null) return;
+            if (_playerData == null) return;
 
-            float direction = Mathf.Sign(_playerTransform.position.x - _transform.position.x);
+            float direction = Mathf.Sign(_playerData.Position.x - _transform.position.x);
             SetHorizontalInput(direction);
         }
 
@@ -260,9 +262,9 @@ namespace Percent111.ProjectNS.Enemy
         // 공격 범위 내 여부
         public bool IsInAttackRange()
         {
-            if (_playerTransform == null) return false;
+            if (_playerData == null) return false;
 
-            float distance = Vector2.Distance(_transform.position, _playerTransform.position);
+            float distance = Vector2.Distance(_transform.position, _playerData.Position);
             return distance <= _settings.attackRange;
         }
 
@@ -281,9 +283,9 @@ namespace Percent111.ProjectNS.Enemy
         // 플레이어 방향 바라보기
         public void LookAtPlayer()
         {
-            if (_playerTransform == null) return;
+            if (_playerData == null) return;
 
-            float direction = Mathf.Sign(_playerTransform.position.x - _transform.position.x);
+            float direction = Mathf.Sign(_playerData.Position.x - _transform.position.x);
             _facingDirection = (int)direction;
             Vector3 scale = _transform.localScale;
             scale.x = -_facingDirection;
@@ -293,6 +295,28 @@ namespace Percent111.ProjectNS.Enemy
         public bool IsPlayerDetected()
         {
             return _isPlayerDetected;
+        }
+
+        // 현재 위치 반환 (적 자신의 위치)
+        public Vector2 GetPosition()
+        {
+            return _transform.position;
+        }
+
+        // 플레이어 위치 반환
+        public Vector2 GetPlayerPosition()
+        {
+            if (_playerData == null)
+                return Vector2.zero;
+            return _playerData.Position;
+        }
+
+        // 플레이어가 땅에 있는지 확인
+        public bool IsPlayerGrounded()
+        {
+            if (_playerData == null)
+                return false;
+            return _playerData.IsGrounded;
         }
 
 #if UNITY_EDITOR

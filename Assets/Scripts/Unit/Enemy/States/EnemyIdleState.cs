@@ -27,9 +27,24 @@ namespace Percent111.ProjectNS.Enemy
             _movement.UpdateDetection();
             _movement.UpdatePhysics();
 
-            // 플레이어 발견 시 추적
+            // 플레이어 발견 시
             if (_movement.IsPlayerDetected())
             {
+                // 공격 가능하면 공격
+                if (_movement.CanAttack())
+                {
+                    RequestStateChange(EnemyStateType.Attack);
+                    return;
+                }
+
+                // 공격 범위 내에 있으면 대기 (쿨타임 중)
+                if (_movement.IsInAttackRange())
+                {
+                    _movement.LookAtPlayer();
+                    return;
+                }
+
+                // 공격 범위 밖이면 추적
                 RequestStateChange(EnemyStateType.Chase);
                 return;
             }

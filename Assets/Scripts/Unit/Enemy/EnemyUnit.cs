@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Percent111.ProjectNS.Common;
 using Percent111.ProjectNS.Event;
@@ -8,19 +9,19 @@ namespace Percent111.ProjectNS.Enemy
 {
     using Unit = Percent111.ProjectNS.Unit.Unit;
 
-    // 적 기본 클래스
-    public class EnemyUnit : Unit
+    // 적 기본 추상 클래스
+    public abstract class EnemyUnit : Unit
     {
-        [SerializeField] private EnemyMovementSettings _movementSettings;
-        [SerializeField] private EnemyStateSettings _stateSettings;
-        [SerializeField] private Animator _animator;
-        [SerializeField] private SpriteGroup _spriteGroup;
-        [SerializeField] private float _fadeDuration = 0.5f;
+        [SerializeField] protected EnemyMovementSettings _movementSettings;
+        [SerializeField] protected EnemyStateSettings _stateSettings;
+        [SerializeField] protected Animator _animator;
+        [SerializeField] protected SpriteGroup _spriteGroup;
+        [SerializeField] protected float _fadeDuration = 0.5f;
 
-        private EnemyMovement _movement;
-        private Transform _playerTransform;
-        private EnemyStateMachine _stateMachine;
-        private EnemyAnimator _enemyAnimator;
+        protected EnemyMovement _movement;
+        protected PlayerDataProvider _playerData;
+        protected EnemyStateMachine _stateMachine;
+        protected EnemyAnimator _enemyAnimator;
 
         protected override void Awake()
         {
@@ -30,7 +31,7 @@ namespace Percent111.ProjectNS.Enemy
             CreateAnimator();
             CreateStateMachine();
         }
-
+        
         private void OnEnable()
         {
             SubscribeEvents();
@@ -59,18 +60,17 @@ namespace Percent111.ProjectNS.Enemy
             EventBus.Unsubscribe<EnemyDeathCompleteEvent>(OnEnemyDeathComplete);
         }
 
-        // 공격 이벤트 핸들러
-        private void OnEnemyAttack(EnemyAttackEvent evt)
+        // 공격 이벤트 핸들러 (하위 클래스에서 오버라이드 가능)
+        protected virtual void OnEnemyAttack(EnemyAttackEvent evt)
         {
             // 자신의 이벤트만 처리
             if (evt.Owner != _movement)
                 return;
 
-            // 공격 판정 처리 (플레이어에게 데미지)
+            // 기본 근거리 공격 판정 처리 (플레이어에게 데미지)
             if (_movement.IsInAttackRange())
             {
-                PlayerUnit player = _playerTransform?.GetComponent<PlayerUnit>();
-                player?.OnDamaged(evt.Damage);
+                _playerData?.ApplyDamage(evt.Damage);
             }
         }
 
@@ -108,8 +108,8 @@ namespace Percent111.ProjectNS.Enemy
             _spriteGroup.DOFade(1, _fadeDuration);
         }
 
-        // Pool에서 재사용 시 초기화
-        public void ResetForPool()
+        // Pool에서 재사용 시 초기화 (하위 클래스에서 오버라이드 가능)
+        public virtual void ResetForPool()
         {
             // HP 복구
             _currentHp = MaxHp;
@@ -122,13 +122,13 @@ namespace Percent111.ProjectNS.Enemy
         }
 
         // Movement 생성
-        private void CreateMovement()
+        protected virtual void CreateMovement()
         {
             _movement = new EnemyMovement(transform, _movementSettings);
         }
 
-        // 상태 머신 초기화 (Movement와 Animator를 State에 전달)
-        private void CreateStateMachine()
+        // 상태 머신 초기화 (하위 클래스에서 오버라이드 가능)
+        protected virtual void CreateStateMachine()
         {
             _stateMachine = new EnemyStateMachine(_movement);
 
@@ -150,7 +150,7 @@ namespace Percent111.ProjectNS.Enemy
         }
 
         // Animator 생성
-        private void CreateAnimator()
+        protected virtual void CreateAnimator()
         {
             if (_animator != null)
             {
@@ -186,11 +186,11 @@ namespace Percent111.ProjectNS.Enemy
             }
         }
 
-        // 플레이어 Transform 설정 (외부에서 호출)
-        public void SetPlayerTransform(Transform playerTransform)
+        // 플레이어 데이터 설정 (외부에서 호출)
+        public void SetPlayerData(PlayerDataProvider playerData)
         {
-            _playerTransform = playerTransform;
-            _movement.SetPlayerTransform(playerTransform);
+            _playerData = playerData;
+            _movement.SetPlayerData(playerData);
         }
 
         // Separation 힘 업데이트 (StageManager에서 호출)

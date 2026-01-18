@@ -113,7 +113,8 @@ namespace Percent111.ProjectNS.Battle
             for (int i = 0; i < count; i++)
             {
                 Vector3 spawnPos = GetSpawnPosition(i);
-                EnemyType type = GetEnemyTypeForStage(i);
+                // EnemyType type = GetEnemyTypeForStage(i);
+                EnemyType type = EnemyType.Ranged;
 
                 EnemyUnit enemy = _enemyPool.Spawn(type, spawnPos);
                 if (enemy != null)

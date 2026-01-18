@@ -64,9 +64,6 @@ namespace Percent111.ProjectNS.Player
                 _animator.SetAnimationSpeed(autoSpeedFactor);
             }
 
-            // 무적 설정
-            SetInvincible(true);
-
             // 이벤트 발행 (사운드/이펙트용)
             EventBus.Publish(this, new PlayerDiveAttackEvent(_diveDirection));
         }
@@ -198,9 +195,6 @@ namespace Percent111.ProjectNS.Player
 
             // 회전 복원
             _movement.ResetRotation();
-
-            // 무적 해제
-            SetInvincible(false);
 
             // 애니메이션 속도 복원
             _animator.ResetAnimationSpeed();
