@@ -15,16 +15,17 @@ MonoBehaviour:
   characterCenterOffset: 0.5
   attackTargetDuration: 0.4
   attackDamage: 10
-  attackHitTimingRatio: 0.5
+  attackHitTimingRatio: 0.9
   attackRange: 1.5
   slashDashDistance: 1.5
-  slashDashRatio: 0.3
+  slashDashRatio: 0.5
   jumpAttackTargetDuration: 0.5
   jumpAttackForwardSpeed: 10
   jumpAttackJumpMultiplier: 0.5
   dashAttackTargetDuration: 0.5
   dashDistance: 5
   dashMoveRatio: 0.5
+  dashAttackHitTimingRatio: 0.5
   dashDamage: 15
   dashRecoveryTime: 0.15
   dashCooldown: 1

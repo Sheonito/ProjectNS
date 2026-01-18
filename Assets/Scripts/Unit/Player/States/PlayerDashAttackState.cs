@@ -19,6 +19,7 @@ namespace Percent111.ProjectNS.Player
         private bool _isDashing;
         private bool _isRecovering;
         private bool _isCooldownBlocked;
+        private EnemyUnit _targetEnemy;
 
         // 쿨타임 관리 (static)
         private static float _lastDashTime = -999f;
@@ -44,6 +45,7 @@ namespace Percent111.ProjectNS.Player
             _isDashing = true;
             _isRecovering = false;
             _isCooldownBlocked = false;
+            _targetEnemy = null;
 
             // 수평 입력 초기화 (이전 입력 제거)
             _movement.SetHorizontalInput(0);
@@ -83,6 +85,9 @@ namespace Percent111.ProjectNS.Player
             // 무적 상태 설정
             SetInvincible(true);
 
+            // 대시 시작 시 타겟 미리 판정 (전체 대시 범위)
+            FindTarget();
+
             // 대시공격 이벤트 발행 (사운드, 이펙트 등)
             EventBus.Publish(this, new PlayerDashAttackEvent(_dashDirection));
         }
@@ -118,10 +123,10 @@ namespace Percent111.ProjectNS.Player
                     Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, progress);
                     _movement.SetPosition(currentPosition);
 
-                    // 대시 중 공격 판정 (1회만, 1명만)
-                    if (!_hasHit)
+                    // 대시 공격 데미지 적용 (타이밍에 1회만)
+                    if (!_hasHit && progress >= _settings.dashAttackHitTimingRatio)
                     {
-                        PerformDashAttackHit();
+                        ApplyDamageToTarget();
                     }
                 }
                 else
@@ -157,12 +162,13 @@ namespace Percent111.ProjectNS.Player
             }
         }
 
-        // 대시 공격 판정 처리 (State에서 직접 처리, 1명 제한)
-        private void PerformDashAttackHit()
+        // 대시 시작 시 타겟 판정 (전체 대시 범위, 1명만)
+        private void FindTarget()
         {
-            Vector2 position = _movement.GetPosition();
+            Vector2 position = _startPosition;
             float dashDistance = _settings.dashDistance;
 
+            // 대시 전체 범위에서 타겟 판정
             Vector2 attackCenter = position + Vector2.right * _dashDirection * dashDistance * 0.5f;
             Collider2D[] hits = Physics2D.OverlapBoxAll(
                 attackCenter,
@@ -171,16 +177,21 @@ namespace Percent111.ProjectNS.Player
                 _settings.enemyLayer
             );
 
-            // 1명만 타격
+            // 1명만 타겟으로 지정
             if (hits.Length > 0)
             {
-                EnemyUnit enemy = hits[0].GetComponent<EnemyUnit>();
-                if (enemy != null)
-                {
-                    enemy.OnDamaged(_settings.dashDamage);
-                    _hasHit = true;
-                }
+                _targetEnemy = hits[0].GetComponent<EnemyUnit>();
             }
+        }
+
+        // 타겟에게 데미지 적용 (타이밍에 호출)
+        private void ApplyDamageToTarget()
+        {
+            if (_targetEnemy != null)
+            {
+                _targetEnemy.OnDamaged(_settings.dashDamage);
+            }
+            _hasHit = true;
         }
 
         public override void Exit()

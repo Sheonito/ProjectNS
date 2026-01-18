@@ -44,6 +44,9 @@ namespace Percent111.ProjectNS.Player
         [Tooltip("대시 이동 비율 (0~1, 목표 지속 시간 기준)")]
         [Range(0f, 1f)]
         public float dashMoveRatio = 0.5f;
+        [Tooltip("대시 공격 데미지 적용 타이밍 비율 (0~1, 대시 이동 구간 기준)")]
+        [Range(0f, 1f)]
+        public float dashAttackHitTimingRatio = 0.5f;
         [Tooltip("대시 데미지")]
         public int dashDamage = 15;
         [Tooltip("대시 후 딜레이 (후딜레이)")]

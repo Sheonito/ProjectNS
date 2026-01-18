@@ -174,6 +174,9 @@ namespace Percent111.ProjectNS.Enemy
 
             ApplyDamage(damage);
 
+            // 타격 연출 (카메라 쉐이크 + 히트 이펙트)
+            HitEffectManager.Instance?.PlayHitEffect(transform.position);
+
             // HP에 따라 상태 전환
             if (IsDead)
             {

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Percent111.ProjectNS.DI;
 using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Player;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace Percent111.ProjectNS.Battle
@@ -27,6 +28,9 @@ namespace Percent111.ProjectNS.Battle
 
         [Header("Spawn Points")]
         [SerializeField] private List<Transform> _enemySpawnPoints;
+
+        [Header("Cinemachine")]
+        [SerializeField] private CinemachineCamera _cinemachineCamera;
 
         private PlayerUnit _player;
         private PlayerDataProvider _playerData;
@@ -81,6 +85,17 @@ namespace Percent111.ProjectNS.Battle
             GameObject playerObj = Instantiate(_playerPrefab, spawnPos, Quaternion.identity);
             _player = playerObj.GetComponent<PlayerUnit>();
             _playerData = _player.CreateDataProvider();
+
+            SetCinemachineTarget();
+        }
+
+        // Cinemachine 카메라 타겟 설정
+        private void SetCinemachineTarget()
+        {
+            if (_cinemachineCamera != null && _player != null)
+            {
+                _cinemachineCamera.Follow = _player.transform;
+            }
         }
 
         // 적 풀 초기화

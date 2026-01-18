@@ -2,6 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
+using Percent111.ProjectNS.Event;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class HitEffect : MonoBehaviour
@@ -11,7 +12,6 @@ public class HitEffect : MonoBehaviour
 
     [Header("Playback")]
     [SerializeField] private float duration = 0.1f;
-    [SerializeField] private bool destroyOnFinish = true;
 
     private SpriteRenderer spriteRenderer;
     private CancellationTokenSource cts;
@@ -36,6 +36,16 @@ public class HitEffect : MonoBehaviour
         Cancel();
     }
 
+    // Pool 반환용 초기화
+    public void ResetForPool()
+    {
+        Cancel();
+        if (spriteRenderer != null && frames != null && frames.Length > 0)
+        {
+            spriteRenderer.sprite = frames[0];
+        }
+    }
+
     private void Cancel()
     {
         if (cts != null)
@@ -50,7 +60,7 @@ public class HitEffect : MonoBehaviour
     {
         if (frames == null || frames.Length == 0)
         {
-            Debug.LogWarning("HitEffectSpriteAnimatorUniTask: No frames assigned.");
+            Debug.LogWarning("HitEffect: No frames assigned.");
             return;
         }
 
@@ -77,9 +87,23 @@ public class HitEffect : MonoBehaviour
             return;
         }
 
-        if (destroyOnFinish)
-            Destroy(gameObject);
-        else
-            gameObject.SetActive(false);
+        // 이벤트 발행하여 Pool로 반환 요청
+        EventBus.Publish(this, new HitEffectReturnEvent(this));
+    }
+}
+
+// HitEffect 반환 요청 이벤트
+public class HitEffectReturnEvent : IEvent
+{
+    public HitEffect Effect { get; private set; }
+
+    public HitEffectReturnEvent(HitEffect effect)
+    {
+        Effect = effect;
+    }
+
+    public Type GetPublishType()
+    {
+        return typeof(HitEffect);
     }
 }
