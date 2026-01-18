@@ -1057,7 +1057,6 @@ MonoBehaviour:
   _preLoadCount: 10
   _enemySpawnPoints:
   - {fileID: 1913803100}
-  - {fileID: 65743134}
 --- !u!4 &1884111599
 Transform:
   m_ObjectHideFlags: 0

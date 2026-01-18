@@ -20,6 +20,7 @@ namespace Percent111.ProjectNS.Enemy
         private readonly Animator _animator;
         private readonly EnemyMovement _ownerMovement;
         private readonly Dictionary<EnemyStateType, string> _stateToAnimation;
+        private readonly Dictionary<string, float> _animationLengthCache;
 
         // 생성자
         public EnemyAnimator(Animator animator, EnemyMovement ownerMovement)
@@ -35,6 +36,18 @@ namespace Percent111.ProjectNS.Enemy
                 { EnemyStateType.Damaged, AnimationNames.Damaged },
                 { EnemyStateType.Death, AnimationNames.Death }
             };
+            _animationLengthCache = new Dictionary<string, float>();
+            CacheAnimationLengths();
+        }
+
+        // 애니메이션 길이 캐싱 (최초 1회)
+        private void CacheAnimationLengths()
+        {
+            RuntimeAnimatorController controller = _animator.runtimeAnimatorController;
+            foreach (AnimationClip clip in controller.animationClips)
+            {
+                _animationLengthCache[clip.name] = clip.length;
+            }
         }
 
         // 이벤트 구독
@@ -79,6 +92,38 @@ namespace Percent111.ProjectNS.Enemy
         {
             AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
             return stateInfo.normalizedTime >= 1.0f;
+        }
+
+        // 상태 타입에 해당하는 애니메이션 길이 반환
+        public float GetAnimationLength(EnemyStateType stateType)
+        {
+            if (_stateToAnimation.TryGetValue(stateType, out string animationName))
+            {
+                return GetAnimationLength(animationName);
+            }
+            return 0f;
+        }
+
+        // 애니메이션 이름으로 길이 반환
+        public float GetAnimationLength(string animationName)
+        {
+            if (_animationLengthCache.TryGetValue(animationName, out float length))
+            {
+                return length;
+            }
+            return 0f;
+        }
+
+        // 애니메이션 재생 속도 설정
+        public void SetAnimationSpeed(float speed)
+        {
+            _animator.speed = speed;
+        }
+
+        // 애니메이션 재생 속도 초기화 (1.0)
+        public void ResetAnimationSpeed()
+        {
+            _animator.speed = 1f;
         }
     }
 }

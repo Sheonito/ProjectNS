@@ -7,26 +7,37 @@ namespace Percent111.ProjectNS.Enemy
     public class EnemyDeathState : EnemyStateBase
     {
         private readonly EnemyStateSettings _settings;
-        private float _deathTimer;
-        private bool _isDeathComplete;
+        private readonly EnemyAnimator _animator;
+        private float _deathDuration;
 
-        public EnemyDeathState(EnemyMovement movement, EnemyStateSettings settings) : base(movement)
+        public EnemyDeathState(EnemyMovement movement, EnemyStateSettings settings, EnemyAnimator animator) : base(movement)
         {
             _settings = settings;
+            _animator = animator;
         }
 
         public override async void Enter()
         {
             base.Enter();
-            _deathTimer = 0;
-            _isDeathComplete = false;
             _movement.Stop();
 
-            _deathTimer += Time.deltaTime;
+            // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
+            _deathDuration = _settings.deathTargetDuration;
 
-            await UniTask.WaitForSeconds(_settings.deathDuration);
-            _isDeathComplete = true;
+            // 애니메이션 속도 자동 계산 (애니메이션 길이 / 목표 시간)
+            float baseAnimLength = _animator.GetAnimationLength(EnemyStateType.Death);
+            float autoSpeedFactor = baseAnimLength / _deathDuration;
+            _animator.SetAnimationSpeed(autoSpeedFactor);
+
+            await UniTask.WaitForSeconds(_deathDuration);
             PublishDeathCompleteEvent();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            // 애니메이션 속도 복원
+            _animator.ResetAnimationSpeed();
         }
     }
 }

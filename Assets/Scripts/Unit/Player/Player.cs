@@ -47,29 +47,13 @@ namespace Percent111.ProjectNS.Player
         // 이벤트 구독
         private void SubscribeEvents()
         {
-            EventBus.Subscribe<PlayerStateChangedEvent>(OnPlayerStateChanged);
-            EventBus.Subscribe<PlayerJumpEvent>(OnPlayerJump);
             EventBus.Subscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
         }
 
         // 이벤트 구독 해제
         private void UnsubscribeEvents()
         {
-            EventBus.Unsubscribe<PlayerStateChangedEvent>(OnPlayerStateChanged);
-            EventBus.Unsubscribe<PlayerJumpEvent>(OnPlayerJump);
             EventBus.Unsubscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
-        }
-
-        // 상태 변경 이벤트 핸들러
-        private void OnPlayerStateChanged(PlayerStateChangedEvent evt)
-        {
-            // 상태 변경 시 필요한 처리 (애니메이션, 사운드 등)
-        }
-
-        // 점프 이벤트 핸들러
-        private void OnPlayerJump(PlayerJumpEvent evt)
-        {
-            // 점프 시 필요한 처리 (사운드, 이펙트 등)
         }
 
         // 무적 상태 변경 이벤트 핸들러

@@ -37,22 +37,6 @@ namespace Percent111.ProjectNS.Player
         }
     }
 
-    // 플레이어 착지 이벤트 (Movement → State/Player)
-    public class PlayerLandedEvent : IEvent
-    {
-        public float FallVelocity { get; private set; }
-
-        public PlayerLandedEvent(float fallVelocity)
-        {
-            FallVelocity = fallVelocity;
-        }
-
-        public Type GetPublishType()
-        {
-            return typeof(PlayerMovement);
-        }
-    }
-
     // 플레이어 점프 이벤트 (State → Player)
     public class PlayerJumpEvent : IEvent
     {

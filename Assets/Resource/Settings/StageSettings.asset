@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: StageSettings
   m_EditorClassIdentifier: 
   maxStage: 6
-  baseEnemyCount: 3
+  baseEnemyCount: 1
   enemyIncreasePerStage: 2
   rangedChanceIncreasePerStage: 0.1
+  separationRadius: 1
+  separationForce: 5
+  separationUpdateInterval: 3

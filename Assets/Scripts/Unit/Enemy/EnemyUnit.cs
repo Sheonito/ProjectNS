@@ -27,8 +27,8 @@ namespace Percent111.ProjectNS.Enemy
             base.Awake();
 
             CreateMovement();
-            CreateStateMachine();
             CreateAnimator();
+            CreateStateMachine();
         }
 
         private void OnEnable()
@@ -48,7 +48,6 @@ namespace Percent111.ProjectNS.Enemy
         // 이벤트 구독
         private void SubscribeEvents()
         {
-            EventBus.Subscribe<EnemyStateChangedEvent>(OnEnemyStateChanged);
             EventBus.Subscribe<EnemyAttackEvent>(OnEnemyAttack);
             EventBus.Subscribe<EnemyDeathCompleteEvent>(OnEnemyDeathComplete);
         }
@@ -56,19 +55,8 @@ namespace Percent111.ProjectNS.Enemy
         // 이벤트 구독 해제
         private void UnsubscribeEvents()
         {
-            EventBus.Unsubscribe<EnemyStateChangedEvent>(OnEnemyStateChanged);
             EventBus.Unsubscribe<EnemyAttackEvent>(OnEnemyAttack);
             EventBus.Unsubscribe<EnemyDeathCompleteEvent>(OnEnemyDeathComplete);
-        }
-
-        // 상태 변경 이벤트 핸들러
-        private void OnEnemyStateChanged(EnemyStateChangedEvent evt)
-        {
-            // 자신의 이벤트만 처리
-            if (evt.Owner != _movement)
-                return;
-
-            // 상태 변경 시 필요한 처리 (사운드, 이펙트 등)
         }
 
         // 공격 이벤트 핸들러
@@ -139,7 +127,7 @@ namespace Percent111.ProjectNS.Enemy
             _movement = new EnemyMovement(transform, _movementSettings);
         }
 
-        // 상태 머신 초기화
+        // 상태 머신 초기화 (Movement와 Animator를 State에 전달)
         private void CreateStateMachine()
         {
             _stateMachine = new EnemyStateMachine(_movement);
@@ -147,9 +135,9 @@ namespace Percent111.ProjectNS.Enemy
             EnemyIdleState idleState = new EnemyIdleState(_movement, _stateSettings);
             EnemyPatrolState patrolState = new EnemyPatrolState(_movement, _stateSettings);
             EnemyChaseState chaseState = new EnemyChaseState(_movement);
-            EnemyAttackState attackState = new EnemyAttackState(_movement, _stateSettings);
-            EnemyDamagedState damagedState = new EnemyDamagedState(_movement, _stateSettings);
-            EnemyDeathState deathState = new EnemyDeathState(_movement, _stateSettings);
+            EnemyAttackState attackState = new EnemyAttackState(_movement, _stateSettings, _enemyAnimator);
+            EnemyDamagedState damagedState = new EnemyDamagedState(_movement, _stateSettings, _enemyAnimator);
+            EnemyDeathState deathState = new EnemyDeathState(_movement, _stateSettings, _enemyAnimator);
 
             _stateMachine.RegisterState(EnemyStateType.Idle, idleState);
             _stateMachine.RegisterState(EnemyStateType.Patrol, patrolState);

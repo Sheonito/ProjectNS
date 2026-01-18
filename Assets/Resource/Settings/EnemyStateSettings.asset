@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idleDuration: 2
   patrolDuration: 3
-  attackDuration: 0.5
+  attackTargetDuration: 0.7
+  attackHitTimingRatio: 0.5
   attackDamage: 10
-  damagedDuration: 0.3
-  deathDuration: 1
+  damagedTargetDuration: 0.5
+  deathTargetDuration: 1
