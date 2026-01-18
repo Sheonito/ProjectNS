@@ -102,8 +102,16 @@ namespace Percent111.ProjectNS.Player
                 {
                     // 이징 적용 (빠르게 시작, 느리게 끝)
                     float easedProgress = 1f - Mathf.Pow(1f - progress, 2f);
-                    Vector3 targetPosition = _startPosition + Vector3.right * _backstepDirection * _actualBackstepDistance;
-                    Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, easedProgress);
+
+                    // X 위치 계산
+                    float targetX = _startPosition.x + _backstepDirection * _actualBackstepDistance;
+                    float currentX = Mathf.Lerp(_startPosition.x, targetX, easedProgress);
+
+                    // 현재 X 위치에서 지면 Y 가져오기 (경사면 따라 이동)
+                    float? groundY = _movement.GetGroundYAtPosition(currentX);
+                    float currentY = groundY ?? _startPosition.y;
+
+                    Vector3 currentPosition = new Vector3(currentX, currentY, _startPosition.z);
                     _movement.SetPosition(currentPosition);
                 }
                 else

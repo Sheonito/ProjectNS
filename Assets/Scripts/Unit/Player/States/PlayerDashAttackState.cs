@@ -119,8 +119,15 @@ namespace Percent111.ProjectNS.Player
 
                 if (progress < 1f)
                 {
-                    Vector3 targetPosition = _startPosition + Vector3.right * _dashDirection * _actualDashDistance;
-                    Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, progress);
+                    // X 위치 계산
+                    float targetX = _startPosition.x + _dashDirection * _actualDashDistance;
+                    float currentX = Mathf.Lerp(_startPosition.x, targetX, progress);
+
+                    // 현재 X 위치에서 지면 Y 가져오기 (경사면 따라 이동)
+                    float? groundY = _movement.GetGroundYAtPosition(currentX);
+                    float currentY = groundY ?? _startPosition.y;
+
+                    Vector3 currentPosition = new Vector3(currentX, currentY, _startPosition.z);
                     _movement.SetPosition(currentPosition);
 
                     // 대시 공격 데미지 적용 (타이밍에 1회만)

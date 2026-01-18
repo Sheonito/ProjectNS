@@ -295,7 +295,7 @@ namespace Percent111.ProjectNS.Player
             return maxDistance;
         }
 
-        // 특정 방향으로 장애물(벽+경사면)까지의 거리 반환 (공격 대시용)
+        // 특정 방향으로 장애물(벽+가파른 경사면)까지의 거리 반환 (공격 대시용)
         public float GetObstacleDistance(int direction, float maxDistance)
         {
             float minDistance = maxDistance;
@@ -309,26 +309,25 @@ namespace Percent111.ProjectNS.Player
                 minDistance = Mathf.Min(minDistance, wallHit.distance - 0.1f);
             }
 
-            // 2. 경사면 체크 (발 높이에서 앞으로)
+            // 2. 가파른 경사면 체크 (45도 이상만 장애물, 그 이하는 따라 이동 가능)
             Vector2 slopeOrigin = (Vector2)_transform.position + Vector2.down * (_settings.groundCheckOffset - 0.1f);
             RaycastHit2D slopeHit = Physics2D.Raycast(slopeOrigin, dir, maxDistance, _settings.groundLayer);
             if (slopeHit.collider != null)
             {
-                // 경사 각도가 5도 이상이면 장애물로 취급 (평지 제외)
                 float angle = Vector2.Angle(Vector2.up, slopeHit.normal);
-                if (angle > 5f)
+                if (angle > 45f)
                 {
                     minDistance = Mathf.Min(minDistance, slopeHit.distance - 0.1f);
                 }
             }
 
-            // 3. 중간 높이에서도 체크
+            // 3. 중간 높이에서도 가파른 경사면/벽 체크
             Vector2 midOrigin = (Vector2)_transform.position;
             RaycastHit2D midHit = Physics2D.Raycast(midOrigin, dir, maxDistance, _settings.groundLayer);
             if (midHit.collider != null)
             {
                 float angle = Vector2.Angle(Vector2.up, midHit.normal);
-                if (angle > 5f)
+                if (angle > 45f)
                 {
                     minDistance = Mathf.Min(minDistance, midHit.distance - 0.1f);
                 }
@@ -355,6 +354,29 @@ namespace Percent111.ProjectNS.Player
         {
             CheckGround();
         }
+
+        // 특정 위치에서 지면 Y 좌표 반환 (대시/백스탭 경사면 이동용)
+        // 지면이 없으면 null 반환
+        public float? GetGroundYAtPosition(float xPosition)
+        {
+            Vector2 origin = new Vector2(xPosition, _transform.position.y + 1f);
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, 3f, _settings.groundLayer);
+
+            if (hit.collider != null)
+            {
+                // 경사각이 45도 이하인 경우에만 유효
+                float angle = Vector2.Angle(Vector2.up, hit.normal);
+                if (angle <= 45f)
+                {
+                    return hit.point.y + _settings.groundCheckOffset;
+                }
+            }
+            return null;
+        }
+
+        // 지면 레이어 반환 (State에서 직접 Raycast 시 사용)
+        public LayerMask GetGroundLayer() => _settings.groundLayer;
+        public float GetGroundCheckOffset() => _settings.groundCheckOffset;
 
         // Z축 회전 설정 (대각선 공격 등에서 사용)
         public void SetRotation(float angle)

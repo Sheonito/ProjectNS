@@ -76,8 +76,16 @@ namespace Percent111.ProjectNS.Player
             if (_isSlashing && _attackTimer < _slashDuration)
             {
                 float progress = _attackTimer / _slashDuration;
-                Vector3 targetPosition = _startPosition + Vector3.right * _attackDirection * _actualSlashDistance;
-                Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, progress);
+
+                // X 위치 계산
+                float targetX = _startPosition.x + _attackDirection * _actualSlashDistance;
+                float currentX = Mathf.Lerp(_startPosition.x, targetX, progress);
+
+                // 현재 X 위치에서 지면 Y 가져오기 (경사면 따라 이동)
+                float? groundY = _movement.GetGroundYAtPosition(currentX);
+                float currentY = groundY ?? _startPosition.y;
+
+                Vector3 currentPosition = new Vector3(currentX, currentY, _startPosition.z);
                 _movement.SetPosition(currentPosition);
             }
             else

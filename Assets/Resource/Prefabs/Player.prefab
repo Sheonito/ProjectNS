@@ -124,8 +124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d9aeb4013e1e5146883c06bebe65f93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHp: 100
-  _currentHp: 100
+  _maxHp: 10
+  _currentHp: 10
   _movementSettings: {fileID: 11400000, guid: c4e697c8d906998488e326ace582e659, type: 2}
   _stateSettings: {fileID: 11400000, guid: 0b09d9072059b824dbf6be72c8f0e82e, type: 2}
   _animator: {fileID: 3482731379707437798}
