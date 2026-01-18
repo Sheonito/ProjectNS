@@ -47,6 +47,13 @@ namespace Percent111.ProjectNS.Player
                 _movement.CutJump();
             }
 
+            // 대시 공격 입력 시 점프 찍기 공격 (DiveAttack)
+            if (IsDashAttackPressed())
+            {
+                RequestStateChange(PlayerStateType.DiveAttack);
+                return;
+            }
+
             // 공격 입력 (공중에서도 가능)
             if (IsAttackPressed())
             {

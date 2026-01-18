@@ -48,18 +48,38 @@ namespace Percent111.ProjectNS.Player
         private void SubscribeEvents()
         {
             EventBus.Subscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
+            EventBus.Subscribe<PlayerDamageEvent>(OnPlayerDamageEvent);
+            EventBus.Subscribe<PlayerDeathEvent>(OnPlayerDeathEvent);
         }
 
         // 이벤트 구독 해제
         private void UnsubscribeEvents()
         {
             EventBus.Unsubscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
+            EventBus.Unsubscribe<PlayerDamageEvent>(OnPlayerDamageEvent);
+            EventBus.Unsubscribe<PlayerDeathEvent>(OnPlayerDeathEvent);
         }
 
         // 무적 상태 변경 이벤트 핸들러
         private void OnPlayerInvincible(PlayerInvincibleEvent evt)
         {
             _isInvincible = evt.IsInvincible;
+        }
+
+        // 데미지 이벤트 핸들러 (Damaged 상태로 전환)
+        private void OnPlayerDamageEvent(PlayerDamageEvent evt)
+        {
+            // 현재 상태가 Death가 아니면 Damaged 상태로 전환
+            if (_stateMachine.GetCurrentStateType() != PlayerStateType.Death)
+            {
+                EventBus.Publish(this, new PlayerChangeStateRequestEvent(PlayerStateType.Damaged));
+            }
+        }
+
+        // 사망 이벤트 핸들러 (Death 상태로 전환)
+        private void OnPlayerDeathEvent(PlayerDeathEvent evt)
+        {
+            EventBus.Publish(this, new PlayerChangeStateRequestEvent(PlayerStateType.Death));
         }
 
         // PlayerMovement 생성 및 설정
@@ -79,7 +99,10 @@ namespace Percent111.ProjectNS.Player
             PlayerAttackState attackState = new PlayerAttackState(_movement, _stateSettings, _playerAnimator);
             PlayerJumpAttackState jumpAttackState = new PlayerJumpAttackState(_movement, _stateSettings, _playerAnimator);
             PlayerDashAttackState dashAttackState = new PlayerDashAttackState(_movement, _stateSettings, _playerAnimator);
+            PlayerDiveAttackState diveAttackState = new PlayerDiveAttackState(_movement, _stateSettings, _playerAnimator);
             PlayerBackstepState backstepState = new PlayerBackstepState(_movement, _stateSettings, _playerAnimator);
+            PlayerDamagedState damagedState = new PlayerDamagedState(_movement, _stateSettings, _playerAnimator);
+            PlayerDeathState deathState = new PlayerDeathState(_movement, _stateSettings, _playerAnimator);
 
             _stateMachine.RegisterState(PlayerStateType.Idle, idleState);
             _stateMachine.RegisterState(PlayerStateType.Move, moveState);
@@ -87,7 +110,10 @@ namespace Percent111.ProjectNS.Player
             _stateMachine.RegisterState(PlayerStateType.Attack, attackState);
             _stateMachine.RegisterState(PlayerStateType.JumpAttack, jumpAttackState);
             _stateMachine.RegisterState(PlayerStateType.DashAttack, dashAttackState);
+            _stateMachine.RegisterState(PlayerStateType.DiveAttack, diveAttackState);
             _stateMachine.RegisterState(PlayerStateType.Backstep, backstepState);
+            _stateMachine.RegisterState(PlayerStateType.Damaged, damagedState);
+            _stateMachine.RegisterState(PlayerStateType.Death, deathState);
 
             _stateMachine.InitWithState(PlayerStateType.Idle);
         }

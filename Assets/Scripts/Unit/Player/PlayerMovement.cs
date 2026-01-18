@@ -244,6 +244,25 @@ namespace Percent111.ProjectNS.Player
             return maxDistance;
         }
 
+        // 지면까지의 거리 반환 (다이브 공격용)
+        public float GetGroundDistance(float maxDistance)
+        {
+            Vector2 origin = (Vector2)_transform.position + Vector2.down * _settings.groundCheckOffset;
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, maxDistance, _settings.groundLayer);
+
+            if (hit.collider != null)
+            {
+                return hit.distance;
+            }
+            return maxDistance;
+        }
+
+        // 지면 체크만 수행 (외부에서 호출 가능)
+        public void ForceGroundCheck()
+        {
+            CheckGround();
+        }
+
         // Z축 회전 설정 (대각선 공격 등에서 사용)
         public void SetRotation(float angle)
         {

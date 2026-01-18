@@ -145,4 +145,20 @@ namespace Percent111.ProjectNS.Player
             return typeof(PlayerStateBase);
         }
     }
+
+    // 플레이어 점프 찍기 공격 이벤트 (State → Player, 사운드/이펙트용)
+    public class PlayerDiveAttackEvent : IEvent
+    {
+        public int Direction { get; private set; }
+
+        public PlayerDiveAttackEvent(int direction)
+        {
+            Direction = direction;
+        }
+
+        public Type GetPublishType()
+        {
+            return typeof(PlayerStateBase);
+        }
+    }
 }

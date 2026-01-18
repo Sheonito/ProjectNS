@@ -33,6 +33,12 @@ MonoBehaviour:
   backstepMoveRatio: 0.6
   backstepRecoveryTime: 0.1
   backstepCooldown: 0.5
+  diveAttackTargetDuration: 0.4
+  diveAttackDamage: 20
+  diveAttackSpeed: 25
+  diveAttackHorizontalSpeed: 20
+  diveAttackRange: 1.2
+  diveAttackRecoveryTime: 0.2
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128

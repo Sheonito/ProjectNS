@@ -64,6 +64,20 @@ namespace Percent111.ProjectNS.Player
         [Tooltip("백스텝 쿨타임")]
         public float backstepCooldown = 0.5f;
 
+        [Header("Dive Attack (점프 찍기 공격)")]
+        [Tooltip("점프 찍기 공격 상태 목표 지속 시간 (초)")]
+        public float diveAttackTargetDuration = 0.4f;
+        [Tooltip("점프 찍기 공격 데미지")]
+        public int diveAttackDamage = 20;
+        [Tooltip("점프 찍기 하강 속도")]
+        public float diveAttackSpeed = 25f;
+        [Tooltip("점프 찍기 수평 이동 속도")]
+        public float diveAttackHorizontalSpeed = 5f;
+        [Tooltip("점프 찍기 공격 판정 범위")]
+        public float diveAttackRange = 1.2f;
+        [Tooltip("점프 찍기 착지 후 경직 시간")]
+        public float diveAttackRecoveryTime = 0.2f;
+
         [Header("Combat")]
         [Tooltip("적 레이어")]
         public LayerMask enemyLayer;

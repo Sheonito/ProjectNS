@@ -21,6 +21,7 @@ namespace Percent111.ProjectNS.Player
             public const string Fall = "Fall";
             public const string Slide = "Slide";
             public const string Crouch = "Croush";
+            public const string DiveAttack = "Dive-Attack";
         }
 
         private readonly Animator _animator;
@@ -39,6 +40,7 @@ namespace Percent111.ProjectNS.Player
                 { PlayerStateType.Attack, AnimationNames.Attack },
                 { PlayerStateType.JumpAttack, AnimationNames.Attack },
                 { PlayerStateType.DashAttack, AnimationNames.DashAttack },
+                { PlayerStateType.DiveAttack, AnimationNames.DiveAttack },
                 { PlayerStateType.Backstep, AnimationNames.Dash },
                 { PlayerStateType.Damaged, AnimationNames.Hurt },
                 { PlayerStateType.Death, AnimationNames.Death }
