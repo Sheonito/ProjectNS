@@ -10,17 +10,22 @@ namespace Percent111.ProjectNS.Player
         // 애니메이션 이름 상수 (Animator Controller 기준)
         private static class AnimationNames
         {
-            public const string Idle = "IDLE";
-            public const string Move = "MOVE";
-            public const string Attack = "ATTACK";
-            public const string DashAttack = "DASHATTACK";
-            public const string Damaged = "DAMAGED";
-            public const string Death = "DEATH";
-            public const string Jump = "JUMP";
+            public const string Idle = "Idle";
+            public const string Run = "Run";
+            public const string Attack = "Attack";
+            public const string DashAttack = "Dash-Attack";
+            public const string Dash = "Dash";
+            public const string Hurt = "Hurt";
+            public const string Death = "Death";
+            public const string Jump = "JumpMerge";
+            public const string Fall = "Fall";
+            public const string Slide = "Slide";
+            public const string Crouch = "Croush";
         }
 
         private readonly Animator _animator;
         private readonly Dictionary<PlayerStateType, string> _stateToAnimation;
+        private readonly Dictionary<string, float> _animationLengthCache;
 
         // 생성자 (Animator 참조 필요)
         public PlayerAnimator(Animator animator)
@@ -29,14 +34,27 @@ namespace Percent111.ProjectNS.Player
             _stateToAnimation = new Dictionary<PlayerStateType, string>
             {
                 { PlayerStateType.Idle, AnimationNames.Idle },
-                { PlayerStateType.Move, AnimationNames.Move },
+                { PlayerStateType.Move, AnimationNames.Run },
                 { PlayerStateType.Jump, AnimationNames.Jump },
                 { PlayerStateType.Attack, AnimationNames.Attack },
                 { PlayerStateType.JumpAttack, AnimationNames.Attack },
                 { PlayerStateType.DashAttack, AnimationNames.DashAttack },
-                { PlayerStateType.Damaged, AnimationNames.Damaged },
+                { PlayerStateType.Backstep, AnimationNames.Dash },
+                { PlayerStateType.Damaged, AnimationNames.Hurt },
                 { PlayerStateType.Death, AnimationNames.Death }
             };
+            _animationLengthCache = new Dictionary<string, float>();
+            CacheAnimationLengths();
+        }
+
+        // 애니메이션 길이 캐싱 (최초 1회)
+        private void CacheAnimationLengths()
+        {
+            RuntimeAnimatorController controller = _animator.runtimeAnimatorController;
+            foreach (AnimationClip clip in controller.animationClips)
+            {
+                _animationLengthCache[clip.name] = clip.length;
+            }
         }
 
         // 이벤트 구독 (Player의 OnEnable에서 호출)
@@ -75,10 +93,40 @@ namespace Percent111.ProjectNS.Player
         // 현재 애니메이션 재생 완료 여부 확인
         public bool IsCurrentAnimationFinished()
         {
-            if (_animator == null) return true;
-
             AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
             return stateInfo.normalizedTime >= 1.0f;
+        }
+
+        // 상태 타입에 해당하는 애니메이션 길이 반환
+        public float GetAnimationLength(PlayerStateType stateType)
+        {
+            if (_stateToAnimation.TryGetValue(stateType, out string animationName))
+            {
+                return GetAnimationLength(animationName);
+            }
+            return 0f;
+        }
+
+        // 애니메이션 이름으로 길이 반환
+        public float GetAnimationLength(string animationName)
+        {
+            if (_animationLengthCache.TryGetValue(animationName, out float length))
+            {
+                return length;
+            }
+            return 0f;
+        }
+
+        // 애니메이션 재생 속도 설정
+        public void SetAnimationSpeed(float speed)
+        {
+            _animator.speed = speed;
+        }
+
+        // 애니메이션 재생 속도 초기화 (1.0)
+        public void ResetAnimationSpeed()
+        {
+            _animator.speed = 1f;
         }
     }
 }

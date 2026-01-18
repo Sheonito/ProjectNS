@@ -176,7 +176,7 @@ namespace Percent111.ProjectNS.Player
             _transform.position += movement;
         }
 
-        // 방향 전환 (Scale.x = 1이 왼쪽, -1이 오른쪽)
+        // 방향 전환 (Scale.x = 1이 오른쪽, -1이 왼쪽)
         private void UpdateFacingDirection()
         {
             if (Mathf.Abs(_horizontalInput) > 0.01f)
@@ -184,7 +184,7 @@ namespace Percent111.ProjectNS.Player
                 _facingDirection = (int)Mathf.Sign(_horizontalInput);
 
                 Vector3 scale = _transform.localScale;
-                scale.x = -_facingDirection;
+                scale.x = _facingDirection;
                 _transform.localScale = scale;
             }
         }
@@ -213,7 +213,7 @@ namespace Percent111.ProjectNS.Player
             _facingDirection = direction > 0 ? 1 : -1;
 
             Vector3 scale = _transform.localScale;
-            scale.x = -_facingDirection;
+            scale.x = _facingDirection;
             _transform.localScale = scale;
         }
 
@@ -227,6 +227,18 @@ namespace Percent111.ProjectNS.Player
         public void SetPosition(Vector3 position)
         {
             _transform.position = position;
+        }
+
+        // Z축 회전 설정 (대각선 공격 등에서 사용)
+        public void SetRotation(float angle)
+        {
+            _transform.rotation = Quaternion.Euler(0, 0, angle);
+        }
+
+        // 회전 초기화
+        public void ResetRotation()
+        {
+            _transform.rotation = Quaternion.identity;
         }
 
         // 디버그용 Gizmo 그리기 (Player에서 호출)

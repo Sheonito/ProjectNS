@@ -9,7 +9,9 @@ namespace Percent111.ProjectNS.Player
     {
         private readonly PlayerMovement _movement;
         private readonly PlayerStateSettings _settings;
+        private readonly PlayerAnimator _animator;
         private float _dashTimer;
+        private float _dashDuration;
         private int _dashDirection;
         private Vector3 _startPosition;
         private bool _hasHit;
@@ -20,10 +22,11 @@ namespace Percent111.ProjectNS.Player
         // 쿨타임 관리 (static)
         private static float _lastDashTime = -999f;
 
-        public PlayerDashAttackState(PlayerMovement movement, PlayerStateSettings settings) : base()
+        public PlayerDashAttackState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) : base()
         {
             _movement = movement;
             _settings = settings;
+            _animator = animator;
         }
 
         // 쿨타임 체크 (외부에서 호출 가능)
@@ -51,6 +54,15 @@ namespace Percent111.ProjectNS.Player
                 _isDashing = false;
                 return;
             }
+
+            // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
+            float totalDuration = _settings.dashAttackTargetDuration;
+            _dashDuration = totalDuration * _settings.dashMoveRatio;
+
+            // 애니메이션 속도 자동 계산 (애니메이션 길이 / 목표 시간)
+            float baseAnimLength = _animator.GetAnimationLength(PlayerStateType.DashAttack);
+            float autoSpeedFactor = baseAnimLength / totalDuration;
+            _animator.SetAnimationSpeed(autoSpeedFactor);
 
             // 쿨타임 시작
             _lastDashTime = Time.time;
@@ -94,7 +106,7 @@ namespace Percent111.ProjectNS.Player
             // 대시 중
             if (_isDashing)
             {
-                float progress = _dashTimer / _settings.dashDuration;
+                float progress = _dashTimer / _dashDuration;
 
                 if (progress < 1f)
                 {
@@ -173,6 +185,8 @@ namespace Percent111.ProjectNS.Player
 
             // 안전하게 무적 해제 (강제 상태 변경 대비)
             SetInvincible(false);
+            // 애니메이션 속도 복원
+            _animator.ResetAnimationSpeed();
         }
     }
 }

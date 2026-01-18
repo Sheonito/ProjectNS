@@ -1061,6 +1061,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Backstep",
+                    "type": "Button",
+                    "id": "0f4bb3bb-7045-4fe1-afb5-009a52b343c2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1259,6 +1268,17 @@
                     "processors": "",
                     "groups": ";KeyboardMouse",
                     "action": "DashAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f6a0c282-290c-42bc-bd56-b4948996114c",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "Backstep",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -13,21 +13,28 @@ MonoBehaviour:
   m_Name: PlayerStateSettings
   m_EditorClassIdentifier: 
   characterCenterOffset: 0.5
-  attackDuration: 0.4
+  attackTargetDuration: 0.4
   attackDamage: 10
-  attackHitTiming: 0.2
+  attackHitTimingRatio: 0.5
   attackRange: 1.5
   slashDashDistance: 1.5
-  slashDashDuration: 0.15
+  slashDashRatio: 0.3
+  jumpAttackTargetDuration: 0.5
   jumpAttackForwardSpeed: 10
   jumpAttackJumpMultiplier: 0.5
+  dashAttackTargetDuration: 0.5
   dashDistance: 5
-  dashDuration: 0.15
+  dashMoveRatio: 0.5
   dashDamage: 15
   dashRecoveryTime: 0.15
   dashCooldown: 1
+  backstepTargetDuration: 0.3
+  backstepDistance: 3
+  backstepMoveRatio: 0.6
+  backstepRecoveryTime: 0.1
+  backstepCooldown: 0.5
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  damagedDuration: 0.3
-  deathDuration: 1
+  damagedTargetDuration: 0.3
+  deathTargetDuration: 1

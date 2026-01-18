@@ -25,7 +25,7 @@ MonoBehaviour:
   coyoteTime: 0.08
   jumpCutMultiplier: 0.4
   groundCheckDistance: 0.15
-  groundCheckOffset: 0
+  groundCheckOffset: 0.82
   groundLayer:
     serializedVersion: 2
     m_Bits: 256

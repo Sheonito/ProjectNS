@@ -100,4 +100,5 @@ using UnityEngine.InputSystem.Utilities;
         Jump,
         Attack,
         DashAttack,
+        Backstep,
     }

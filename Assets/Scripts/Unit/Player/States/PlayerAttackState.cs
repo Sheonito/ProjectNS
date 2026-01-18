@@ -9,16 +9,21 @@ namespace Percent111.ProjectNS.Player
     {
         private readonly PlayerMovement _movement;
         private readonly PlayerStateSettings _settings;
+        private readonly PlayerAnimator _animator;
         private float _attackTimer;
+        private float _attackDuration;
+        private float _slashDuration;
+        private float _hitTiming;
         private bool _hasHit;
         private int _attackDirection;
         private Vector3 _startPosition;
         private bool _isSlashing;
 
-        public PlayerAttackState(PlayerMovement movement, PlayerStateSettings settings) : base()
+        public PlayerAttackState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) : base()
         {
             _movement = movement;
             _settings = settings;
+            _animator = animator;
         }
 
         public override void Enter()
@@ -27,6 +32,16 @@ namespace Percent111.ProjectNS.Player
             _attackTimer = 0;
             _hasHit = false;
             _startPosition = _movement.GetPosition();
+
+            // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
+            _attackDuration = _settings.attackTargetDuration;
+            _slashDuration = _attackDuration * _settings.slashDashRatio;
+            _hitTiming = _attackDuration * _settings.attackHitTimingRatio;
+
+            // 애니메이션 속도 자동 계산 (애니메이션 길이 / 목표 시간)
+            float baseAnimLength = _animator.GetAnimationLength(PlayerStateType.Attack);
+            float autoSpeedFactor = baseAnimLength / _attackDuration;
+            _animator.SetAnimationSpeed(autoSpeedFactor);
 
             // 수평 입력 초기화 (이전 입력 제거)
             _movement.SetHorizontalInput(0);
@@ -51,9 +66,9 @@ namespace Percent111.ProjectNS.Player
             _attackTimer += Time.deltaTime;
 
             // 슬래시 대시 중 (살짝 앞으로 이동)
-            if (_isSlashing && _attackTimer < _settings.slashDashDuration)
+            if (_isSlashing && _attackTimer < _slashDuration)
             {
-                float progress = _attackTimer / _settings.slashDashDuration;
+                float progress = _attackTimer / _slashDuration;
                 Vector3 targetPosition = _startPosition + Vector3.right * _attackDirection * _settings.slashDashDistance;
                 Vector3 currentPosition = Vector3.Lerp(_startPosition, targetPosition, progress);
                 _movement.SetPosition(currentPosition);
@@ -66,7 +81,7 @@ namespace Percent111.ProjectNS.Player
             }
 
             // 공격 판정 타이밍
-            if (!_hasHit && _attackTimer >= _settings.attackHitTiming)
+            if (!_hasHit && _attackTimer >= _hitTiming)
             {
                 _hasHit = true;
                 PerformAttackHit();
@@ -80,7 +95,7 @@ namespace Percent111.ProjectNS.Player
             }
 
             // 공격 완료
-            if (_attackTimer >= _settings.attackDuration)
+            if (_attackTimer >= _attackDuration)
             {
                 float horizontalInput = GetHorizontalInput();
 
@@ -135,6 +150,8 @@ namespace Percent111.ProjectNS.Player
         public override void Exit()
         {
             base.Exit();
+            // 애니메이션 속도 복원
+            _animator.ResetAnimationSpeed();
         }
     }
 }

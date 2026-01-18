@@ -13,6 +13,7 @@ namespace Percent111.ProjectNS.Player
         Attack,
         JumpAttack,
         DashAttack,
+        Backstep,
         Damaged,
         Death
     }

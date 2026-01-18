@@ -24,8 +24,8 @@ namespace Percent111.ProjectNS.Player
             _inputAction = UIInputAction.Instance;
 
             CreateMovement();
-            CreateStateMachine();
             CreateAnimator();
+            CreateStateMachine();
         }
 
         private void OnEnable()
@@ -84,7 +84,7 @@ namespace Percent111.ProjectNS.Player
             _movement = new PlayerMovement(transform, _movementSettings);
         }
 
-        // 상태 머신 초기화 (Movement를 State에 전달)
+        // 상태 머신 초기화 (Movement와 Animator를 State에 전달)
         private void CreateStateMachine()
         {
             _stateMachine = new PlayerStateMachine();
@@ -92,9 +92,10 @@ namespace Percent111.ProjectNS.Player
             PlayerIdleState idleState = new PlayerIdleState(_movement, _stateSettings);
             PlayerMoveState moveState = new PlayerMoveState(_movement, _stateSettings);
             PlayerJumpState jumpState = new PlayerJumpState(_movement, _stateSettings);
-            PlayerAttackState attackState = new PlayerAttackState(_movement, _stateSettings);
-            PlayerJumpAttackState jumpAttackState = new PlayerJumpAttackState(_movement, _stateSettings);
-            PlayerDashAttackState dashAttackState = new PlayerDashAttackState(_movement, _stateSettings);
+            PlayerAttackState attackState = new PlayerAttackState(_movement, _stateSettings, _playerAnimator);
+            PlayerJumpAttackState jumpAttackState = new PlayerJumpAttackState(_movement, _stateSettings, _playerAnimator);
+            PlayerDashAttackState dashAttackState = new PlayerDashAttackState(_movement, _stateSettings, _playerAnimator);
+            PlayerBackstepState backstepState = new PlayerBackstepState(_movement, _stateSettings, _playerAnimator);
 
             _stateMachine.RegisterState(PlayerStateType.Idle, idleState);
             _stateMachine.RegisterState(PlayerStateType.Move, moveState);
@@ -102,6 +103,7 @@ namespace Percent111.ProjectNS.Player
             _stateMachine.RegisterState(PlayerStateType.Attack, attackState);
             _stateMachine.RegisterState(PlayerStateType.JumpAttack, jumpAttackState);
             _stateMachine.RegisterState(PlayerStateType.DashAttack, dashAttackState);
+            _stateMachine.RegisterState(PlayerStateType.Backstep, backstepState);
 
             _stateMachine.InitWithState(PlayerStateType.Idle);
         }

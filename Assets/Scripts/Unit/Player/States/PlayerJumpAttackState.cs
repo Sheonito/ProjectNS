@@ -4,20 +4,27 @@ using UnityEngine;
 
 namespace Percent111.ProjectNS.Player
 {
-    // 플레이어 점프 공격 상태 (대각선 점프 + 공격)
+    // 플레이어 점프 공격 상태 (대각선 점프 + 공격, 회전 포함)
     public class PlayerJumpAttackState : PlayerStateBase
     {
         private readonly PlayerMovement _movement;
         private readonly PlayerStateSettings _settings;
+        private readonly PlayerAnimator _animator;
         private float _attackTimer;
+        private float _attackDuration;
+        private float _hitTiming;
         private bool _hasHit;
         private bool _hasJumped;
         private int _jumpDirection;
 
-        public PlayerJumpAttackState(PlayerMovement movement, PlayerStateSettings settings) : base()
+        // 대각선 공격 회전 각도 (오른쪽으로 이동 시 -45도, 왼쪽은 +45도)
+        private const float DIAGONAL_ROTATION_ANGLE = 45f;
+
+        public PlayerJumpAttackState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) : base()
         {
             _movement = movement;
             _settings = settings;
+            _animator = animator;
         }
 
         public override void Enter()
@@ -27,6 +34,15 @@ namespace Percent111.ProjectNS.Player
             _hasHit = false;
             _hasJumped = false;
 
+            // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
+            _attackDuration = _settings.jumpAttackTargetDuration;
+            _hitTiming = _attackDuration * _settings.attackHitTimingRatio;
+
+            // 애니메이션 속도 자동 계산 (애니메이션 길이 / 목표 시간)
+            float baseAnimLength = _animator.GetAnimationLength(PlayerStateType.JumpAttack);
+            float autoSpeedFactor = baseAnimLength / _attackDuration;
+            _animator.SetAnimationSpeed(autoSpeedFactor);
+
             // 수평 입력 초기화 (이전 입력 제거)
             _movement.SetHorizontalInput(0);
 
@@ -34,6 +50,10 @@ namespace Percent111.ProjectNS.Player
             Vector2 playerPos = _movement.GetPosition();
             _jumpDirection = GetMouseHorizontalDirection(playerPos);
             _movement.SetFacingDirection(_jumpDirection);
+
+            // 대각선 회전 적용 (이동 방향에 따라 기울임)
+            float rotationAngle = -_jumpDirection * DIAGONAL_ROTATION_ANGLE;
+            _movement.SetRotation(rotationAngle);
 
             // 대각선 점프 실행 (점프력 약간 낮춤 + 전방 이동 속도 설정)
             if (_movement.CanJump())
@@ -43,8 +63,8 @@ namespace Percent111.ProjectNS.Player
                 PublishJumpEvent();
             }
 
-            // 공격 이벤트 발행 (사운드, 이펙트 등)
-            EventBus.Publish(this, new PlayerAttackEvent());
+            // 점프 공격 이벤트 발행 (사운드, 이펙트 등)
+            EventBus.Publish(this, new PlayerJumpAttackEvent(_jumpDirection));
         }
 
         public override void Execute()
@@ -57,7 +77,7 @@ namespace Percent111.ProjectNS.Player
             _attackTimer += Time.deltaTime;
 
             // 공격 판정 타이밍
-            if (!_hasHit && _attackTimer >= _settings.attackHitTiming)
+            if (!_hasHit && _attackTimer >= _hitTiming)
             {
                 _hasHit = true;
                 PerformAttackHit();
@@ -71,7 +91,7 @@ namespace Percent111.ProjectNS.Player
             }
 
             // 공격 완료 후 착지 여부에 따라 상태 전환
-            if (_attackTimer >= _settings.attackDuration)
+            if (_attackTimer >= _attackDuration)
             {
                 float horizontalInput = GetHorizontalInput();
 
@@ -125,6 +145,11 @@ namespace Percent111.ProjectNS.Player
         public override void Exit()
         {
             base.Exit();
+
+            // 회전 초기화
+            _movement.ResetRotation();
+            // 애니메이션 속도 복원
+            _animator.ResetAnimationSpeed();
         }
     }
 }

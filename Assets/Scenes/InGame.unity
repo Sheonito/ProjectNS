@@ -1049,7 +1049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e96f31c805ad3c4985d683f2e8d9c37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 212540124303540321, guid: e3c1ca399857fb745a8eee26dadb16eb, type: 3}
+  _playerPrefab: {fileID: 5372089786174155306, guid: 67f7ff109470f1349a3b20a28df80a4d, type: 3}
   _playerSpawnPoint: {fileID: 2005239864}
   _meleeEnemyPrefab: {fileID: 8835057555676414045, guid: f14b772dde9021742a282cfebf939977, type: 3}
   _rangedEnemyPrefab: {fileID: 6762521769924476996, guid: 2536b3a58cc2c024ca62424df3ebfd9c, type: 3}
@@ -1129,7 +1129,7 @@ Transform:
   m_GameObject: {fileID: 2005239863}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.02, z: 0}
+  m_LocalPosition: {x: 0, y: -0.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

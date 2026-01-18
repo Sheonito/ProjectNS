@@ -28,6 +28,13 @@ namespace Percent111.ProjectNS.Player
             _movement.SetHorizontalInput(horizontalInput);
             _movement.UpdatePhysics();
 
+            // 백스텝 입력
+            if (IsBackstepPressed())
+            {
+                RequestStateChange(PlayerStateType.Backstep);
+                return;
+            }
+
             // 대시공격 입력 (전용 버튼, 쿨타임 체크는 DashAttackState에서)
             if (IsDashAttackPressed())
             {

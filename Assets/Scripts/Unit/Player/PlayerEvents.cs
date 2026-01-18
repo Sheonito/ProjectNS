@@ -129,4 +129,36 @@ namespace Percent111.ProjectNS.Player
             return typeof(PlayerStateBase);
         }
     }
+
+    // 플레이어 점프 공격 이벤트 (State → Player, 사운드/이펙트용)
+    public class PlayerJumpAttackEvent : IEvent
+    {
+        public int Direction { get; private set; }
+
+        public PlayerJumpAttackEvent(int direction)
+        {
+            Direction = direction;
+        }
+
+        public Type GetPublishType()
+        {
+            return typeof(PlayerStateBase);
+        }
+    }
+
+    // 플레이어 백스텝 이벤트 (State → Player, 사운드/이펙트용)
+    public class PlayerBackstepEvent : IEvent
+    {
+        public int Direction { get; private set; }
+
+        public PlayerBackstepEvent(int direction)
+        {
+            Direction = direction;
+        }
+
+        public Type GetPublishType()
+        {
+            return typeof(PlayerStateBase);
+        }
+    }
 }

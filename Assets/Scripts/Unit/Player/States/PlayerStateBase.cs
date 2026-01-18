@@ -66,6 +66,11 @@ namespace Percent111.ProjectNS.Player
             return _inputAction.GetButtonDown(InputActionType.DashAttack);
         }
 
+        protected bool IsBackstepPressed()
+        {
+            return _inputAction.GetButtonDown(InputActionType.Backstep);
+        }
+
         // 상태 전환 요청 (EventBus 사용, StateMachine 직접 참조 없음)
         protected void RequestStateChange(PlayerStateType targetState)
         {
