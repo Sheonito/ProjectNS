@@ -76,8 +76,8 @@ namespace Percent111.ProjectNS.Player
             _dashDirection = GetMouseHorizontalDirection(_startPosition);
             _movement.SetFacingDirection(_dashDirection);
 
-            // 벽 체크: 벽까지의 거리를 고려해 실제 대시 거리 결정
-            _actualDashDistance = _movement.GetWallDistance(_dashDirection, _settings.dashDistance);
+            // 장애물(벽+경사면) 체크: 거리를 고려해 실제 대시 거리 결정
+            _actualDashDistance = _movement.GetObstacleDistance(_dashDirection, _settings.dashDistance);
 
             // 속도 초기화 (대시 중에는 별도로 위치 제어)
             _movement.SetVelocity(Vector2.zero);

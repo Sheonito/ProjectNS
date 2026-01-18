@@ -12,7 +12,6 @@ namespace Percent111.ProjectNS.Player
         private float _horizontalInput;
         private bool _isGrounded;
         private bool _wasGrounded;
-        private float _coyoteTimer;
         private int _facingDirection = 1;
         private bool _jumpCutApplied;
 
@@ -32,20 +31,14 @@ namespace Percent111.ProjectNS.Player
         // 물리 업데이트 (State에서 매 프레임 호출)
         public void UpdatePhysics()
         {
-            UpdateCoyoteTimer();
             CheckGround();
             HandleHorizontalMovement();
             UpdateGravity();
             MoveCharacter();
+            SnapToSlope();
             UpdateFacingDirection();
 
             _wasGrounded = _isGrounded;
-        }
-
-        // 코요티 타이머 업데이트
-        private void UpdateCoyoteTimer()
-        {
-            _coyoteTimer = _isGrounded ? _settings.coyoteTime : _coyoteTimer - Time.deltaTime;
         }
 
         // 지면 감지 (Raycast)
@@ -77,7 +70,6 @@ namespace Percent111.ProjectNS.Player
             if (CanJump())
             {
                 _velocity.y = _settings.jumpForce;
-                _coyoteTimer = 0;
                 _jumpCutApplied = false;
                 _isGrounded = false;
             }
@@ -90,7 +82,6 @@ namespace Percent111.ProjectNS.Player
             {
                 _velocity.y = _settings.jumpForce * jumpMultiplier;
                 _velocity.x = forwardSpeed;
-                _coyoteTimer = 0;
                 _jumpCutApplied = false;
                 _isGrounded = false;
             }
@@ -109,7 +100,7 @@ namespace Percent111.ProjectNS.Player
         // 점프 가능 여부
         public bool CanJump()
         {
-            return _coyoteTimer > 0;
+            return _isGrounded;
         }
 
         // 수평 이동 처리
@@ -174,6 +165,37 @@ namespace Percent111.ProjectNS.Player
         {
             Vector3 movement = new Vector3(_velocity.x, _velocity.y, 0) * Time.deltaTime;
             _transform.position += movement;
+        }
+
+        // 경사면 스냅 (앞쪽 아래로 Raycast하여 경사면 감지 및 Y 위치 조정)
+        private void SnapToSlope()
+        {
+            // 지면에 있고 수평 이동 중일 때만
+            if (!_isGrounded || Mathf.Abs(_velocity.x) < 0.01f) return;
+
+            int moveDir = (int)Mathf.Sign(_velocity.x);
+
+            // 앞쪽 아래 방향으로 Raycast (발 앞쪽 지점에서)
+            Vector2 origin = (Vector2)_transform.position + Vector2.right * moveDir * 0.3f;
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, 1f, _settings.groundLayer);
+
+            if (hit.collider == null) return;
+
+            // 경사 각도 체크 (45도 이상이면 무시 - 벽으로 간주)
+            float slopeAngle = Vector2.Angle(Vector2.up, hit.normal);
+            if (slopeAngle > 45f) return;
+
+            // 현재 발 위치와 경사면 높이 차이 계산
+            float groundY = hit.point.y + _settings.groundCheckOffset;
+            float diff = groundY - _transform.position.y;
+
+            // 경사면이 위에 있으면 (올라가야 할 때) Y 위치 조정
+            if (diff > 0.01f && diff < 0.5f)
+            {
+                _transform.position = new Vector3(_transform.position.x, groundY, _transform.position.z);
+                _velocity.y = 0;
+                _isGrounded = true;
+            }
         }
 
         // 방향 전환 (Scale.x = 1이 오른쪽, -1이 왼쪽)
@@ -242,6 +264,48 @@ namespace Percent111.ProjectNS.Player
                 return Mathf.Max(0, hit.distance - 0.1f);
             }
             return maxDistance;
+        }
+
+        // 특정 방향으로 장애물(벽+경사면)까지의 거리 반환 (공격 대시용)
+        public float GetObstacleDistance(int direction, float maxDistance)
+        {
+            float minDistance = maxDistance;
+            Vector2 dir = new Vector2(direction, 0);
+
+            // 1. 벽 체크 (위쪽)
+            Vector2 wallOrigin = (Vector2)_transform.position + Vector2.up * _settings.wallCheckHeight;
+            RaycastHit2D wallHit = Physics2D.Raycast(wallOrigin, dir, maxDistance, _settings.groundLayer);
+            if (wallHit.collider != null)
+            {
+                minDistance = Mathf.Min(minDistance, wallHit.distance - 0.1f);
+            }
+
+            // 2. 경사면 체크 (발 높이에서 앞으로)
+            Vector2 slopeOrigin = (Vector2)_transform.position + Vector2.down * (_settings.groundCheckOffset - 0.1f);
+            RaycastHit2D slopeHit = Physics2D.Raycast(slopeOrigin, dir, maxDistance, _settings.groundLayer);
+            if (slopeHit.collider != null)
+            {
+                // 경사 각도가 5도 이상이면 장애물로 취급 (평지 제외)
+                float angle = Vector2.Angle(Vector2.up, slopeHit.normal);
+                if (angle > 5f)
+                {
+                    minDistance = Mathf.Min(minDistance, slopeHit.distance - 0.1f);
+                }
+            }
+
+            // 3. 중간 높이에서도 체크
+            Vector2 midOrigin = (Vector2)_transform.position;
+            RaycastHit2D midHit = Physics2D.Raycast(midOrigin, dir, maxDistance, _settings.groundLayer);
+            if (midHit.collider != null)
+            {
+                float angle = Vector2.Angle(Vector2.up, midHit.normal);
+                if (angle > 5f)
+                {
+                    minDistance = Mathf.Min(minDistance, midHit.distance - 0.1f);
+                }
+            }
+
+            return Mathf.Max(0, minDistance);
         }
 
         // 지면까지의 거리 반환 (다이브 공격용)

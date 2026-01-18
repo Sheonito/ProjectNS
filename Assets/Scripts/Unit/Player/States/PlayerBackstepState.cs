@@ -70,8 +70,8 @@ namespace Percent111.ProjectNS.Player
             // 백스텝 방향 (현재 바라보는 방향의 반대)
             _backstepDirection = -_movement.GetFacingDirection();
 
-            // 벽 체크: 벽까지의 거리를 고려해 실제 백스텝 거리 결정
-            _actualBackstepDistance = _movement.GetWallDistance(_backstepDirection, _settings.backstepDistance);
+            // 장애물(벽+경사면) 체크: 거리를 고려해 실제 백스텝 거리 결정
+            _actualBackstepDistance = _movement.GetObstacleDistance(_backstepDirection, _settings.backstepDistance);
 
             // 속도 초기화
             _movement.SetVelocity(Vector2.zero);

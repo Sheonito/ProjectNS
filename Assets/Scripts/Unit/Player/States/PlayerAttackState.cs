@@ -56,10 +56,10 @@ namespace Percent111.ProjectNS.Player
             bool hasEnemyInRange = IsEnemyInAttackRange(playerPos, _settings.attackRange, _settings.enemyLayer);
             _isSlashing = !hasEnemyInRange && _movement.IsGrounded();
 
-            // 슬래시 대시 시 벽 체크
+            // 슬래시 대시 시 장애물(벽+경사면) 체크
             if (_isSlashing)
             {
-                _actualSlashDistance = _movement.GetWallDistance(_attackDirection, _settings.slashDashDistance);
+                _actualSlashDistance = _movement.GetObstacleDistance(_attackDirection, _settings.slashDashDistance);
             }
 
             // 공격 이벤트 발행 (사운드, 이펙트 등)

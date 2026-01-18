@@ -31,8 +31,6 @@ namespace Percent111.ProjectNS.Player
         public float gravity = -50f;
         [Tooltip("최대 낙하 속도")]
         public float maxFallSpeed = -30f;
-        [Tooltip("코요테 타임 (점프 유예 시간)")]
-        public float coyoteTime = 0.08f;
         [Tooltip("점프 버튼 떼면 낮게 점프하는 배율")]
         public float jumpCutMultiplier = 0.4f;
 

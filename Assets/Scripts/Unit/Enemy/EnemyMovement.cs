@@ -48,6 +48,7 @@ namespace Percent111.ProjectNS.Enemy
             UpdateSeparation();
             UpdateGravity();
             MoveCharacter();
+            SnapToSlope();
             UpdateFacingDirection();
             UpdateAttackCooldown();
         }
@@ -227,6 +228,37 @@ namespace Percent111.ProjectNS.Enemy
         {
             Vector3 movement = new Vector3(_velocity.x, _velocity.y, 0) * Time.deltaTime;
             _transform.position += movement;
+        }
+
+        // 경사면 스냅 (앞쪽 아래로 Raycast하여 경사면 감지 및 Y 위치 조정)
+        private void SnapToSlope()
+        {
+            // 지면에 있고 수평 이동 중일 때만
+            if (!_isGrounded || Mathf.Abs(_velocity.x) < 0.01f) return;
+
+            int moveDir = (int)Mathf.Sign(_velocity.x);
+
+            // 앞쪽 아래 방향으로 Raycast (발 앞쪽 지점에서)
+            Vector2 origin = (Vector2)_transform.position + Vector2.right * moveDir * 0.3f;
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, 1f, _settings.groundLayer);
+
+            if (hit.collider == null) return;
+
+            // 경사 각도 체크 (45도 이상이면 무시 - 벽으로 간주)
+            float slopeAngle = Vector2.Angle(Vector2.up, hit.normal);
+            if (slopeAngle > 45f) return;
+
+            // 현재 발 위치와 경사면 높이 차이 계산
+            float groundY = hit.point.y + _settings.groundCheckOffset;
+            float diff = groundY - _transform.position.y;
+
+            // 경사면이 위에 있으면 (올라가야 할 때) Y 위치 조정
+            if (diff > 0.01f && diff < 0.5f)
+            {
+                _transform.position = new Vector3(_transform.position.x, groundY, _transform.position.z);
+                _velocity.y = 0;
+                _isGrounded = true;
+            }
         }
 
         // 방향 전환
