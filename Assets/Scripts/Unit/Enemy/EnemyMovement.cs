@@ -158,13 +158,26 @@ namespace Percent111.ProjectNS.Enemy
         {
             // 1. 땅 안에 묻혀있는지 확인 (위로 Raycast)
             Vector2 upOrigin = (Vector2)_transform.position;
-            RaycastHit2D upHit = Physics2D.Raycast(upOrigin, Vector2.up, 1f, _settings.groundLayer);
+            RaycastHit2D upHit = Physics2D.Raycast(upOrigin, Vector2.up, 2f, _settings.groundLayer);
 
             if (upHit.collider != null)
             {
-                // 땅 안에 있음 → 땅 위로 밀어내기
-                float pushUpY = upHit.point.y + _settings.groundCheckOffset + 0.01f;
-                _transform.position = new Vector3(_transform.position.x, pushUpY, _transform.position.z);
+                // 땅 안에 있음 → 즉시 땅 위로 이동
+                // 충분히 위로 올린 후 아래로 Raycast해서 정확한 표면 찾기
+                Vector2 aboveGround = upHit.point + Vector2.up * 0.1f;
+                RaycastHit2D downHit = Physics2D.Raycast(aboveGround, Vector2.down, 3f, _settings.groundLayer);
+
+                if (downHit.collider != null)
+                {
+                    float groundY = downHit.point.y + _settings.groundCheckOffset;
+                    _transform.position = new Vector3(_transform.position.x, groundY, _transform.position.z);
+                }
+                else
+                {
+                    // fallback: 그냥 위로 밀어냄
+                    _transform.position = new Vector3(_transform.position.x, upHit.point.y + 0.1f, _transform.position.z);
+                }
+
                 _velocity.y = 0;
                 _isGrounded = true;
                 return;
@@ -342,6 +355,12 @@ namespace Percent111.ProjectNS.Enemy
         public bool IsPlayerDetected()
         {
             return _isPlayerDetected;
+        }
+
+        // 지면 체크 강제 실행 (스폰 시 호출)
+        public void ForceGroundCheck()
+        {
+            CheckGround();
         }
 
         // 현재 위치 반환 (적 자신의 위치)

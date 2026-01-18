@@ -37,6 +37,9 @@ namespace Percent111.ProjectNS.Enemy
             SubscribeEvents();
             _stateMachine.SubscribeEvents();
             _enemyAnimator?.SubscribeEvents();
+
+            // 활성화 시 지면 체크 (땅 뚫기 방지)
+            _movement?.ForceGroundCheck();
         }
 
         private void OnDisable()
@@ -119,6 +122,9 @@ namespace Percent111.ProjectNS.Enemy
 
             // 상태 초기화
             _stateMachine.InitWithState(EnemyStateType.Idle);
+
+            // 지면 체크 강제 실행 (땅 뚫기 방지)
+            _movement.ForceGroundCheck();
         }
 
         // Movement 생성
