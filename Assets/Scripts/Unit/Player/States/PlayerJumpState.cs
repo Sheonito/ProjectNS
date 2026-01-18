@@ -47,20 +47,6 @@ namespace Percent111.ProjectNS.Player
                 _movement.CutJump();
             }
 
-            // 백스텝 입력 (공중에서도 가능)
-            if (IsBackstepPressed())
-            {
-                RequestStateChange(PlayerStateType.Backstep);
-                return;
-            }
-
-            // 대시공격 입력 (공중에서도 가능)
-            if (IsDashAttackPressed())
-            {
-                RequestStateChange(PlayerStateType.DashAttack);
-                return;
-            }
-
             // 공격 입력 (공중에서도 가능)
             if (IsAttackPressed())
             {
