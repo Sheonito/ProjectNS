@@ -25,12 +25,13 @@ namespace Percent111.ProjectNS.Player
         private static float _lastDashTime = -999f;
         private static float _dashCooldownDuration;
 
-        public PlayerDashAttackState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) : base()
+        public PlayerDashAttackState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) :
+            base()
         {
             _movement = movement;
             _settings = settings;
             _animator = animator;
-            _dashCooldownDuration = settings.dashCooldown;
+            _dashCooldownDuration = settings.dashAttack.cooldown;
         }
 
         // 쿨타임 체크 (static - 상태 전환 전 체크용)
@@ -42,7 +43,7 @@ namespace Percent111.ProjectNS.Player
         // 쿨타임 체크 (인스턴스용)
         public bool IsOnCooldown()
         {
-            return Time.time - _lastDashTime < _settings.dashCooldown;
+            return Time.time - _lastDashTime < _settings.dashAttack.cooldown;
         }
 
         public override void Enter()
@@ -67,8 +68,8 @@ namespace Percent111.ProjectNS.Player
             }
 
             // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
-            float totalDuration = _settings.dashAttackTargetDuration;
-            _dashDuration = totalDuration * _settings.dashMoveRatio;
+            float totalDuration = _settings.dashAttack.targetDuration;
+            _dashDuration = totalDuration * _settings.dashAttack.moveRatio;
 
             // 애니메이션 속도 자동 계산 (애니메이션 길이 / 목표 시간)
             float baseAnimLength = _animator.GetAnimationLength(PlayerStateType.DashAttack);
@@ -85,7 +86,7 @@ namespace Percent111.ProjectNS.Player
             _movement.SetFacingDirection(_dashDirection);
 
             // 장애물(벽+경사면) 체크: 거리를 고려해 실제 대시 거리 결정
-            _actualDashDistance = _movement.GetObstacleDistance(_dashDirection, _settings.dashDistance);
+            _actualDashDistance = _movement.GetObstacleDistance(_dashDirection, _settings.dashAttack.distance);
 
             // 속도 초기화 (대시 중에는 별도로 위치 제어)
             _movement.SetVelocity(Vector2.zero);
@@ -112,6 +113,7 @@ namespace Percent111.ProjectNS.Player
                 {
                     RequestStateChange(PlayerStateType.Idle);
                 }
+
                 return;
             }
 
@@ -136,7 +138,7 @@ namespace Percent111.ProjectNS.Player
                     _movement.SetPosition(currentPosition);
 
                     // 대시 공격 데미지 적용 (타이밍에 1회만)
-                    if (!_hasHit && progress >= _settings.dashAttackHitTimingRatio)
+                    if (!_hasHit && progress >= _settings.dashAttack.hitTimingRatio)
                     {
                         ApplyDamageToTarget();
                     }
@@ -151,13 +153,14 @@ namespace Percent111.ProjectNS.Player
                     // 무적 해제
                     SetInvincible(false);
                 }
+
                 return;
             }
 
             // 후딜레이 중
             if (_isRecovering)
             {
-                if (_dashTimer >= _settings.dashRecoveryTime)
+                if (_dashTimer >= _settings.dashAttack.recoveryTime)
                 {
                     // 후딜레이 완료 → 상태 전환
                     if (!_movement.IsGrounded())
@@ -187,7 +190,7 @@ namespace Percent111.ProjectNS.Player
         private void FindTarget()
         {
             Vector2 position = _startPosition;
-            float dashDistance = _settings.dashDistance;
+            float dashDistance = _settings.dashAttack.distance;
 
             // 대시 전체 범위에서 타겟 판정
             Vector2 attackCenter = position + Vector2.right * _dashDirection * dashDistance * 0.5f;
@@ -195,7 +198,7 @@ namespace Percent111.ProjectNS.Player
                 attackCenter,
                 new Vector2(dashDistance, 1f),
                 0f,
-                _settings.enemyLayer
+                _settings.combat.enemyLayer
             );
 
             // 1명만 타겟으로 지정 (살아있는 적만)
@@ -215,15 +218,15 @@ namespace Percent111.ProjectNS.Player
         {
             if (_targetEnemy != null && !_targetEnemy.IsDead)
             {
-                _targetEnemy.OnDamaged(_settings.dashDamage);
+                _targetEnemy.OnDamaged(_settings.dashAttack.damage);
             }
+
             _hasHit = true;
         }
 
         public override void Exit()
         {
             base.Exit();
-
             // 안전하게 무적 해제 (강제 상태 변경 대비)
             SetInvincible(false);
             // 애니메이션 속도 복원

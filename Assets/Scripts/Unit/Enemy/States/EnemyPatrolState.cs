@@ -40,7 +40,7 @@ namespace Percent111.ProjectNS.Enemy
 
             // 일정 시간 후 대기
             _patrolTimer += Time.deltaTime;
-            if (_patrolTimer >= _settings.patrolDuration)
+            if (_patrolTimer >= _settings.patrol.duration)
             {
                 RequestStateChange(EnemyStateType.Idle);
                 return;

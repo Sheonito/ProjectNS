@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Percent111.ProjectNS.Battle;
+using Percent111.ProjectNS.Directing;
 using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Event;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace Percent111.ProjectNS.Player
             _movement = movement;
             _settings = settings;
             _animator = animator;
-            _cooldownDuration = settings.jumpAttackCooldown;
+            _cooldownDuration = settings.jumpAttack.cooldown;
         }
 
         public override void Enter()
@@ -54,13 +55,16 @@ namespace Percent111.ProjectNS.Player
             _lastUseTime = Time.time + _cooldownDuration;
 
             // 이전 타격 취소
-            _hitCts?.Cancel();
-            _hitCts?.Dispose();
+            if (_hitCts != null)
+            {
+                _hitCts.Cancel();
+                _hitCts.Dispose();
+            }
             _hitCts = new CancellationTokenSource();
 
             // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
-            _attackDuration = _settings.jumpAttackTargetDuration;
-            _hitTiming = _attackDuration * _settings.attackHitTimingRatio;
+            _attackDuration = _settings.jumpAttack.targetDuration;
+            _hitTiming = _attackDuration * _settings.attack.hitTimingRatio;
 
             // 애니메이션 속도 자동 계산 (애니메이션 길이 / 목표 시간)
             float baseAnimLength = _animator.GetAnimationLength(PlayerStateType.JumpAttack);
@@ -82,7 +86,7 @@ namespace Percent111.ProjectNS.Player
             // 대각선 점프 실행 (점프력 약간 낮춤 + 전방 이동 속도 설정)
             if (_movement.CanJump())
             {
-                _movement.DiagonalJump(_settings.jumpAttackJumpMultiplier, _jumpDirection * _settings.jumpAttackForwardSpeed);
+                _movement.DiagonalJump(_settings.jumpAttack.jumpMultiplier, _jumpDirection * _settings.jumpAttack.forwardSpeed);
                 _movement.ConsumeAllJumps(); // 점프 공격 후 추가 점프 불가
                 _hasJumped = true;
             }
@@ -140,11 +144,11 @@ namespace Percent111.ProjectNS.Player
         {
             Vector2 position = _movement.GetPosition();
             Vector2 attackDirection = GetMouseDirection(position);
-            float range = _settings.attackRange;
+            float range = _settings.attack.range;
 
             // 공격 방향 중심으로 탐색
             Vector2 attackCenter = position + attackDirection * range * 0.5f;
-            Collider2D[] hits = Physics2D.OverlapCircleAll(attackCenter, range, _settings.enemyLayer);
+            Collider2D[] hits = Physics2D.OverlapCircleAll(attackCenter, range, _settings.combat.enemyLayer);
 
             // 공격 방향에 있는 살아있는 적만 수집 (뒤에 있는 적 제외, 죽은 적 제외)
             List<EnemyUnit> enemies = new List<EnemyUnit>();
@@ -183,7 +187,7 @@ namespace Percent111.ProjectNS.Player
         // 순차 타격 (손에 걸리는 듯한 타격감 + 히트스탑)
         private async UniTaskVoid PerformSequentialHitsAsync(List<EnemyUnit> enemies, CancellationToken ct)
         {
-            float hitInterval = _settings.hitInterval;
+            float hitInterval = _settings.attack.hitInterval;
 
             foreach (EnemyUnit enemy in enemies)
             {
@@ -191,16 +195,16 @@ namespace Percent111.ProjectNS.Player
                 if (enemy == null || enemy.IsDead) continue;
 
                 // 데미지 적용
-                enemy.OnDamaged(_settings.attackDamage);
+                enemy.OnDamaged(_settings.attack.damage);
 
                 // 히트스탑 + 카메라쉐이크 + 이펙트 (적 위치에)
-                BattleManager.Directing?.PlayHitEffect(enemy.transform.position);
+                DirectingManager.Instance.PlayHitEffect(enemy.transform.position);
 
                 // 다음 적까지 간격 (마지막 적이 아니면)
                 if (enemy != enemies[enemies.Count - 1])
                 {
                     // realtime으로 대기 (히트스탑 중에도 진행)
-                    await UniTask.Delay((int)(hitInterval * 1000), DelayType.Realtime, cancellationToken: ct);
+                    await UniTask.WaitForSeconds(hitInterval, ignoreTimeScale: true, cancellationToken: ct);
                 }
             }
         }

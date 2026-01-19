@@ -277,10 +277,8 @@ namespace Percent111.ProjectNS.Player
 
         // 외부 접근용 메서드
         public Vector2 GetVelocity() => _velocity;
-        public bool IsGrounded() => _isGrounded || _coyoteTimer > 0; // 코요테 타임 적용
-        public bool IsActuallyGrounded() => _isGrounded; // 실제 지면 체크 (코요테 타임 무시)
+        public bool IsGrounded() => _isGrounded || _coyoteTimer > 0;
         public int GetFacingDirection() => _facingDirection;
-        public bool WasJustLanded() => _isGrounded && !_wasGrounded;
         public Vector3 GetPosition() => _transform.position;
 
         // 방향 설정 (마우스 공격 등에서 사용)

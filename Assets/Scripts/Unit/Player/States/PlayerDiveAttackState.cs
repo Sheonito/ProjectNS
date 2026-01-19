@@ -34,7 +34,7 @@ namespace Percent111.ProjectNS.Player
             _movement = movement;
             _settings = settings;
             _animator = animator;
-            _cooldownDuration = settings.diveAttackCooldown;
+            _cooldownDuration = settings.diveAttack.cooldown;
         }
 
         public override void Enter()
@@ -53,8 +53,8 @@ namespace Percent111.ProjectNS.Player
             _movement.SetHorizontalInput(0);
 
             // 목표 duration 기반 계산
-            _diveDuration = _settings.diveAttackTargetDuration;
-            _recoveryTime = _settings.diveAttackRecoveryTime;
+            _diveDuration = _settings.diveAttack.targetDuration;
+            _recoveryTime = _settings.diveAttack.recoveryTime;
 
             // 마우스 방향에 따라 공격 방향 설정
             Vector2 playerPos = _movement.GetPosition();
@@ -67,8 +67,8 @@ namespace Percent111.ProjectNS.Player
 
             // 하강 속도 설정 (대각선 아래 방향)
             Vector2 diveVelocity = new Vector2(
-                _diveDirection * _settings.diveAttackHorizontalSpeed,
-                -_settings.diveAttackSpeed
+                _diveDirection * _settings.diveAttack.horizontalSpeed,
+                -_settings.diveAttack.speed
             );
             _movement.SetVelocity(diveVelocity);
 
@@ -190,11 +190,11 @@ namespace Percent111.ProjectNS.Player
         private void PerformDiveHit()
         {
             Vector2 position = _movement.GetPosition();
-            float range = _settings.diveAttackRange;
+            float range = _settings.diveAttack.range;
 
             // 대각선 아래 방향으로 판정
             Vector2 attackCenter = position + new Vector2(_diveDirection * range * 0.3f, -range * 0.5f);
-            Collider2D[] hits = Physics2D.OverlapCircleAll(attackCenter, range, _settings.enemyLayer);
+            Collider2D[] hits = Physics2D.OverlapCircleAll(attackCenter, range, _settings.combat.enemyLayer);
 
             // 1명만 타격 (가장 가까운 살아있는 적)
             float closestDistance = float.MaxValue;
@@ -216,7 +216,7 @@ namespace Percent111.ProjectNS.Player
 
             if (closestEnemy != null)
             {
-                closestEnemy.OnDamaged(_settings.diveAttackDamage);
+                closestEnemy.OnDamaged(_settings.diveAttack.damage);
                 _hasHit = true;
 
                 // 적 히트 시 튕겨나감 (할로우 나이트 스타일)
@@ -232,8 +232,8 @@ namespace Percent111.ProjectNS.Player
 
             // 위쪽 + 공격 반대 방향으로 튕김 (우측 공격 → 좌측 대각선 튕김)
             Vector2 bounceVelocity = new Vector2(
-                -_diveDirection * _settings.diveAttackBounceBackForce,
-                _settings.diveAttackBounceForce
+                -_diveDirection * _settings.diveAttack.bounceBackForce,
+                _settings.diveAttack.bounceForce
             );
             _movement.SetVelocity(bounceVelocity);
         }

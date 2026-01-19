@@ -6,33 +6,67 @@ namespace Percent111.ProjectNS.Enemy
     [CreateAssetMenu(fileName = "EnemyStateSettings", menuName = "ProjectNS/Enemy/State Settings")]
     public class EnemyStateSettings : ScriptableObject
     {
-        [Header("Idle State")]
+        [Header("Idle")]
+        public EnemyIdleSettings idle = new EnemyIdleSettings();
+
+        [Header("Patrol")]
+        public EnemyPatrolSettings patrol = new EnemyPatrolSettings();
+
+        [Header("Attack")]
+        public EnemyAttackSettings attack = new EnemyAttackSettings();
+
+        [Header("Damaged")]
+        public EnemyDamagedSettings damaged = new EnemyDamagedSettings();
+
+        [Header("Death")]
+        public EnemyDeathSettings death = new EnemyDeathSettings();
+    }
+
+    [System.Serializable]
+    public class EnemyIdleSettings
+    {
         [Tooltip("대기 상태 유지 시간")]
-        public float idleDuration = 2f;
+        public float duration = 2f;
+    }
 
-        [Header("Patrol State")]
+    [System.Serializable]
+    public class EnemyPatrolSettings
+    {
         [Tooltip("순찰 상태 유지 시간")]
-        public float patrolDuration = 3f;
+        public float duration = 3f;
+    }
 
-        [Header("Attack State")]
+    [System.Serializable]
+    public class EnemyAttackSettings
+    {
         [Tooltip("공격 상태 목표 지속 시간 (초)")]
-        public float attackTargetDuration = 0.5f;
-        [Tooltip("공격 판정 타이밍 비율 (0~1, 목표 지속 시간 기준)")]
+        public float targetDuration = 0.7f;
+        
+        [Tooltip("공격 판정 타이밍 비율 (0~1)")]
         [Range(0f, 1f)]
-        public float attackHitTimingRatio = 0.5f;
+        public float hitTimingRatio = 0.5f;
+        
         [Tooltip("공격 데미지")]
-        public int attackDamage = 10;
+        public int damage = 10;
+        
         [Tooltip("공격 쿨타임 (초)")]
-        public float attackCooldown = 1f;
+        public float cooldown = 1f;
+        
         [Tooltip("공격 범위")]
-        public float attackRange = 1.5f;
+        public float range = 1.5f;
+    }
 
-        [Header("Damaged State")]
+    [System.Serializable]
+    public class EnemyDamagedSettings
+    {
         [Tooltip("피격 상태 목표 지속 시간 (초)")]
-        public float damagedTargetDuration = 0.3f;
+        public float targetDuration = 0.5f;
+    }
 
-        [Header("Death State")]
+    [System.Serializable]
+    public class EnemyDeathSettings
+    {
         [Tooltip("사망 상태 목표 지속 시간 (초)")]
-        public float deathTargetDuration = 1f;
+        public float targetDuration = 1f;
     }
 }

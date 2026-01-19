@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using Percent111.ProjectNS.Battle;
 using Percent111.ProjectNS.Common;
+using Percent111.ProjectNS.Directing;
 using Percent111.ProjectNS.Event;
 using Percent111.ProjectNS.Player;
 using UnityEngine;
@@ -37,17 +38,26 @@ namespace Percent111.ProjectNS.Enemy
         {
             SubscribeEvents();
             _stateMachine.SubscribeEvents();
-            _enemyAnimator?.SubscribeEvents();
+            if (_enemyAnimator != null)
+            {
+                _enemyAnimator.SubscribeEvents();
+            }
 
             // 활성화 시 지면 체크 (땅 뚫기 방지)
-            _movement?.ForceGroundCheck();
+            if (_movement != null)
+            {
+                _movement.ForceGroundCheck();
+            }
         }
 
         private void OnDisable()
         {
             UnsubscribeEvents();
             _stateMachine.UnsubscribeEvents();
-            _enemyAnimator?.UnsubscribeEvents();
+            if (_enemyAnimator != null)
+            {
+                _enemyAnimator.UnsubscribeEvents();
+            }
         }
 
         // 이벤트 구독
@@ -72,9 +82,9 @@ namespace Percent111.ProjectNS.Enemy
                 return;
 
             // 기본 근거리 공격 판정 처리 (플레이어에게 데미지)
-            if (_movement.IsInAttackRange())
+            if (_movement.IsInAttackRange() && _playerData != null)
             {
-                _playerData?.ApplyDamage(evt.Damage);
+                _playerData.ApplyDamage(evt.Damage);
             }
         }
 
@@ -136,7 +146,7 @@ namespace Percent111.ProjectNS.Enemy
             // StateSettings의 공격 설정 적용
             if (_stateSettings != null)
             {
-                _movement.SetAttackSettings(_stateSettings.attackCooldown, _stateSettings.attackRange);
+                _movement.SetAttackSettings(_stateSettings.attack.cooldown, _stateSettings.attack.range);
             }
         }
 
@@ -196,7 +206,7 @@ namespace Percent111.ProjectNS.Enemy
             ApplyDamage(damage);
 
             // 타격 연출 (카메라 쉐이크 + 히트 이펙트)
-            BattleManager.Directing?.PlayHitEffect(transform.position);
+            DirectingManager.Instance.PlayHitEffect(transform.position);
 
             // HP에 따라 상태 전환
             if (IsDead)
@@ -219,7 +229,10 @@ namespace Percent111.ProjectNS.Enemy
         // 위치 초기화 (스폰 시 호출 - 지면 체크 강제 실행)
         public void InitializePosition()
         {
-            _movement?.ForceGroundCheck();
+            if (_movement != null)
+            {
+                _movement.ForceGroundCheck();
+            }
         }
 
         // Separation 힘 업데이트 (StageManager에서 호출)

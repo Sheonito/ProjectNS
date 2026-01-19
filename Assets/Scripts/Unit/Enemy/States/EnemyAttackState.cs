@@ -28,8 +28,8 @@ namespace Percent111.ProjectNS.Enemy
             _movement.StartAttackCooldown();
 
             // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
-            _attackDuration = _settings.attackTargetDuration;
-            _hitTiming = _attackDuration * _settings.attackHitTimingRatio;
+            _attackDuration = _settings.attack.targetDuration;
+            _hitTiming = _attackDuration * _settings.attack.hitTimingRatio;
 
             // 애니메이션 속도 자동 계산 (애니메이션 길이 / 목표 시간)
             float baseAnimLength = _animator.GetAnimationLength(EnemyStateType.Attack);
@@ -47,7 +47,7 @@ namespace Percent111.ProjectNS.Enemy
             if (!_hasAttacked && _attackTimer >= _hitTiming)
             {
                 _hasAttacked = true;
-                PublishAttackEvent(_settings.attackDamage);
+                PublishAttackEvent(_settings.attack.damage);
             }
 
             // 공격 완료

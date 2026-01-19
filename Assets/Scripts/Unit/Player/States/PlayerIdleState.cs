@@ -45,7 +45,7 @@ namespace Percent111.ProjectNS.Player
                 Vector2 playerPos = _movement.GetPosition();
 
                 // 적이 공격 범위 내에 있으면 제자리 공격 (쿨타임 체크)
-                if (IsEnemyInAttackRange(playerPos, _settings.attackRange, _settings.enemyLayer))
+                if (IsEnemyInAttackRange(playerPos, _settings.attack.range, _settings.combat.enemyLayer))
                 {
                     if (!PlayerAttackState.IsOnCooldownStatic())
                     {
@@ -55,7 +55,7 @@ namespace Percent111.ProjectNS.Player
                 else
                 {
                     // 적이 없으면 마우스 Y 위치에 따라 자동 전환 (캐릭터 중심 기준)
-                    MouseVerticalPosition mousePos = GetMouseVerticalPosition(playerPos, _settings.characterCenterOffset);
+                    MouseVerticalPosition mousePos = GetMouseVerticalPosition(playerPos, _settings.character.centerOffset);
 
                     if (mousePos == MouseVerticalPosition.Above)
                     {

@@ -36,10 +36,7 @@ namespace Percent111.ProjectNS.Common
         private async UniTaskVoid HitStopAsync()
         {
             Time.timeScale = 0f;
-            await UniTask.Delay(
-                TimeSpan.FromSeconds(_hitStopDuration),
-                DelayType.UnscaledDeltaTime
-            );
+            await UniTask.WaitForSeconds(_hitStopDuration, ignoreTimeScale: true);
             Time.timeScale = 1f;
         }
     }

@@ -27,7 +27,7 @@ namespace Percent111.ProjectNS.Player
             _movement = movement;
             _settings = settings;
             _animator = animator;
-            _backstepCooldownDuration = settings.backstepCooldown;
+            _backstepCooldownDuration = settings.backstep.cooldown;
         }
 
         // 쿨타임 체크 (static - 상태 전환 전 체크용)
@@ -39,7 +39,7 @@ namespace Percent111.ProjectNS.Player
         // 쿨타임 체크 (인스턴스용)
         public bool IsOnCooldown()
         {
-            return Time.time - _lastBackstepTime < _settings.backstepCooldown;
+            return Time.time - _lastBackstepTime < _settings.backstep.cooldown;
         }
 
         public override void Enter()
@@ -62,8 +62,8 @@ namespace Percent111.ProjectNS.Player
             }
 
             // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
-            float totalDuration = _settings.backstepTargetDuration;
-            _backstepDuration = totalDuration * _settings.backstepMoveRatio;
+            float totalDuration = _settings.backstep.targetDuration;
+            _backstepDuration = totalDuration * _settings.backstep.moveRatio;
 
             // 애니메이션 속도 자동 계산 (애니메이션 길이 / 목표 시간)
             float baseAnimLength = _animator.GetAnimationLength(PlayerStateType.Backstep);
@@ -79,7 +79,7 @@ namespace Percent111.ProjectNS.Player
             _backstepDirection = -_movement.GetFacingDirection();
 
             // 장애물(벽+경사면) 체크: 거리를 고려해 실제 백스텝 거리 결정
-            _actualBackstepDistance = _movement.GetObstacleDistance(_backstepDirection, _settings.backstepDistance);
+            _actualBackstepDistance = _movement.GetObstacleDistance(_backstepDirection, _settings.backstep.distance);
 
             // 속도 초기화
             _movement.SetVelocity(Vector2.zero);
@@ -132,7 +132,7 @@ namespace Percent111.ProjectNS.Player
             // 후딜레이 중
             if (_isRecovering)
             {
-                if (_backstepTimer >= _settings.backstepRecoveryTime)
+                if (_backstepTimer >= _settings.backstep.recoveryTime)
                 {
                     ReturnToPreviousState();
                 }

@@ -76,12 +76,7 @@ namespace Percent111.ProjectNS.Effect
                 for (int i = 0; i < frames.Length; i++)
                 {
                     spriteRenderer.sprite = frames[i];
-                    await UniTask.Delay(
-                        TimeSpan.FromSeconds(frameTime),
-                        DelayType.DeltaTime,
-                        PlayerLoopTiming.Update,
-                        cts.Token
-                    );
+                    await UniTask.WaitForSeconds(frameTime, cancellationToken: cts.Token);
                 }
             }
             catch (OperationCanceledException)

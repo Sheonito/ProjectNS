@@ -1,5 +1,6 @@
-using System;
 using Cysharp.Threading.Tasks;
+using Percent111.ProjectNS.Common;
+using Percent111.ProjectNS.DI;
 using Percent111.ProjectNS.Spawner;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -7,28 +8,29 @@ using UnityEngine;
 namespace Percent111.ProjectNS.Directing
 {
     // 연출 관리자 (히트스탑 + 카메라 쉐이크)
-    public class DirectingManager
+    public class DirectingManager : SingletonMonoBehaviour<DirectingManager>
     {
-        private readonly CinemachineImpulseSource _impulseSource;
-        private readonly float _hitStopDuration;
-        private readonly float _hitStopTimeScale;
-        private readonly float _defaultShakeForce;
+        private DirectingContainer _directingContainer;
+
+        private CinemachineImpulseSource _impulseSource;
+        private float _hitStopDuration;
+        private float _hitStopTimeScale;
+        private float _defaultShakeForce;
 
         private EffectSpawner _effectSpawner;
         private bool _isHitStopping;
 
-        public DirectingManager(
-            CinemachineImpulseSource impulseSource,
-            float hitStopDuration = 0.05f,
-            float hitStopTimeScale = 0f,
-            float defaultShakeForce = 0.5f)
+        public override void Initialize()
         {
-            _impulseSource = impulseSource;
-            _hitStopDuration = hitStopDuration;
-            _hitStopTimeScale = hitStopTimeScale;
-            _defaultShakeForce = defaultShakeForce;
+            base.Initialize();
+            _directingContainer = DIResolver.Resolve<DirectingContainer>();
+            _impulseSource = _directingContainer.impulseSource;
+            _hitStopDuration = _directingContainer.HitStopDuration;
+            _hitStopTimeScale = _directingContainer.HitStopTimeScale;
+            _defaultShakeForce = _directingContainer.CameraShakeForce;
         }
 
+        // EffectSpawner 외부 설정 (InGameSceneEntry에서 호출)
         public void SetEffectSpawner(EffectSpawner effectSpawner)
         {
             _effectSpawner = effectSpawner;
@@ -41,13 +43,12 @@ namespace Percent111.ProjectNS.Directing
             {
                 Time.timeScale = 1f;
             }
+            _effectSpawner = null;
         }
 
         // 카메라 쉐이크 재생
         public void PlayCameraShake(float force = -1)
         {
-            if (_impulseSource == null) return;
-            
             float actualForce = force < 0 ? _defaultShakeForce : force;
             _impulseSource.GenerateImpulse(actualForce);
         }
@@ -70,7 +71,7 @@ namespace Percent111.ProjectNS.Directing
         public void PlayHitEffect(Vector3 position)
         {
             PlayHitFeedback();
-            _effectSpawner?.SpawnHitEffect(position);
+            _effectSpawner.SpawnHitEffect(position);
         }
 
         private async UniTaskVoid HitStopAsync()
@@ -80,7 +81,7 @@ namespace Percent111.ProjectNS.Directing
             Time.timeScale = _hitStopTimeScale;
 
             // realtime으로 대기 (timeScale 영향 받지 않음)
-            await UniTask.Delay((int)(_hitStopDuration * 1000), DelayType.Realtime);
+            await UniTask.WaitForSeconds(_hitStopDuration, ignoreTimeScale: true);
 
             Time.timeScale = originalTimeScale;
             _isHitStopping = false;

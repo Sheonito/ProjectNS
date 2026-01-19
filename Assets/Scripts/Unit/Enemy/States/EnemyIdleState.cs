@@ -50,7 +50,7 @@ namespace Percent111.ProjectNS.Enemy
 
             // 일정 시간 후 순찰
             _idleTimer += Time.deltaTime;
-            if (_idleTimer >= _settings.idleDuration)
+            if (_idleTimer >= _settings.idle.duration)
             {
                 RequestStateChange(EnemyStateType.Patrol);
                 return;

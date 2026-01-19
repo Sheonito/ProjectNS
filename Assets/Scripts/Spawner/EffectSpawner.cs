@@ -1,4 +1,5 @@
 using Percent111.ProjectNS.Common;
+using Percent111.ProjectNS.DI;
 using Percent111.ProjectNS.Effect;
 using Percent111.ProjectNS.Event;
 using UnityEngine;
@@ -14,10 +15,11 @@ namespace Percent111.ProjectNS.Spawner
         private HitEffectPool _hitEffectPool;
         private Transform _poolParent;
 
-        public EffectSpawner(HitEffect hitEffectPrefab, int preLoadCount = 20)
+        public EffectSpawner()
         {
-            _hitEffectPrefab = hitEffectPrefab;
-            _preLoadCount = preLoadCount;
+            EffectSpawnerSettings settings = DIResolver.Resolve<EffectSpawnerSettings>();
+            _hitEffectPrefab = settings.hitEffectPrefab;
+            _preLoadCount = settings.preLoadCount;
         }
 
         public void Initialize(Transform parent)
@@ -28,7 +30,10 @@ namespace Percent111.ProjectNS.Spawner
 
         public void Dispose()
         {
-            _hitEffectPool?.UnsubscribeEvents();
+            if (_hitEffectPool != null)
+            {
+                _hitEffectPool.UnsubscribeEvents();
+            }
         }
 
         private void CreatePoolParent(Transform parent)

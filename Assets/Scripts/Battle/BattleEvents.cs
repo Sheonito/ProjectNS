@@ -1,7 +1,8 @@
 using System;
+using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Event;
 using Percent111.ProjectNS.Player;
-using Percent111.ProjectNS.UI;
+using Percent111.ProjectNS.Scene;
 
 namespace Percent111.ProjectNS.Battle
 {
@@ -20,15 +21,6 @@ namespace Percent111.ProjectNS.Battle
         public Type GetPublishType()
         {
             return typeof(PlayerDeathState);
-        }
-    }
-
-    // 게임 클리어 이벤트
-    public class GameClearEvent : IEvent
-    {
-        public Type GetPublishType()
-        {
-            return typeof(BattleManager);
         }
     }
 
@@ -86,6 +78,38 @@ namespace Percent111.ProjectNS.Battle
         public Type GetPublishType()
         {
             return typeof(StageManager);
+        }
+    }
+
+    // 플레이어 생성 완료 이벤트 (EnemyPool 초기화용)
+    public class PlayerSpawnedEvent : IEvent
+    {
+        public PlayerDataProvider PlayerData { get; private set; }
+
+        public PlayerSpawnedEvent(PlayerDataProvider playerData)
+        {
+            PlayerData = playerData;
+        }
+
+        public Type GetPublishType()
+        {
+            return typeof(BattleManager);
+        }
+    }
+
+    // EnemyPool 초기화 완료 이벤트
+    public class EnemyPoolInitializedEvent : IEvent
+    {
+        public EnemyPool EnemyPool { get; private set; }
+
+        public EnemyPoolInitializedEvent(EnemyPool enemyPool)
+        {
+            EnemyPool = enemyPool;
+        }
+
+        public Type GetPublishType()
+        {
+            return typeof(InGameSceneEntry);
         }
     }
 }

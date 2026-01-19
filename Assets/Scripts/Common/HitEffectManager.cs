@@ -87,7 +87,7 @@ namespace Percent111.ProjectNS.Common
             Time.timeScale = _hitStopTimeScale;
 
             // realtime으로 대기 (timeScale 영향 받지 않음)
-            await UniTask.Delay((int)(_hitStopDuration * 1000), DelayType.Realtime);
+            await UniTask.WaitForSeconds(_hitStopDuration, ignoreTimeScale: true);
 
             Time.timeScale = originalTimeScale;
             _isHitStopping = false;

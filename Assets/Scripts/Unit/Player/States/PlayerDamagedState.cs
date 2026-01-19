@@ -28,7 +28,7 @@ namespace Percent111.ProjectNS.Player
             _movement.SetVelocity(Vector2.zero);
 
             // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
-            _damagedDuration = _settings.damagedTargetDuration;
+            _damagedDuration = _settings.damaged.targetDuration;
 
             // 애니메이션 속도 자동 계산 (애니메이션 길이 / 목표 시간)
             float baseAnimLength = _animator.GetAnimationLength(PlayerStateType.Damaged);

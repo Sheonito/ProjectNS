@@ -100,7 +100,7 @@ namespace Percent111.ProjectNS.Player
         private async UniTaskVoid StartShieldInvincibility()
         {
             _isInvincible = true;
-            await UniTask.Delay((int)(_stateSettings.shieldInvincibleDuration * 1000));
+            await UniTask.WaitForSeconds(_stateSettings.shield.invincibleDuration);
             _isInvincible = false;
         }
 
@@ -213,11 +213,11 @@ namespace Percent111.ProjectNS.Player
 
             // 일반 공격 범위 (노란색)
             Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-            Gizmos.DrawWireSphere(position, _stateSettings.attackRange);
+            Gizmos.DrawWireSphere(position, _stateSettings.attack.range);
 
             // 다이브 공격 범위 (주황색)
             Gizmos.color = new Color(1f, 0.5f, 0f, 0.3f);
-            Gizmos.DrawWireSphere(position, _stateSettings.diveAttackRange);
+            Gizmos.DrawWireSphere(position, _stateSettings.diveAttack.range);
         }
     }
 }

@@ -55,9 +55,12 @@ namespace Percent111.ProjectNS.Battle
             EventBus.Unsubscribe<EnemyReturnToPoolEvent>(OnEnemyReturnToPool);
 
             // 스폰 취소 및 정리
-            _spawnCts?.Cancel();
-            _spawnCts?.Dispose();
-            _spawnCts = null;
+            if (_spawnCts != null)
+            {
+                _spawnCts.Cancel();
+                _spawnCts.Dispose();
+                _spawnCts = null;
+            }
         }
 
         // 적 Pool 반환 이벤트 핸들러
@@ -88,8 +91,11 @@ namespace Percent111.ProjectNS.Battle
             }
 
             // 이전 스폰 취소
-            _spawnCts?.Cancel();
-            _spawnCts?.Dispose();
+            if (_spawnCts != null)
+            {
+                _spawnCts.Cancel();
+                _spawnCts.Dispose();
+            }
             _spawnCts = new CancellationTokenSource();
 
             _currentStage = stageNumber;
@@ -142,7 +148,7 @@ namespace Percent111.ProjectNS.Battle
                 // 마지막 적이 아니면 interval 대기
                 if (i < count - 1 && _settings.spawnInterval > 0)
                 {
-                    await UniTask.Delay(TimeSpan.FromSeconds(_settings.spawnInterval), cancellationToken: ct);
+                    await UniTask.WaitForSeconds(_settings.spawnInterval, cancellationToken: ct);
                 }
             }
         }
@@ -194,7 +200,10 @@ namespace Percent111.ProjectNS.Battle
             _isTimerRunning = false;
 
             // 스폰 취소
-            _spawnCts?.Cancel();
+            if (_spawnCts != null)
+            {
+                _spawnCts.Cancel();
+            }
 
             EventBus.Publish(this, new StageClearedEvent(_currentStage));
 
