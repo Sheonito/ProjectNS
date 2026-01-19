@@ -45,9 +45,6 @@ namespace Percent111.ProjectNS.Player
 
             _damagedTimer += Time.deltaTime;
 
-            // 물리 업데이트 (중력 적용)
-            _movement.UpdatePhysics();
-
             // 피격 경직 완료
             if (_damagedTimer >= _damagedDuration)
             {
@@ -67,6 +64,12 @@ namespace Percent111.ProjectNS.Player
                 }
                 return;
             }
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+            _movement.UpdatePhysics();
         }
 
         public override void Exit()

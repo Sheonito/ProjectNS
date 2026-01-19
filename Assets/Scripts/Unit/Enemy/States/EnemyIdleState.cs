@@ -25,7 +25,6 @@ namespace Percent111.ProjectNS.Enemy
             base.Execute();
 
             _movement.UpdateDetection();
-            _movement.UpdatePhysics();
 
             // 플레이어 발견 시
             if (_movement.IsPlayerDetected())
@@ -56,6 +55,12 @@ namespace Percent111.ProjectNS.Enemy
                 RequestStateChange(EnemyStateType.Patrol);
                 return;
             }
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+            _movement.UpdatePhysics();
         }
     }
 }

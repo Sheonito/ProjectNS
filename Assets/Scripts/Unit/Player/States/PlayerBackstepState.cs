@@ -20,15 +20,23 @@ namespace Percent111.ProjectNS.Player
 
         // 쿨타임 관리 (static)
         private static float _lastBackstepTime = -999f;
+        private static float _backstepCooldownDuration;
 
         public PlayerBackstepState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) : base()
         {
             _movement = movement;
             _settings = settings;
             _animator = animator;
+            _backstepCooldownDuration = settings.backstepCooldown;
         }
 
-        // 쿨타임 체크 (외부에서 호출 가능)
+        // 쿨타임 체크 (static - 상태 전환 전 체크용)
+        public static bool IsOnCooldownStatic()
+        {
+            return Time.time - _lastBackstepTime < _backstepCooldownDuration;
+        }
+
+        // 쿨타임 체크 (인스턴스용)
         public bool IsOnCooldown()
         {
             return Time.time - _lastBackstepTime < _settings.backstepCooldown;
@@ -127,12 +135,21 @@ namespace Percent111.ProjectNS.Player
             // 후딜레이 중
             if (_isRecovering)
             {
-                _movement.UpdatePhysics();
-
                 if (_backstepTimer >= _settings.backstepRecoveryTime)
                 {
                     ReturnToPreviousState();
                 }
+            }
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+
+            // 후딜레이 중에만 물리 업데이트
+            if (_isRecovering)
+            {
+                _movement.UpdatePhysics();
             }
         }
 

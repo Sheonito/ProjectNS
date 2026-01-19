@@ -17,6 +17,7 @@ namespace Percent111.ProjectNS.Player
         public OnEnter onEnter { get; set; }
         public OnExecute onExecute { get; set; }
         public OnExit onExit { get; set; }
+        public OnExecutePhysics onExecutePhysics { get; set; }
 
         protected UIInputAction _inputAction;
 
@@ -33,6 +34,12 @@ namespace Percent111.ProjectNS.Player
         public virtual void Execute()
         {
             onExecute?.Invoke();
+        }
+
+        // 물리 처리 (FixedUpdate에서 호출)
+        public virtual void ExecutePhysics()
+        {
+            onExecutePhysics?.Invoke();
         }
 
         public virtual void Exit()

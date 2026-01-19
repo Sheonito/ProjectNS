@@ -64,7 +64,11 @@ namespace Percent111.ProjectNS.Enemy
                 }
                 return;
             }
+        }
 
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
             _movement.UpdatePhysics();
         }
 

@@ -82,9 +82,6 @@ namespace Percent111.ProjectNS.Player
         {
             base.Execute();
 
-            // 대각선 점프 중에는 입력 무시, 물리만 업데이트
-            _movement.UpdatePhysics();
-
             _attackTimer += Time.deltaTime;
 
             // 공격 판정 타이밍
@@ -94,8 +91,8 @@ namespace Percent111.ProjectNS.Player
                 PerformAttackHit();
             }
 
-            // 대시공격 입력 시 대시공격으로 전환
-            if (IsDashAttackPressed())
+            // 대시공격 입력 시 대시공격으로 전환 (쿨타임 체크 포함)
+            if (IsDashAttackPressed() && !PlayerDashAttackState.IsOnCooldownStatic())
             {
                 RequestStateChange(PlayerStateType.DashAttack);
                 return;
@@ -120,6 +117,12 @@ namespace Percent111.ProjectNS.Player
                 }
                 return;
             }
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+            _movement.UpdatePhysics();
         }
 
         // 공격 판정 처리 (다수 공격, 순차 타격감)

@@ -34,7 +34,7 @@ namespace Percent111.ProjectNS.FSM
             CurState.Enter();
         }
 
-        // 유니티 Update에서 매 프레임 호출
+        // 유니티 Update에서 매 프레임 호출 (입력 처리)
         public virtual void Execute()
         {
             StateTransition transition = _transitions.SingleOrDefault(transiton => transiton.condition?.Invoke() == true);
@@ -52,6 +52,20 @@ namespace Percent111.ProjectNS.FSM
             if (CurState != null)
             {
                 CurState.Execute();
+            }
+        }
+
+        // 유니티 FixedUpdate에서 매 프레임 호출 (물리 처리)
+        public virtual void ExecutePhysics()
+        {
+            if (GlobalState != null)
+            {
+                GlobalState.ExecutePhysics();
+            }
+
+            if (CurState != null)
+            {
+                CurState.ExecutePhysics();
             }
         }
         

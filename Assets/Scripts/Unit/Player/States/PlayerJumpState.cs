@@ -37,9 +37,7 @@ namespace Percent111.ProjectNS.Player
             base.Execute();
 
             float horizontalInput = GetHorizontalInput();
-
             _movement.SetHorizontalInput(horizontalInput);
-            _movement.UpdatePhysics();
 
             // 점프 버튼을 떼면 낮은 점프
             if (!IsJumpHeld())
@@ -81,6 +79,12 @@ namespace Percent111.ProjectNS.Player
                 }
                 return;
             }
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+            _movement.UpdatePhysics();
         }
 
         public override void Exit()

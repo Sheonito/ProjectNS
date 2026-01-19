@@ -35,9 +35,8 @@ namespace Percent111.ProjectNS.Enemy
                 return;
             }
 
-            // 순찰 이동
+            // 순찰 이동 입력 설정
             _movement.Patrol(_patrolDirection);
-            _movement.UpdatePhysics();
 
             // 일정 시간 후 대기
             _patrolTimer += Time.deltaTime;
@@ -46,6 +45,12 @@ namespace Percent111.ProjectNS.Enemy
                 RequestStateChange(EnemyStateType.Idle);
                 return;
             }
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+            _movement.UpdatePhysics();
         }
 
         public override void Exit()

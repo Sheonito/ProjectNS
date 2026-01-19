@@ -39,8 +39,13 @@ namespace Percent111.ProjectNS.Enemy
                 return;
             }
 
-            // 플레이어 방향으로 이동
+            // 플레이어 방향으로 이동 입력 설정
             _movement.MoveTowardsPlayer();
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
             _movement.UpdatePhysics();
         }
 

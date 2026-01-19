@@ -119,9 +119,6 @@ namespace Percent111.ProjectNS.Player
             // 튕김 중 (공중공격은 가능, 포크공격은 불가)
             else if (_isBouncing)
             {
-                // 중력 적용
-                _movement.UpdatePhysics();
-
                 // 공중 공격 입력 체크 (포크공격 제외)
                 if (IsAttackPressed() && !IsDashAttackPressed())
                 {
@@ -228,6 +225,17 @@ namespace Percent111.ProjectNS.Player
                 _settings.diveAttackBounceForce
             );
             _movement.SetVelocity(bounceVelocity);
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+
+            // 튕김 중에만 물리 업데이트 (중력 적용)
+            if (_isBouncing)
+            {
+                _movement.UpdatePhysics();
+            }
         }
 
         public override void Exit()

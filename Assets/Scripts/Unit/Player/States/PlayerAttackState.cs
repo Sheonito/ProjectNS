@@ -82,7 +82,7 @@ namespace Percent111.ProjectNS.Player
 
             _attackTimer += Time.deltaTime;
 
-            // 슬래시 대시 중 (살짝 앞으로 이동)
+            // 슬래시 대시 중 (살짝 앞으로 이동) - 직접 위치 제어
             if (_isSlashing && _attackTimer < _slashDuration)
             {
                 float progress = _attackTimer / _slashDuration;
@@ -101,8 +101,6 @@ namespace Percent111.ProjectNS.Player
             else
             {
                 _isSlashing = false;
-                // 슬래시 완료 후 물리 업데이트
-                _movement.UpdatePhysics();
             }
 
             // 공격 판정 타이밍
@@ -145,6 +143,17 @@ namespace Percent111.ProjectNS.Player
                     RequestStateChange(PlayerStateType.Idle);
                 }
                 return;
+            }
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+
+            // 슬래시 완료 후에만 물리 업데이트
+            if (!_isSlashing)
+            {
+                _movement.UpdatePhysics();
             }
         }
 

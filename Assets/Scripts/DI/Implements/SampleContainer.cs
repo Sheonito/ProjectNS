@@ -17,7 +17,8 @@ namespace Percent111.ProjectNS.DI
 
         public override Type GetAllowedType()
         {
-            return typeof(SampleState);
+            // return typeof(SampleState);
+            return null;
         }
     }   
 }

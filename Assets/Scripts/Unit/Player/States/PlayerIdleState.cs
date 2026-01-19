@@ -23,19 +23,17 @@ namespace Percent111.ProjectNS.Player
         {
             base.Execute();
 
-            _movement.UpdatePhysics();
-
             float horizontalInput = GetHorizontalInput();
 
-            // 백스텝 입력
-            if (IsBackstepPressed())
+            // 백스텝 입력 (쿨타임 체크 포함)
+            if (IsBackstepPressed() && !PlayerBackstepState.IsOnCooldownStatic())
             {
                 RequestStateChange(PlayerStateType.Backstep);
                 return;
             }
 
-            // 대시공격 입력 (전용 버튼, 쿨타임 체크는 DashAttackState에서)
-            if (IsDashAttackPressed())
+            // 대시공격 입력 (쿨타임 체크 포함)
+            if (IsDashAttackPressed() && !PlayerDashAttackState.IsOnCooldownStatic())
             {
                 RequestStateChange(PlayerStateType.DashAttack);
                 return;
@@ -90,6 +88,12 @@ namespace Percent111.ProjectNS.Player
                 RequestStateChange(PlayerStateType.Jump);
                 return;
             }
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+            _movement.UpdatePhysics();
         }
 
         public override void Exit()

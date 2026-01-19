@@ -22,7 +22,8 @@ namespace Percent111.ProjectNS.Event
 
         public Type GetPublishType()
         {
-            return typeof(SampleState);
+            // return typeof(SampleState);
+            return null;
         }
     }
    

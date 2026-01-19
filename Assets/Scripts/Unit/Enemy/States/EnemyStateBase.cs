@@ -9,6 +9,7 @@ namespace Percent111.ProjectNS.Enemy
         public OnEnter onEnter { get; set; }
         public OnExecute onExecute { get; set; }
         public OnExit onExit { get; set; }
+        public OnExecutePhysics onExecutePhysics { get; set; }
 
         protected EnemyMovement _movement;
 
@@ -31,6 +32,12 @@ namespace Percent111.ProjectNS.Enemy
         public virtual void Execute()
         {
             onExecute?.Invoke();
+        }
+
+        // 물리 처리 (FixedUpdate에서 호출)
+        public virtual void ExecutePhysics()
+        {
+            onExecutePhysics?.Invoke();
         }
 
         public virtual void Exit()

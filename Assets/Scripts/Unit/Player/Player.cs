@@ -158,6 +158,11 @@ namespace Percent111.ProjectNS.Player
             _stateMachine.Execute();
         }
 
+        private void FixedUpdate()
+        {
+            _stateMachine.ExecutePhysics();
+        }
+
         // 데미지 처리 (직접 상태 전환)
         public void OnDamaged(int damage)
         {

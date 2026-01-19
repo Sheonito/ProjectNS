@@ -51,9 +51,6 @@ namespace Percent111.ProjectNS.Player
 
             _deathTimer += Time.deltaTime;
 
-            // 물리 업데이트 (중력 적용)
-            _movement.UpdatePhysics();
-
             // 사망 애니메이션 완료 체크
             if (!_isDeathComplete && _deathTimer >= _deathDuration)
             {
@@ -66,6 +63,12 @@ namespace Percent111.ProjectNS.Player
                     EventBus.Publish(this, new GameOverEvent());
                 }
             }
+        }
+
+        public override void ExecutePhysics()
+        {
+            base.ExecutePhysics();
+            _movement.UpdatePhysics();
         }
 
         public override void Exit()
