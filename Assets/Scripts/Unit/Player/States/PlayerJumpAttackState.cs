@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Percent111.ProjectNS.Common;
+using Percent111.ProjectNS.Battle;
 using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Event;
 using UnityEngine;
@@ -85,11 +85,7 @@ namespace Percent111.ProjectNS.Player
                 _movement.DiagonalJump(_settings.jumpAttackJumpMultiplier, _jumpDirection * _settings.jumpAttackForwardSpeed);
                 _movement.ConsumeAllJumps(); // 점프 공격 후 추가 점프 불가
                 _hasJumped = true;
-                PublishJumpEvent();
             }
-
-            // 점프 공격 이벤트 발행 (사운드, 이펙트 등)
-            EventBus.Publish(this, new PlayerJumpAttackEvent(_jumpDirection));
         }
 
         public override void Execute()
@@ -198,7 +194,7 @@ namespace Percent111.ProjectNS.Player
                 enemy.OnDamaged(_settings.attackDamage);
 
                 // 히트스탑 + 카메라쉐이크 + 이펙트 (적 위치에)
-                HitEffectManager.Instance?.PlayHitFeedback(enemy.transform.position);
+                BattleManager.Directing?.PlayHitEffect(enemy.transform.position);
 
                 // 다음 적까지 간격 (마지막 적이 아니면)
                 if (enemy != enemies[enemies.Count - 1])

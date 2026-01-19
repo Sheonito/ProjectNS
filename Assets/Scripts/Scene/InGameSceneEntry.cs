@@ -4,7 +4,7 @@ using Percent111.ProjectNS.Event;
 using UnityEngine;
 namespace Percent111.ProjectNS.Scene
 {
-    public class InGameSceneEntry : MonoBehaviour,ISceneEntry
+    public class InGameSceneEntry : MonoBehaviour, ISceneEntry
     {
         [SerializeField] private BattleManager _battleManager;
         [SerializeField] private DIInstaller _diInstaller;
@@ -13,7 +13,6 @@ namespace Percent111.ProjectNS.Scene
         {
             InstallDI();
             Init();
-            RegisterEvents();
             await _battleManager.Initialize();
             _battleManager.StartBattle();
         }
@@ -31,15 +30,6 @@ namespace Percent111.ProjectNS.Scene
         }
 
         private void Init()
-        {
-        }
-
-        private void RegisterEvents()
-        {
-            EventBus.Subscribe<SampleEvent>(DoSampleEvent);
-        }
-
-        private void DoSampleEvent(SampleEvent sampleEvent)
         {
         }
     }

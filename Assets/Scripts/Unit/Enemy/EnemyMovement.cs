@@ -71,12 +71,6 @@ namespace Percent111.ProjectNS.Enemy
         {
             _wasPlayerDetected = _isPlayerDetected;
             _isPlayerDetected = DetectPlayer();
-
-            // 탐지 상태 변경 시 이벤트 발행
-            if (_isPlayerDetected != _wasPlayerDetected)
-            {
-                EventBus.Publish(this, new EnemyPlayerDetectedEvent(_isPlayerDetected));
-            }
         }
 
         // 카타나 제로 스타일 플레이어 탐지 (기본: 360도 거리 기반)

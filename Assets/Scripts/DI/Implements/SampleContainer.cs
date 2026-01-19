@@ -9,7 +9,7 @@ namespace Percent111.ProjectNS.DI
         public ExtendedButton StayButton { get; private set; }
         public ExtendedButton HitButton { get; private set; }
 
-        public SampleContainer(ExtendedButton stayButton,ExtendedButton hitButton)
+        public SampleContainer(ExtendedButton stayButton, ExtendedButton hitButton)
         {
             StayButton = stayButton;
             HitButton = hitButton;

@@ -38,40 +38,6 @@ namespace Percent111.ProjectNS.Player
         }
     }
 
-    // 플레이어 점프 이벤트 (State → Player)
-    public class PlayerJumpEvent : IEvent
-    {
-        public Type GetPublishType()
-        {
-            return typeof(PlayerStateBase);
-        }
-    }
-
-    // 플레이어 공격 이벤트 (State → Player, 사운드/이펙트용)
-    public class PlayerAttackEvent : IEvent
-    {
-        public Type GetPublishType()
-        {
-            return typeof(PlayerStateBase);
-        }
-    }
-
-    // 플레이어 대시공격 이벤트 (State → Player, 사운드/이펙트용)
-    public class PlayerDashAttackEvent : IEvent
-    {
-        public int Direction { get; private set; }
-
-        public PlayerDashAttackEvent(int direction)
-        {
-            Direction = direction;
-        }
-
-        public Type GetPublishType()
-        {
-            return typeof(PlayerStateBase);
-        }
-    }
-
     // 플레이어 무적 상태 변경 이벤트 (State → Player)
     public class PlayerInvincibleEvent : IEvent
     {
@@ -88,69 +54,12 @@ namespace Percent111.ProjectNS.Player
         }
     }
 
-    // 플레이어 점프 공격 이벤트 (State → Player, 사운드/이펙트용)
-    public class PlayerJumpAttackEvent : IEvent
-    {
-        public int Direction { get; private set; }
-
-        public PlayerJumpAttackEvent(int direction)
-        {
-            Direction = direction;
-        }
-
-        public Type GetPublishType()
-        {
-            return typeof(PlayerStateBase);
-        }
-    }
-
-    // 플레이어 백스텝 이벤트 (State → Player, 사운드/이펙트용)
-    public class PlayerBackstepEvent : IEvent
-    {
-        public int Direction { get; private set; }
-
-        public PlayerBackstepEvent(int direction)
-        {
-            Direction = direction;
-        }
-
-        public Type GetPublishType()
-        {
-            return typeof(PlayerStateBase);
-        }
-    }
-
-    // 플레이어 점프 찍기 공격 이벤트 (State → Player, 사운드/이펙트용)
-    public class PlayerDiveAttackEvent : IEvent
-    {
-        public int Direction { get; private set; }
-
-        public PlayerDiveAttackEvent(int direction)
-        {
-            Direction = direction;
-        }
-
-        public Type GetPublishType()
-        {
-            return typeof(PlayerStateBase);
-        }
-    }
-
     // 방어막 획득 이벤트 (ShieldItem → Player)
     public class ShieldCollectedEvent : IEvent
     {
         public Type GetPublishType()
         {
             return typeof(ShieldItem);
-        }
-    }
-
-    // 방어막 파괴 이벤트 (Player → UI 등)
-    public class ShieldBrokenEvent : IEvent
-    {
-        public Type GetPublishType()
-        {
-            return typeof(PlayerUnit);
         }
     }
 }

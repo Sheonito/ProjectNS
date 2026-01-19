@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8134849093936655441}
   - component: {fileID: 3482731379707437798}
   - component: {fileID: 1833586032109740435}
-  - component: {fileID: 5255687912748113309}
+  - component: {fileID: 458183149993934179}
   - component: {fileID: 2494729488959658805}
   m_Layer: 6
   m_Name: Player
@@ -113,7 +113,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5255687912748113309
+--- !u!114 &458183149993934179
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,16 +122,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5372089786174155306}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d9aeb4013e1e5146883c06bebe65f93, type: 3}
+  m_Script: {fileID: 11500000, guid: 16bb139fe04486941b5d047b127f2a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHp: 10
-  _currentHp: 10
+  _currentHp: 0
   _movementSettings: {fileID: 11400000, guid: c4e697c8d906998488e326ace582e659, type: 2}
   _stateSettings: {fileID: 11400000, guid: 0b09d9072059b824dbf6be72c8f0e82e, type: 2}
   _animator: {fileID: 3482731379707437798}
   _shieldVisual: {fileID: 5881300214419800490}
-  _shieldInvincibleDuration: 1.5
 --- !u!61 &2494729488959658805
 BoxCollider2D:
   m_ObjectHideFlags: 0

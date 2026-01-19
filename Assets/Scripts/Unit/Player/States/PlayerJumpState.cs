@@ -26,9 +26,6 @@ namespace Percent111.ProjectNS.Player
             {
                 _movement.Jump();
                 _hasJumped = true;
-                
-                // 점프 이벤트 발행 (사운드, 이펙트 등 처리용)
-                PublishJumpEvent();
             }
         }
 
@@ -49,7 +46,6 @@ namespace Percent111.ProjectNS.Player
             if (IsJumpPressed() && _movement.CanJump())
             {
                 _movement.Jump();
-                PublishJumpEvent();
             }
 
             // 대시 공격 입력 시 점프 찍기 공격 (DiveAttack) - 쿨타임 체크 포함

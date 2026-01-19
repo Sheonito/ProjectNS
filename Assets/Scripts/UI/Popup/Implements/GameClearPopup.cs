@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Percent111.ProjectNS.UI
 {
     // 게임 클리어 팝업
-    public class GameClearPopup : PopupBase,IRestartable
+    public class GameClearPopup : PopupBase, IRestartable
     {
         [Header("Buttons")]
         [SerializeField] private Button _restartButton;

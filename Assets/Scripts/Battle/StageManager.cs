@@ -33,11 +33,6 @@ namespace Percent111.ProjectNS.Battle
         public float RemainingTime => Mathf.Max(0, _stageTimer);
         public float StageDuration => _settings.stageDuration;
 
-        public event Action<int> OnStageStarted;
-        public event Action<int> OnStageCleared;
-        public event Action OnAllStagesCleared;
-        public event Action<float> OnTimerUpdated;
-
         // 생성자
         public StageManager(StageSettings settings, EnemyPool enemyPool, List<Transform> spawnPoints)
         {
@@ -77,8 +72,6 @@ namespace Percent111.ProjectNS.Battle
             enemy.ResetForPool();
             _enemyPool.Despawn(enemy, EnemyType.Melee); // TODO: EnemyUnit에서 Type 가져오기
 
-            Debug.Log($"Enemy returned to pool! Remaining: {_remainingEnemies}");
-
             if (IsStageCleared)
             {
                 HandleStageClear();
@@ -106,10 +99,8 @@ namespace Percent111.ProjectNS.Battle
             _stageTimer = _settings.stageDuration;
             _isTimerRunning = true;
 
-            Debug.Log($"Stage {stageNumber} Start! Enemy Count: {enemyCount}, Duration: {_settings.stageDuration}s");
-
             SpawnEnemiesAsync(enemyCount, _spawnCts.Token).Forget();
-            OnStageStarted?.Invoke(stageNumber);
+            EventBus.Publish(this, new StageStartedEvent(stageNumber));
         }
 
         // 다음 스테이지 시작
@@ -117,7 +108,6 @@ namespace Percent111.ProjectNS.Battle
         {
             if (_currentStage >= _settings.maxStage)
             {
-                Debug.Log("All stages cleared!");
                 return;
             }
 
@@ -191,8 +181,6 @@ namespace Percent111.ProjectNS.Battle
 
             _enemyPool.Despawn(enemy, type);
 
-            Debug.Log($"Enemy killed! Remaining: {_remainingEnemies}");
-
             if (IsStageCleared)
             {
                 HandleStageClear();
@@ -208,13 +196,11 @@ namespace Percent111.ProjectNS.Battle
             // 스폰 취소
             _spawnCts?.Cancel();
 
-            Debug.Log($"Stage {_currentStage} Cleared!");
-            OnStageCleared?.Invoke(_currentStage);
+            EventBus.Publish(this, new StageClearedEvent(_currentStage));
 
             if (_currentStage >= _settings.maxStage)
             {
-                Debug.Log("Congratulations! All stages cleared!");
-                OnAllStagesCleared?.Invoke();
+                EventBus.Publish(this, new AllStagesClearedEvent());
             }
             else
             {
@@ -244,7 +230,7 @@ namespace Percent111.ProjectNS.Battle
             if (!_isTimerRunning) return;
 
             _stageTimer -= Time.deltaTime;
-            OnTimerUpdated?.Invoke(_stageTimer);
+            EventBus.Publish(this, new StageTimerUpdatedEvent(_stageTimer));
 
             // 시간이 다 되면 자동으로 다음 스테이지
             if (_stageTimer <= 0)
@@ -257,8 +243,6 @@ namespace Percent111.ProjectNS.Battle
         // 스테이지 시간 종료 처리
         private void HandleStageTimeUp()
         {
-            Debug.Log($"Stage {_currentStage} Time Up!");
-
             // 이전 스테이지 몬스터는 유지 (제거하지 않음)
             // 스테이지 클리어 처리 (내부에서 다음 스테이지 자동 이동)
             HandleStageClear();

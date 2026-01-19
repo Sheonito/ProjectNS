@@ -1,12 +1,13 @@
-using System;
 using Percent111.ProjectNS.Scene;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class GameRunner : MonoBehaviour
+namespace Percent111.ProjectNS.Common
 {
-    private void Awake()
+    public class GameRunner : MonoBehaviour
     {
-        SceneEntryManager.Instance.Additive(GameScene.Global);
+        private void Awake()
+        {
+            SceneEntryManager.Instance.Additive(GameScene.Global);
+        }
     }
 }

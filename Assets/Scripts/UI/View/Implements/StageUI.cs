@@ -1,4 +1,5 @@
 using Percent111.ProjectNS.Battle;
+using Percent111.ProjectNS.Event;
 using TMPro;
 using UnityEngine;
 
@@ -24,13 +25,25 @@ namespace Percent111.ProjectNS.UI
         {
             _stageManager = stageManager;
 
-            // 이벤트 구독
-            _stageManager.OnStageStarted += UpdateStageText;
-            _stageManager.OnTimerUpdated += UpdateTimerText;
+            // EventBus 구독
+            EventBus.Subscribe<StageStartedEvent>(OnStageStarted);
+            EventBus.Subscribe<StageTimerUpdatedEvent>(OnTimerUpdated);
 
             // 초기 표시
             UpdateStageText(_stageManager.CurrentStage);
             UpdateTimerText(_stageManager.RemainingTime);
+        }
+
+        // 스테이지 시작 이벤트 핸들러
+        private void OnStageStarted(StageStartedEvent evt)
+        {
+            UpdateStageText(evt.StageNumber);
+        }
+
+        // 타이머 업데이트 이벤트 핸들러
+        private void OnTimerUpdated(StageTimerUpdatedEvent evt)
+        {
+            UpdateTimerText(evt.RemainingTime);
         }
 
         // 스테이지 텍스트 업데이트
@@ -59,11 +72,8 @@ namespace Percent111.ProjectNS.UI
         // 정리
         private void OnDestroy()
         {
-            if (_stageManager != null)
-            {
-                _stageManager.OnStageStarted -= UpdateStageText;
-                _stageManager.OnTimerUpdated -= UpdateTimerText;
-            }
+            EventBus.Unsubscribe<StageStartedEvent>(OnStageStarted);
+            EventBus.Unsubscribe<StageTimerUpdatedEvent>(OnTimerUpdated);
         }
     }
 }

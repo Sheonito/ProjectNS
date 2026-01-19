@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Percent111.ProjectNS.DI;
+using Percent111.ProjectNS.Directing;
+using Percent111.ProjectNS.Effect;
 using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Event;
+using Percent111.ProjectNS.Item;
 using Percent111.ProjectNS.Player;
+using Percent111.ProjectNS.Spawner;
 using Percent111.ProjectNS.UI;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Percent111.ProjectNS.Battle
 {
-    // 전투 관리자 (Player/Enemy 생성, StageManager 관리)
+    // 전투 관리자 (Player/Enemy 생성, StageManager 관리, Spawner/연출 관리)
     public class BattleManager : MonoBehaviour
     {
         [Header("Player")]
@@ -35,9 +38,24 @@ namespace Percent111.ProjectNS.Battle
 
         [Header("Cinemachine")]
         [SerializeField] private CinemachineCamera _cinemachineCamera;
+        [SerializeField] private CinemachineImpulseSource _impulseSource;
 
         [Header("UI")]
         [SerializeField] private StageUI _stageUI;
+
+        [Header("Item Spawner")]
+        [SerializeField] private ShieldItem _shieldItemPrefab;
+        [SerializeField] private float _shieldDropChance = 0.2f;
+        [SerializeField] private int _shieldPreLoadCount = 10;
+
+        [Header("Effect Spawner")]
+        [SerializeField] private HitEffect _hitEffectPrefab;
+        [SerializeField] private int _hitEffectPreLoadCount = 20;
+
+        [Header("Directing")]
+        [SerializeField] private float _hitStopDuration = 0.05f;
+        [SerializeField] private float _hitStopTimeScale = 0f;
+        [SerializeField] private float _cameraShakeForce = 0.5f;
 
         private PlayerUnit _player;
         private PlayerDataProvider _playerData;
@@ -47,11 +65,20 @@ namespace Percent111.ProjectNS.Battle
         private Transform _poolParent;
         private Transform _projectilePoolParent;
 
+        // Spawner & Directing
+        private ItemSpawner _itemSpawner;
+        private EffectSpawner _effectSpawner;
+        private DirectingManager _directingManager;
+
+        // Static accessor for DirectingManager (used by combat systems)
+        public static DirectingManager Directing { get; private set; }
+
         private void OnEnable()
         {
             EventBus.Subscribe<GameOverEvent>(OnGameOver);
             EventBus.Subscribe<GameClearEvent>(OnGameClear);
             EventBus.Subscribe<GameRestartEvent>(OnGameRestart);
+            EventBus.Subscribe<AllStagesClearedEvent>(OnAllStagesCleared);
         }
 
         private void OnDisable()
@@ -59,6 +86,7 @@ namespace Percent111.ProjectNS.Battle
             EventBus.Unsubscribe<GameOverEvent>(OnGameOver);
             EventBus.Unsubscribe<GameClearEvent>(OnGameClear);
             EventBus.Unsubscribe<GameRestartEvent>(OnGameRestart);
+            EventBus.Unsubscribe<AllStagesClearedEvent>(OnAllStagesCleared);
         }
 
         // 초기화
@@ -69,6 +97,45 @@ namespace Percent111.ProjectNS.Battle
             InitializeProjectilePool();
             InitializeEnemyPool();
             InitializeStageManager();
+            InitializeSpawners();
+            InitializeDirectingManager();
+        }
+
+        // ItemSpawner & EffectSpawner 초기화
+        private void InitializeSpawners()
+        {
+            // ItemSpawner 초기화
+            if (_shieldItemPrefab != null)
+            {
+                _itemSpawner = new ItemSpawner(_shieldItemPrefab, _shieldDropChance, _shieldPreLoadCount);
+                _itemSpawner.Initialize(transform);
+            }
+
+            // EffectSpawner 초기화
+            if (_hitEffectPrefab != null)
+            {
+                _effectSpawner = new EffectSpawner(_hitEffectPrefab, _hitEffectPreLoadCount);
+                _effectSpawner.Initialize(transform);
+            }
+        }
+
+        // DirectingManager 초기화
+        private void InitializeDirectingManager()
+        {
+            _directingManager = new DirectingManager(
+                _impulseSource,
+                _hitStopDuration,
+                _hitStopTimeScale,
+                _cameraShakeForce
+            );
+
+            if (_effectSpawner != null)
+            {
+                _directingManager.SetEffectSpawner(_effectSpawner);
+            }
+
+            // Static accessor 설정
+            Directing = _directingManager;
         }
 
         // 풀 부모 오브젝트 생성
@@ -137,10 +204,6 @@ namespace Percent111.ProjectNS.Battle
             _stageManager = new StageManager(_stageSettings, _enemyPool, _enemySpawnPoints);
             _stageManager.SubscribeEvents();
 
-            _stageManager.OnStageStarted += OnStageStarted;
-            _stageManager.OnStageCleared += OnStageCleared;
-            _stageManager.OnAllStagesCleared += OnAllStagesCleared;
-
             // StageUI 초기화
             if (_stageUI != null)
             {
@@ -162,23 +225,9 @@ namespace Percent111.ProjectNS.Battle
             _stageManager.UpdateEnemySeparation();
         }
 
-        // 스테이지 시작 이벤트 핸들러
-        private void OnStageStarted(int stageNumber)
-        {
-            Debug.Log($"BattleManager: Stage {stageNumber} started");
-        }
-
-        // 스테이지 클리어 이벤트 핸들러
-        private void OnStageCleared(int stageNumber)
-        {
-            Debug.Log($"BattleManager: Stage {stageNumber} cleared");
-        }
-
         // 모든 스테이지 클리어 이벤트 핸들러
-        private void OnAllStagesCleared()
+        private void OnAllStagesCleared(AllStagesClearedEvent evt)
         {
-            Debug.Log("BattleManager: All stages cleared!");
-
             // 게임 클리어 이벤트 발행
             EventBus.Publish(this, new GameClearEvent());
         }
@@ -186,8 +235,6 @@ namespace Percent111.ProjectNS.Battle
         // 게임 오버 이벤트 핸들러
         private void OnGameOver(GameOverEvent evt)
         {
-            Debug.Log("BattleManager: Game Over!");
-
             // 게임 오버 팝업 표시
             PopupManager.Instance.Push<GameOverPopup>();
         }
@@ -195,8 +242,6 @@ namespace Percent111.ProjectNS.Battle
         // 게임 클리어 이벤트 핸들러
         private void OnGameClear(GameClearEvent evt)
         {
-            Debug.Log("BattleManager: Game Clear!");
-
             // 게임 클리어 팝업 표시
             PopupManager.Instance?.Push<GameClearPopup>();
         }
@@ -204,8 +249,6 @@ namespace Percent111.ProjectNS.Battle
         // 게임 재시작 이벤트 핸들러
         private void OnGameRestart(GameRestartEvent evt)
         {
-            Debug.Log("BattleManager: Game Restart!");
-
             // 기존 데이터 정리 후 재시작
             RestartBattleAsync().Forget();
         }
@@ -228,9 +271,6 @@ namespace Percent111.ProjectNS.Battle
             if (_stageManager != null)
             {
                 _stageManager.UnsubscribeEvents();
-                _stageManager.OnStageStarted -= OnStageStarted;
-                _stageManager.OnStageCleared -= OnStageCleared;
-                _stageManager.OnAllStagesCleared -= OnAllStagesCleared;
                 _stageManager = null;
             }
 
@@ -250,6 +290,19 @@ namespace Percent111.ProjectNS.Battle
             _projectilePool?.ClearAll();
             DIResolver.UnregisterInstance<ProjectilePool>();
             _projectilePool = null;
+
+            // ItemSpawner 정리
+            _itemSpawner?.Dispose();
+            _itemSpawner = null;
+
+            // EffectSpawner 정리
+            _effectSpawner?.Dispose();
+            _effectSpawner = null;
+
+            // DirectingManager 정리
+            _directingManager?.Dispose();
+            _directingManager = null;
+            Directing = null;
 
             // 풀 부모 오브젝트 제거
             if (_poolParent != null)
@@ -271,14 +324,16 @@ namespace Percent111.ProjectNS.Battle
             if (_stageManager != null)
             {
                 _stageManager.UnsubscribeEvents();
-                _stageManager.OnStageStarted -= OnStageStarted;
-                _stageManager.OnStageCleared -= OnStageCleared;
-                _stageManager.OnAllStagesCleared -= OnAllStagesCleared;
             }
 
-            _enemyPool.ClearAll();
-            _projectilePool.ClearAll();
+            _enemyPool?.ClearAll();
+            _projectilePool?.ClearAll();
             DIResolver.UnregisterInstance<ProjectilePool>();
+
+            _itemSpawner?.Dispose();
+            _effectSpawner?.Dispose();
+            _directingManager?.Dispose();
+            Directing = null;
         }
     }
 }

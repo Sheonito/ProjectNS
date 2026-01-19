@@ -79,9 +79,6 @@ namespace Percent111.ProjectNS.Player
                 float autoSpeedFactor = baseAnimLength / _diveDuration;
                 _animator.SetAnimationSpeed(autoSpeedFactor);
             }
-
-            // 이벤트 발행 (사운드/이펙트용)
-            EventBus.Publish(this, new PlayerDiveAttackEvent(_diveDirection));
         }
 
         public override void Execute()

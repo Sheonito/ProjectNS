@@ -41,22 +41,6 @@ namespace Percent111.ProjectNS.Enemy
         }
     }
 
-    // 적 플레이어 발견 이벤트 (Movement → State)
-    public class EnemyPlayerDetectedEvent : IEvent
-    {
-        public bool IsDetected { get; private set; }
-
-        public EnemyPlayerDetectedEvent(bool isDetected)
-        {
-            IsDetected = isDetected;
-        }
-
-        public Type GetPublishType()
-        {
-            return typeof(EnemyMovement);
-        }
-    }
-
     // 적 공격 이벤트 (State → Enemy)
     public class EnemyAttackEvent : IEvent
     {

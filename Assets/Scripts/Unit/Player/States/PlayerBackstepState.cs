@@ -83,9 +83,6 @@ namespace Percent111.ProjectNS.Player
 
             // 속도 초기화
             _movement.SetVelocity(Vector2.zero);
-
-            // 백스텝 이벤트 발행 (사운드, 이펙트 등)
-            EventBus.Publish(this, new PlayerBackstepEvent(_backstepDirection));
         }
 
         public override void Execute()

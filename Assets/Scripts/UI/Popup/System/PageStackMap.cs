@@ -19,7 +19,7 @@ namespace Percent111.ProjectNS.UI
             {
                 Stack<PageBase> newStack = new();
                 newStack.Push(page);
-                _map.Add(popup,newStack);
+                _map.Add(popup, newStack);
             }
         }
 

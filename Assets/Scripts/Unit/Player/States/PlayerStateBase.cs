@@ -85,12 +85,6 @@ namespace Percent111.ProjectNS.Player
             EventBus.Publish(this, new PlayerChangeStateRequestEvent(targetState));
         }
 
-        // 점프 이벤트 발행
-        protected void PublishJumpEvent()
-        {
-            EventBus.Publish(this, new PlayerJumpEvent());
-        }
-
         // 무적 상태 변경 이벤트 발행
         protected void SetInvincible(bool isInvincible)
         {

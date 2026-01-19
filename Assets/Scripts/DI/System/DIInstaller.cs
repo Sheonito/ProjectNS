@@ -10,7 +10,7 @@ namespace Percent111.ProjectNS.DI
         
         public void Install()
         {
-            new SampleContainer(null,null);
+            new SampleContainer(null, null);
         }
     }
 }

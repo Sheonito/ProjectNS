@@ -81,7 +81,6 @@ namespace Percent111.ProjectNS.Player
             {
                 _shieldVisual.SetActive(true);
             }
-            Debug.Log("Shield Acquired!");
         }
 
         // 방어막 파괴 처리
@@ -93,13 +92,8 @@ namespace Percent111.ProjectNS.Player
                 _shieldVisual.SetActive(false);
             }
             
-            // 방어막 파괴 이벤트 발행
-            EventBus.Publish(this, new ShieldBrokenEvent());
-            
             // 무적 시간 부여
             StartShieldInvincibility().Forget();
-            
-            Debug.Log("Shield Broken! Invincible for " + _stateSettings.shieldInvincibleDuration + " seconds.");
         }
 
         // 방어막 파괴 후 무적 시간
@@ -189,7 +183,6 @@ namespace Percent111.ProjectNS.Player
             // HP에 따라 상태 전환
             if (IsDead)
             {
-                Debug.Log("Player Dead");
                 _stateMachine.ChangeState(PlayerStateType.Death);
             }
             else

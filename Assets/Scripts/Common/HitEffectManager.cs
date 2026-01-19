@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Percent111.ProjectNS.Effect;
 using UnityEngine;
 
 namespace Percent111.ProjectNS.Common

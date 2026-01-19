@@ -95,9 +95,6 @@ namespace Percent111.ProjectNS.Player
 
             // 대시 시작 시 타겟 미리 판정 (전체 대시 범위)
             FindTarget();
-
-            // 대시공격 이벤트 발행 (사운드, 이펙트 등)
-            EventBus.Publish(this, new PlayerDashAttackEvent(_dashDirection));
         }
 
         public override void Execute()

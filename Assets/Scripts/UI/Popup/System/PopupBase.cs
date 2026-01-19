@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -32,7 +32,7 @@ namespace Percent111.ProjectNS.UI
         {
             _view.SetInteractable(true);
             _view.SetBlocksRaycasts(true);
-            _view.FadeCanvasGroup(fadeInValue,fadeDuration);
+            _view.FadeCanvasGroup(fadeInValue, fadeDuration);
             IsActive = true;
             
             onShow?.Invoke();
@@ -44,7 +44,7 @@ namespace Percent111.ProjectNS.UI
             
             _view.SetInteractable(false);
             _view.SetBlocksRaycasts(false);
-            _view.FadeCanvasGroup(0,duration,onHideCompleted);
+            _view.FadeCanvasGroup(0, duration, onHideCompleted);
             
             IsActive = false;
             
