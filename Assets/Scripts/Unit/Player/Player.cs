@@ -14,7 +14,6 @@ namespace Percent111.ProjectNS.Player
 
         [Header("Shield")]
         [SerializeField] private GameObject _shieldVisual; // 방어막 시각 효과 (선택)
-        [SerializeField] private float _shieldInvincibleDuration = 1.5f; // 방어막 파괴 후 무적 시간
 
         private PlayerMovement _movement;
         private PlayerStateMachine _stateMachine;
@@ -100,14 +99,14 @@ namespace Percent111.ProjectNS.Player
             // 무적 시간 부여
             StartShieldInvincibility().Forget();
             
-            Debug.Log("Shield Broken! Invincible for " + _shieldInvincibleDuration + " seconds.");
+            Debug.Log("Shield Broken! Invincible for " + _stateSettings.shieldInvincibleDuration + " seconds.");
         }
 
         // 방어막 파괴 후 무적 시간
         private async UniTaskVoid StartShieldInvincibility()
         {
             _isInvincible = true;
-            await UniTask.Delay((int)(_shieldInvincibleDuration * 1000));
+            await UniTask.Delay((int)(_stateSettings.shieldInvincibleDuration * 1000));
             _isInvincible = false;
         }
 

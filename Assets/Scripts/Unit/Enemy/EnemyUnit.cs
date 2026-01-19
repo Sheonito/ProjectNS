@@ -131,6 +131,12 @@ namespace Percent111.ProjectNS.Enemy
         protected virtual void CreateMovement()
         {
             _movement = new EnemyMovement(transform, _movementSettings);
+            
+            // StateSettings의 공격 설정 적용
+            if (_stateSettings != null)
+            {
+                _movement.SetAttackSettings(_stateSettings.attackCooldown, _stateSettings.attackRange);
+            }
         }
 
         // 상태 머신 초기화 (하위 클래스에서 오버라이드 가능)

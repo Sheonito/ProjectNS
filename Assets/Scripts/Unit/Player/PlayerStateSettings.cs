@@ -22,6 +22,8 @@ namespace Percent111.ProjectNS.Player
         public float attackRange = 1.5f;
         [Tooltip("다수 적 타격 시 간격 (초)")]
         public float hitInterval = 0.05f;
+        [Tooltip("일반 공격 쿨타임 (초)")]
+        public float attackCooldown = 0.1f;
 
         [Header("Slash Attack (마우스 아래 공격)")]
         [Tooltip("슬래시 공격 시 살짝 대시 거리")]
@@ -37,6 +39,8 @@ namespace Percent111.ProjectNS.Player
         public float jumpAttackForwardSpeed = 8f;
         [Tooltip("점프 공격 시 점프력 배율")]
         public float jumpAttackJumpMultiplier = 0.8f;
+        [Tooltip("점프 공격 쿨타임 (초)")]
+        public float jumpAttackCooldown = 0.5f;
 
         [Header("Dash Attack")]
         [Tooltip("대시 공격 상태 목표 지속 시간 (초)")]
@@ -86,6 +90,8 @@ namespace Percent111.ProjectNS.Player
         public float diveAttackBounceForce = 12f;
         [Tooltip("점프 찍기 적 히트 시 튕김 힘 (뒤쪽)")]
         public float diveAttackBounceBackForce = 3f;
+        [Tooltip("점프 찍기 공격 쿨타임 (초)")]
+        public float diveAttackCooldown = 0.5f;
 
         [Header("Combat")]
         [Tooltip("적 레이어")]
@@ -98,5 +104,9 @@ namespace Percent111.ProjectNS.Player
         [Header("Death")]
         [Tooltip("사망 상태 목표 지속 시간 (초)")]
         public float deathTargetDuration = 1f;
+
+        [Header("Shield")]
+        [Tooltip("방어막 파괴 후 무적 시간 (초)")]
+        public float shieldInvincibleDuration = 1.5f;
     }
 }

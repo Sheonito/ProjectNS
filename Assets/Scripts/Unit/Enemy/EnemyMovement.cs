@@ -23,6 +23,8 @@ namespace Percent111.ProjectNS.Enemy
 
         // 공격 쿨타임
         private float _attackCooldownTimer;
+        private float _attackCooldown;
+        private float _attackRange;
 
         // Separation (외부에서 전달받음)
         private Vector2 _separationVelocity;
@@ -32,6 +34,17 @@ namespace Percent111.ProjectNS.Enemy
         {
             _transform = transform;
             _settings = settings;
+            
+            // 기본값 설정 (StateSettings에서 덮어쓰기 가능)
+            _attackCooldown = settings.attackCooldown;
+            _attackRange = settings.attackRange;
+        }
+
+        // 공격 설정 (EnemyStateSettings에서 호출)
+        public void SetAttackSettings(float attackCooldown, float attackRange)
+        {
+            _attackCooldown = attackCooldown;
+            _attackRange = attackRange;
         }
 
         // 플레이어 데이터 설정 (Enemy에서 호출)
@@ -325,7 +338,7 @@ namespace Percent111.ProjectNS.Enemy
             if (_playerData == null) return false;
 
             float distance = Vector2.Distance(_transform.position, _playerData.Position);
-            return distance <= _settings.attackRange;
+            return distance <= _attackRange;
         }
 
         // 공격 가능 여부
@@ -337,7 +350,7 @@ namespace Percent111.ProjectNS.Enemy
         // 공격 실행 (쿨타임 시작)
         public void StartAttackCooldown()
         {
-            _attackCooldownTimer = _settings.attackCooldown;
+            _attackCooldownTimer = _attackCooldown;
         }
 
         // 플레이어 방향 바라보기
@@ -410,7 +423,7 @@ namespace Percent111.ProjectNS.Enemy
 
             // 공격 범위
             Gizmos.color = Color.magenta;
-            Gizmos.DrawWireSphere(_transform.position, _settings.attackRange);
+            Gizmos.DrawWireSphere(_transform.position, _attackRange);
 
             // 지면 체크
             Vector2 groundOrigin = (Vector2)_transform.position + Vector2.down * _settings.groundCheckOffset;

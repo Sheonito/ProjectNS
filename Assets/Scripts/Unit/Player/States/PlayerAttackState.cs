@@ -25,11 +25,22 @@ namespace Percent111.ProjectNS.Player
         private bool _isSlashing;
         private CancellationTokenSource _hitCts;
 
+        // 쿨타임 (static으로 공유)
+        private static float _lastUseTime = float.MinValue;
+        private float _cooldownDuration;
+
+        // 외부에서 쿨타임 체크 (상태 진입 전 확인용)
+        public static bool IsOnCooldownStatic() => Time.time < _lastUseTime;
+
+        // 인스턴스 쿨타임 체크
+        public bool IsOnCooldown() => Time.time < _lastUseTime;
+
         public PlayerAttackState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) : base()
         {
             _movement = movement;
             _settings = settings;
             _animator = animator;
+            _cooldownDuration = settings.attackCooldown;
         }
 
         public override void Enter()
@@ -38,6 +49,9 @@ namespace Percent111.ProjectNS.Player
             _attackTimer = 0;
             _hasHit = false;
             _startPosition = _movement.GetPosition();
+
+            // 쿨타임 시작
+            _lastUseTime = Time.time + _cooldownDuration;
 
             // 이전 타격 취소
             _hitCts?.Cancel();

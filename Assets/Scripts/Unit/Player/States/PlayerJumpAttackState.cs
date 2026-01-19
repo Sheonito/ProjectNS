@@ -25,11 +25,22 @@ namespace Percent111.ProjectNS.Player
         // 대각선 공격 회전 각도 (오른쪽으로 이동 시 -45도, 왼쪽은 +45도)
         private const float DIAGONAL_ROTATION_ANGLE = 45f;
 
+        // 쿨타임 (static으로 공유)
+        private static float _lastUseTime = float.MinValue;
+        private float _cooldownDuration;
+
+        // 외부에서 쿨타임 체크 (상태 진입 전 확인용)
+        public static bool IsOnCooldownStatic() => Time.time < _lastUseTime;
+
+        // 인스턴스 쿨타임 체크
+        public bool IsOnCooldown() => Time.time < _lastUseTime;
+
         public PlayerJumpAttackState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) : base()
         {
             _movement = movement;
             _settings = settings;
             _animator = animator;
+            _cooldownDuration = settings.jumpAttackCooldown;
         }
 
         public override void Enter()
@@ -38,6 +49,9 @@ namespace Percent111.ProjectNS.Player
             _attackTimer = 0;
             _hasHit = false;
             _hasJumped = false;
+
+            // 쿨타임 시작
+            _lastUseTime = Time.time + _cooldownDuration;
 
             // 이전 타격 취소
             _hitCts?.Cancel();

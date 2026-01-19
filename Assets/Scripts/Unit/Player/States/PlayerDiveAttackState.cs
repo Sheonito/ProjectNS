@@ -19,11 +19,22 @@ namespace Percent111.ProjectNS.Player
         private bool _isRecovering;
         private bool _hasHit;
 
+        // 쿨타임 (static으로 공유)
+        private static float _lastUseTime = float.MinValue;
+        private float _cooldownDuration;
+
+        // 외부에서 쿨타임 체크 (상태 진입 전 확인용)
+        public static bool IsOnCooldownStatic() => Time.time < _lastUseTime;
+
+        // 인스턴스 쿨타임 체크
+        public bool IsOnCooldown() => Time.time < _lastUseTime;
+
         public PlayerDiveAttackState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) : base()
         {
             _movement = movement;
             _settings = settings;
             _animator = animator;
+            _cooldownDuration = settings.diveAttackCooldown;
         }
 
         public override void Enter()
@@ -34,6 +45,9 @@ namespace Percent111.ProjectNS.Player
             _isDiving = true;
             _isBouncing = false;
             _isRecovering = false;
+
+            // 쿨타임 시작
+            _lastUseTime = Time.time + _cooldownDuration;
 
             // 수평 입력 초기화
             _movement.SetHorizontalInput(0);
@@ -119,8 +133,8 @@ namespace Percent111.ProjectNS.Player
             // 튕김 중 (공중공격은 가능, 포크공격은 불가)
             else if (_isBouncing)
             {
-                // 공중 공격 입력 체크 (포크공격 제외)
-                if (IsAttackPressed() && !IsDashAttackPressed())
+                // 공중 공격 입력 체크 (포크공격 제외, 쿨타임 체크 포함)
+                if (IsAttackPressed() && !IsDashAttackPressed() && !PlayerAttackState.IsOnCooldownStatic())
                 {
                     RequestStateChange(PlayerStateType.Attack);
                     return;

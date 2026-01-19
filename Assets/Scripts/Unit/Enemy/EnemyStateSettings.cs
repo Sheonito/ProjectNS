@@ -22,6 +22,10 @@ namespace Percent111.ProjectNS.Enemy
         public float attackHitTimingRatio = 0.5f;
         [Tooltip("공격 데미지")]
         public int attackDamage = 10;
+        [Tooltip("공격 쿨타임 (초)")]
+        public float attackCooldown = 1f;
+        [Tooltip("공격 범위")]
+        public float attackRange = 1.5f;
 
         [Header("Damaged State")]
         [Tooltip("피격 상태 목표 지속 시간 (초)")]

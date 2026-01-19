@@ -45,10 +45,13 @@ namespace Percent111.ProjectNS.Player
             {
                 Vector2 playerPos = _movement.GetPosition();
 
-                // 적이 공격 범위 내에 있으면 제자리 공격
+                // 적이 공격 범위 내에 있으면 제자리 공격 (쿨타임 체크)
                 if (IsEnemyInAttackRange(playerPos, _settings.attackRange, _settings.enemyLayer))
                 {
-                    RequestStateChange(PlayerStateType.Attack);
+                    if (!PlayerAttackState.IsOnCooldownStatic())
+                    {
+                        RequestStateChange(PlayerStateType.Attack);
+                    }
                 }
                 else
                 {
@@ -57,13 +60,19 @@ namespace Percent111.ProjectNS.Player
 
                     if (mousePos == MouseVerticalPosition.Above)
                     {
-                        // 마우스가 위에 있으면 대각선 점프 공격
-                        RequestStateChange(PlayerStateType.JumpAttack);
+                        // 마우스가 위에 있으면 점프 공격만 시도 (쿨타임이면 무시, 폴백 없음)
+                        if (!PlayerJumpAttackState.IsOnCooldownStatic())
+                        {
+                            RequestStateChange(PlayerStateType.JumpAttack);
+                        }
                     }
                     else
                     {
-                        // 마우스가 아래에 있으면 슬래시 공격 (살짝 대시 포함)
-                        RequestStateChange(PlayerStateType.Attack);
+                        // 마우스가 아래에 있으면 슬래시 공격만 시도 (쿨타임이면 무시, 폴백 없음)
+                        if (!PlayerAttackState.IsOnCooldownStatic())
+                        {
+                            RequestStateChange(PlayerStateType.Attack);
+                        }
                     }
                 }
                 return;

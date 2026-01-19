@@ -14,15 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSpeed: 10
   airSpeed: 8
-  groundAcceleration: 80
-  groundDeceleration: 100
-  airAcceleration: 40
+  groundAcceleration: 40
+  groundDeceleration: 45
+  airAcceleration: 20
   airDeceleration: 30
   turnSpeedMultiplier: 2
   jumpForce: 15
   gravity: -50
   maxFallSpeed: -30
   jumpCutMultiplier: 0.4
+  maxJumpCount: 2
+  doubleJumpMultiplier: 0.9
+  coyoteTime: 0.1
   groundCheckDistance: 0.15
   groundCheckOffset: 0.82
   groundLayer:

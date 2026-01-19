@@ -52,15 +52,15 @@ namespace Percent111.ProjectNS.Player
                 PublishJumpEvent();
             }
 
-            // 대시 공격 입력 시 점프 찍기 공격 (DiveAttack)
-            if (IsDashAttackPressed())
+            // 대시 공격 입력 시 점프 찍기 공격 (DiveAttack) - 쿨타임 체크 포함
+            if (IsDashAttackPressed() && !PlayerDiveAttackState.IsOnCooldownStatic())
             {
                 RequestStateChange(PlayerStateType.DiveAttack);
                 return;
             }
 
-            // 공격 입력 (공중에서도 가능)
-            if (IsAttackPressed())
+            // 공격 입력 (공중에서도 가능) - 쿨타임 체크 포함
+            if (IsAttackPressed() && !PlayerAttackState.IsOnCooldownStatic())
             {
                 RequestStateChange(PlayerStateType.Attack);
                 return;

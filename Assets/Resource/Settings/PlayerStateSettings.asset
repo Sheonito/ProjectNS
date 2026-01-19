@@ -17,12 +17,14 @@ MonoBehaviour:
   attackDamage: 10
   attackHitTimingRatio: 0.8
   attackRange: 1.5
-  hitInterval: 0.1
+  hitInterval: 0.075
+  attackCooldown: 0.5
   slashDashDistance: 1.5
   slashDashRatio: 0.5
   jumpAttackTargetDuration: 0.4
   jumpAttackForwardSpeed: 12
   jumpAttackJumpMultiplier: 0.6
+  jumpAttackCooldown: 0.6
   dashAttackTargetDuration: 0.5
   dashDistance: 5
   dashMoveRatio: 0.5
@@ -42,9 +44,11 @@ MonoBehaviour:
   diveAttackRange: 0.6
   diveAttackRecoveryTime: 0.1
   diveAttackBounceForce: 10
-  diveAttackBounceBackForce: 10
+  diveAttackBounceBackForce: 11
+  diveAttackCooldown: 0.5
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
   damagedTargetDuration: 0.3
   deathTargetDuration: 1
+  shieldInvincibleDuration: 0.5
