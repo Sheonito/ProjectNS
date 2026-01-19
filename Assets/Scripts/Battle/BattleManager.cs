@@ -47,13 +47,6 @@ namespace Percent111.ProjectNS.Battle
         private Transform _poolParent;
         private Transform _projectilePoolParent;
 
-        private async void Awake()
-        {
-            await UniTask.WaitForSeconds(2);
-            
-            Initialize();
-        }
-
         private void OnEnable()
         {
             EventBus.Subscribe<GameOverEvent>(OnGameOver);
@@ -67,14 +60,13 @@ namespace Percent111.ProjectNS.Battle
         }
 
         // 초기화
-        private void Initialize()
+        public async UniTask Initialize()
         {
             CreatePoolParents();
             SpawnPlayer();
             InitializeProjectilePool();
             InitializeEnemyPool();
             InitializeStageManager();
-            StartBattle();
         }
 
         // 풀 부모 오브젝트 생성
@@ -155,7 +147,7 @@ namespace Percent111.ProjectNS.Battle
         }
 
         // 전투 시작
-        private void StartBattle()
+        public void StartBattle()
         {
             _stageManager.StartStage(1);
         }

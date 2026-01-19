@@ -1,17 +1,21 @@
+using Percent111.ProjectNS.Battle;
 using Percent111.ProjectNS.DI;
 using Percent111.ProjectNS.Event;
 using UnityEngine;
 namespace Percent111.ProjectNS.Scene
 {
-    public class InGameSceneEntry : ISceneEntry
+    public class InGameSceneEntry : MonoBehaviour,ISceneEntry
     {
-        private DIInstaller _diInstaller;
+        [SerializeField] private BattleManager _battleManager;
+        [SerializeField] private DIInstaller _diInstaller;
 
-        public void OnEnter()
+        public async void OnEnter()
         {
             InstallDI();
             Init();
             RegisterEvents();
+            await _battleManager.Initialize();
+            _battleManager.StartBattle();
         }
 
         public void OnExit()
@@ -21,7 +25,8 @@ namespace Percent111.ProjectNS.Scene
         private void InstallDI()
         {
             if (_diInstaller == null)
-                _diInstaller = Object.FindFirstObjectByType<DIInstaller>();
+                return;
+            
             _diInstaller.Install();
         }
 

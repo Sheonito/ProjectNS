@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Percent111.ProjectNS.Scene
 {
-    [CreateAssetMenu(menuName = "Waving/Scene/SceneTable")]
+    [CreateAssetMenu(menuName = "ProjectNS/Scene/SceneTable")]
     public class SceneTable : ScriptableObject
     {
         [System.Serializable]

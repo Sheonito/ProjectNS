@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Percent111.ProjectNS.Common;
-
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,72 +13,54 @@ namespace Percent111.ProjectNS.Scene
     {
         Title,
         InGame,
+        Global
     }
 
     public class SceneEntryManager : SingletonMonoBehaviour<SceneEntryManager>
     {
-        [SerializeField] private SceneTable _sceneTable;
-
-        private Dictionary<SceneInfo, ISceneEntry> _entries = new();
-
-        public GameScene CurrentSceneType { get; private set; }
-
-        public ISceneEntry CurrentSceneEntry
+        public SceneTable SceneTable
         {
             get
             {
-                SceneInfo sceneInfo = _sceneTable.GetSceneInfo(CurrentSceneType);
-                return _entries[sceneInfo];
+                if (_SceneTable == null)
+                {
+                    _SceneTable = Resources.Load<SceneTable>(ResourcesPath.SceneTablePath);
+                }
+
+                return _SceneTable;
             }
         }
+
+        private SceneTable _SceneTable;
+
+        public GameScene CurrentSceneType { get; private set; }
+
+        public ISceneEntry CurrentSceneEntry { get; private set; }
 
         public override void Initialize()
         {
             base.Initialize();
-            _entries = CreateSceneEntries();
+            DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += EnterSceneEntry;
         }
-
-        public ISceneEntry GetSceneEntry(GameScene sceneType)
-        {
-            return _entries[_sceneTable.GetSceneInfo(sceneType)];
-        }
-
-
-        private Dictionary<SceneInfo, ISceneEntry> CreateSceneEntries()
-        {
-            TitleSceneEntry titleEntry = new TitleSceneEntry();
-            InGameSceneEntry inGameEntry = new InGameSceneEntry();
-
-            Dictionary<SceneInfo, ISceneEntry> entries = new Dictionary<SceneInfo, ISceneEntry>();
-            SceneInfo titleInfo = _sceneTable.GetSceneInfo(GameScene.Title);
-            SceneInfo ingameInfo = _sceneTable.GetSceneInfo(GameScene.InGame);
-            entries.Add(titleInfo, titleEntry);
-            entries.Add(ingameInfo, inGameEntry);
-            return entries;
-        }
-
 
         public async UniTask ChangeScene(GameScene sceneType)
         {
-            SceneInfo currentSceneInfo = _sceneTable.GetSceneInfo(CurrentSceneType);
-            SceneInfo loadSceneInfo = _sceneTable.GetSceneInfo(sceneType);
-            await UnloadScene(currentSceneInfo);
+            SceneInfo loadSceneInfo = SceneTable.GetSceneInfo(sceneType);
+            string loadSceneName = loadSceneInfo.sceneName;
             ExitCurrentSceneEntry();
-            
-            await LoadSceneAdditive(loadSceneInfo);
-            EnterSceneEntry(loadSceneInfo);
+            SceneManager.LoadScene(loadSceneName);
         }
 
         public async UniTask Additive(GameScene sceneType)
         {
-            SceneInfo sceneInfo = _sceneTable.GetSceneInfo(sceneType);
+            SceneInfo sceneInfo = SceneTable.GetSceneInfo(sceneType);
             await LoadSceneAdditive(sceneInfo);
-            EnterSceneEntry(sceneInfo);
         }
 
         public async UniTask Remove(GameScene sceneType)
         {
-            SceneInfo sceneInfo = _sceneTable.GetSceneInfo(sceneType);
+            SceneInfo sceneInfo = SceneTable.GetSceneInfo(sceneType);
             ExitCurrentSceneEntry();
             await UnloadScene(sceneInfo);
         }
@@ -97,16 +78,29 @@ namespace Percent111.ProjectNS.Scene
             Scene scene = SceneManager.GetSceneByName(sceneName);
             await SceneManager.UnloadSceneAsync(scene);
         }
-
-        private void EnterSceneEntry(SceneInfo sceneInfo)
+        
+        private void EnterSceneEntry(Scene scene, LoadSceneMode mode)
         {
-            _entries[sceneInfo].OnEnter();
+            ISceneEntry entry = null;
+            entry = FindAnyObjectByType<InGameSceneEntry>();
+
+            string sceneName = scene.name;
+            if (sceneName == nameof(GameScene.Title))
+            {
+                entry = FindAnyObjectByType<TitleSceneEntry>();
+            }
+            else if (sceneName == nameof(GameScene.InGame))
+            {
+                entry = FindAnyObjectByType<InGameSceneEntry>();
+            }
+            
+            entry.OnEnter();
         }
 
         private void ExitCurrentSceneEntry()
         {
-            CurrentSceneEntry.OnExit();
+            if (CurrentSceneEntry != null)
+                CurrentSceneEntry.OnExit();
         }
     }
 }
-
