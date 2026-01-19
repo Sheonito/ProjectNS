@@ -1,5 +1,6 @@
 using System;
 using Percent111.ProjectNS.Event;
+using Percent111.ProjectNS.Item;
 
 namespace Percent111.ProjectNS.Player
 {
@@ -132,6 +133,24 @@ namespace Percent111.ProjectNS.Player
         public Type GetPublishType()
         {
             return typeof(PlayerStateBase);
+        }
+    }
+
+    // 방어막 획득 이벤트 (ShieldItem → Player)
+    public class ShieldCollectedEvent : IEvent
+    {
+        public Type GetPublishType()
+        {
+            return typeof(ShieldItem);
+        }
+    }
+
+    // 방어막 파괴 이벤트 (Player → UI 등)
+    public class ShieldBrokenEvent : IEvent
+    {
+        public Type GetPublishType()
+        {
+            return typeof(PlayerUnit);
         }
     }
 }

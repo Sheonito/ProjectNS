@@ -33,6 +33,10 @@ namespace Percent111.ProjectNS.Player
         public float maxFallSpeed = -30f;
         [Tooltip("점프 버튼 떼면 낮게 점프하는 배율")]
         public float jumpCutMultiplier = 0.4f;
+        [Tooltip("최대 점프 횟수 (1 = 일반 점프, 2 = 더블 점프)")]
+        public int maxJumpCount = 2;
+        [Tooltip("더블 점프 힘 배율")]
+        public float doubleJumpMultiplier = 0.9f;
 
         [Header("Ground Check")]
         [Tooltip("바닥 체크 거리")]

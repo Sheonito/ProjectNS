@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: PlayerStateSettings
   m_EditorClassIdentifier: 
   characterCenterOffset: 0.5
-  attackTargetDuration: 0.4
+  attackTargetDuration: 0.3
   attackDamage: 10
-  attackHitTimingRatio: 0.9
+  attackHitTimingRatio: 0.8
   attackRange: 1.5
+  hitInterval: 0.1
   slashDashDistance: 1.5
   slashDashRatio: 0.5
-  jumpAttackTargetDuration: 0.5
-  jumpAttackForwardSpeed: 10
-  jumpAttackJumpMultiplier: 0.5
+  jumpAttackTargetDuration: 0.4
+  jumpAttackForwardSpeed: 12
+  jumpAttackJumpMultiplier: 0.6
   dashAttackTargetDuration: 0.5
   dashDistance: 5
   dashMoveRatio: 0.5
@@ -38,8 +39,10 @@ MonoBehaviour:
   diveAttackDamage: 20
   diveAttackSpeed: 20
   diveAttackHorizontalSpeed: 20
-  diveAttackRange: 1.2
-  diveAttackRecoveryTime: 0.2
+  diveAttackRange: 0.6
+  diveAttackRecoveryTime: 0.1
+  diveAttackBounceForce: 10
+  diveAttackBounceBackForce: 10
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128

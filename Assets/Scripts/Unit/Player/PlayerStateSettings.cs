@@ -20,6 +20,8 @@ namespace Percent111.ProjectNS.Player
         public float attackHitTimingRatio = 0.5f;
         [Tooltip("공격 범위")]
         public float attackRange = 1.5f;
+        [Tooltip("다수 적 타격 시 간격 (초)")]
+        public float hitInterval = 0.05f;
 
         [Header("Slash Attack (마우스 아래 공격)")]
         [Tooltip("슬래시 공격 시 살짝 대시 거리")]
@@ -80,6 +82,10 @@ namespace Percent111.ProjectNS.Player
         public float diveAttackRange = 1.2f;
         [Tooltip("점프 찍기 착지 후 경직 시간")]
         public float diveAttackRecoveryTime = 0.2f;
+        [Tooltip("점프 찍기 적 히트 시 튕김 힘 (위쪽)")]
+        public float diveAttackBounceForce = 12f;
+        [Tooltip("점프 찍기 적 히트 시 튕김 힘 (뒤쪽)")]
+        public float diveAttackBounceBackForce = 3f;
 
         [Header("Combat")]
         [Tooltip("적 레이어")]

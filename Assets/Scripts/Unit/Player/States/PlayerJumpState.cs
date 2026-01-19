@@ -47,6 +47,13 @@ namespace Percent111.ProjectNS.Player
                 _movement.CutJump();
             }
 
+            // 더블 점프 입력 (공중에서 점프 키 눌림)
+            if (IsJumpPressed() && _movement.CanJump())
+            {
+                _movement.Jump();
+                PublishJumpEvent();
+            }
+
             // 대시 공격 입력 시 점프 찍기 공격 (DiveAttack)
             if (IsDashAttackPressed())
             {

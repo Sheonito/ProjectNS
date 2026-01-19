@@ -15,6 +15,7 @@ namespace Percent111.ProjectNS.Player
         private float _recoveryTime;
         private int _diveDirection;
         private bool _isDiving;
+        private bool _isBouncing;  // 튕김 중 (착지까지 조작불가)
         private bool _isRecovering;
         private bool _hasHit;
 
@@ -31,6 +32,7 @@ namespace Percent111.ProjectNS.Player
             _diveTimer = 0;
             _hasHit = false;
             _isDiving = true;
+            _isBouncing = false;
             _isRecovering = false;
 
             // 수평 입력 초기화
@@ -114,6 +116,28 @@ namespace Percent111.ProjectNS.Player
                 Vector3 movement = new Vector3(velocity.x, velocity.y, 0) * Time.deltaTime;
                 _movement.SetPosition(_movement.GetPosition() + movement);
             }
+            // 튕김 중 (공중공격은 가능, 포크공격은 불가)
+            else if (_isBouncing)
+            {
+                // 중력 적용
+                _movement.UpdatePhysics();
+
+                // 공중 공격 입력 체크 (포크공격 제외)
+                if (IsAttackPressed() && !IsDashAttackPressed())
+                {
+                    RequestStateChange(PlayerStateType.Attack);
+                    return;
+                }
+
+                // 착지 체크
+                if (_movement.IsGrounded())
+                {
+                    _isBouncing = false;
+                    _isRecovering = true;
+                    _diveTimer = 0;
+                    _movement.ResetRotation();
+                }
+            }
             // 착지 후 경직 중
             else if (_isRecovering)
             {
@@ -154,7 +178,7 @@ namespace Percent111.ProjectNS.Player
             }
         }
 
-        // 찍기 공격 판정 처리 (1명만 타격)
+        // 찍기 공격 판정 처리 (1명만 타격, 히트 시 튕김)
         private void PerformDiveHit()
         {
             Vector2 position = _movement.GetPosition();
@@ -186,7 +210,24 @@ namespace Percent111.ProjectNS.Player
             {
                 closestEnemy.OnDamaged(_settings.diveAttackDamage);
                 _hasHit = true;
+
+                // 적 히트 시 튕겨나감 (할로우 나이트 스타일)
+                OnHitEnemy();
             }
+        }
+
+        // 적 히트 시 튕김 처리
+        private void OnHitEnemy()
+        {
+            _isDiving = false;
+            _isBouncing = true;
+
+            // 위쪽 + 공격 반대 방향으로 튕김 (우측 공격 → 좌측 대각선 튕김)
+            Vector2 bounceVelocity = new Vector2(
+                -_diveDirection * _settings.diveAttackBounceBackForce,
+                _settings.diveAttackBounceForce
+            );
+            _movement.SetVelocity(bounceVelocity);
         }
 
         public override void Exit()

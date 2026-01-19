@@ -17,7 +17,7 @@ MonoBehaviour:
   baseEnemyCount: 5
   enemyIncreasePerStage: 2
   spawnInterval: 0.5
-  rangedChanceIncreasePerStage: 0.2
+  rangedChanceIncreasePerStage: 0.1
   separationRadius: 1
   separationForce: 5
   separationUpdateInterval: 3

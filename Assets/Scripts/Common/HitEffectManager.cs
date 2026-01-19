@@ -1,16 +1,24 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Percent111.ProjectNS.Common
 {
-    // 히트 이펙트 총괄 관리 (카메라 쉐이크 + 이펙트 스폰)
+    // 히트 이펙트 총괄 관리 (카메라 쉐이크 + 이펙트 스폰 + 히트스탑)
     public class HitEffectManager : SingletonMonoBehaviour<HitEffectManager>
     {
         [Header("Hit Effect")]
         [SerializeField] private HitEffect _hitEffectPrefab;
         [SerializeField] private int _preLoadCount = 20;
 
+        [Header("Hit Stop")]
+        [Tooltip("히트스탑 지속 시간 (초, realtime)")]
+        [SerializeField] private float _hitStopDuration = 0.05f;
+        [Tooltip("히트스탑 시 timeScale (0 = 완전 정지)")]
+        [SerializeField] private float _hitStopTimeScale = 0f;
+
         private HitEffectPool _hitEffectPool;
         private Transform _poolParent;
+        private bool _isHitStopping;
 
         public override void Initialize()
         {
@@ -56,8 +64,41 @@ namespace Percent111.ProjectNS.Common
             CameraShakeManager.Instance?.PlayHitEffect(force);
         }
 
+        // 히트스탑 재생 (타격 시 시간 멈춤)
+        public void PlayHitStop()
+        {
+            if (_isHitStopping) return;
+            HitStopAsync().Forget();
+        }
+
+        // 히트스탑 + 카메라 쉐이크 동시 재생
+        public void PlayHitFeedback(Vector3 position)
+        {
+            PlayHitStop();
+            PlayCameraShake();
+            SpawnHitEffect(position);
+        }
+
+        private async UniTaskVoid HitStopAsync()
+        {
+            _isHitStopping = true;
+            float originalTimeScale = Time.timeScale;
+            Time.timeScale = _hitStopTimeScale;
+
+            // realtime으로 대기 (timeScale 영향 받지 않음)
+            await UniTask.Delay((int)(_hitStopDuration * 1000), DelayType.Realtime);
+
+            Time.timeScale = originalTimeScale;
+            _isHitStopping = false;
+        }
+
         private void OnDestroy()
         {
+            // 파괴 시 timeScale 복원
+            if (_isHitStopping)
+            {
+                Time.timeScale = 1f;
+            }
             _hitEffectPool?.UnsubscribeEvents();
         }
     }

@@ -1,3 +1,5 @@
+using Percent111.ProjectNS.Battle;
+using Percent111.ProjectNS.Event;
 using UnityEngine;
 
 namespace Percent111.ProjectNS.Player
@@ -11,6 +13,7 @@ namespace Percent111.ProjectNS.Player
         private float _deathTimer;
         private float _deathDuration;
         private bool _isDeathComplete;
+        private bool _hasPublishedGameOver;
 
         public PlayerDeathState(PlayerMovement movement, PlayerStateSettings settings, PlayerAnimator animator) : base()
         {
@@ -24,6 +27,7 @@ namespace Percent111.ProjectNS.Player
             base.Enter();
             _deathTimer = 0;
             _isDeathComplete = false;
+            _hasPublishedGameOver = false;
 
             // 이동 중지
             _movement.SetHorizontalInput(0);
@@ -54,7 +58,13 @@ namespace Percent111.ProjectNS.Player
             if (!_isDeathComplete && _deathTimer >= _deathDuration)
             {
                 _isDeathComplete = true;
-                // 사망 상태는 유지 (게임 오버 처리는 외부에서)
+
+                // 게임 오버 이벤트 발행 (1회만)
+                if (!_hasPublishedGameOver)
+                {
+                    _hasPublishedGameOver = true;
+                    EventBus.Publish(this, new GameOverEvent());
+                }
             }
         }
 

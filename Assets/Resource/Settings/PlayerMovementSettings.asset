@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb60f8c457cf7674c8bef56a6f8be330, type: 3}
   m_Name: PlayerMovementSettings
   m_EditorClassIdentifier: 
-  runSpeed: 12
-  airSpeed: 10
+  runSpeed: 10
+  airSpeed: 8
   groundAcceleration: 80
   groundDeceleration: 100
   airAcceleration: 40

@@ -16,7 +16,7 @@ MonoBehaviour:
   chaseSpeed: 5
   acceleration: 20
   deceleration: 30
-  detectionRange: 8
+  detectionRange: 100
   useFieldOfView: 0
   detectionAngle: 60
   loseTargetTime: 2

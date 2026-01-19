@@ -1,10 +1,14 @@
+using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Percent111.ProjectNS.Common;
 using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Event;
 using UnityEngine;
 
 namespace Percent111.ProjectNS.Player
 {
-    // 플레이어 점프 공격 상태 (대각선 점프 + 공격, 회전 포함)
+    // 플레이어 점프 공격 상태 (대각선 점프 + 공격, 회전 포함, 다수 공격)
     public class PlayerJumpAttackState : PlayerStateBase
     {
         private readonly PlayerMovement _movement;
@@ -16,6 +20,7 @@ namespace Percent111.ProjectNS.Player
         private bool _hasHit;
         private bool _hasJumped;
         private int _jumpDirection;
+        private CancellationTokenSource _hitCts;
 
         // 대각선 공격 회전 각도 (오른쪽으로 이동 시 -45도, 왼쪽은 +45도)
         private const float DIAGONAL_ROTATION_ANGLE = 45f;
@@ -33,6 +38,11 @@ namespace Percent111.ProjectNS.Player
             _attackTimer = 0;
             _hasHit = false;
             _hasJumped = false;
+
+            // 이전 타격 취소
+            _hitCts?.Cancel();
+            _hitCts?.Dispose();
+            _hitCts = new CancellationTokenSource();
 
             // 목표 duration 기반 계산 (애니메이션 속도 자동 조절)
             _attackDuration = _settings.jumpAttackTargetDuration;
@@ -111,40 +121,82 @@ namespace Percent111.ProjectNS.Player
             }
         }
 
-        // 공격 판정 처리 (State에서 직접 처리, 1명만 타격)
+        // 공격 판정 처리 (다수 공격, 순차 타격감)
         private void PerformAttackHit()
         {
             Vector2 position = _movement.GetPosition();
             Vector2 attackDirection = GetMouseDirection(position);
             float range = _settings.attackRange;
 
+            // 공격 방향 중심으로 탐색
             Vector2 attackCenter = position + attackDirection * range * 0.5f;
             Collider2D[] hits = Physics2D.OverlapCircleAll(attackCenter, range, _settings.enemyLayer);
 
-            // 1명만 타격 (가장 가까운 적)
-            float closestDistance = float.MaxValue;
-            EnemyUnit closestEnemy = null;
-
+            // 공격 방향에 있는 적만 수집 (뒤에 있는 적 제외)
+            List<EnemyUnit> enemies = new List<EnemyUnit>();
             foreach (Collider2D hit in hits)
             {
                 EnemyUnit enemy = hit.GetComponent<EnemyUnit>();
                 if (enemy != null)
                 {
-                    float distance = Vector2.Distance(position, hit.transform.position);
-                    if (distance < closestDistance)
+                    // 적이 공격 방향에 있는지 확인 (수평 방향 기준)
+                    Vector2 toEnemy = (Vector2)enemy.transform.position - position;
+                    float horizontalDir = Mathf.Sign(attackDirection.x);
+                    
+                    // 공격 방향과 같은 쪽에 있는 적만 포함
+                    if (Mathf.Sign(toEnemy.x) == horizontalDir || Mathf.Abs(toEnemy.x) < 0.1f)
                     {
-                        closestDistance = distance;
-                        closestEnemy = enemy;
+                        enemies.Add(enemy);
                     }
                 }
             }
 
-            closestEnemy?.OnDamaged(_settings.attackDamage);
+            // 거리순 정렬
+            enemies.Sort((a, b) =>
+            {
+                float distA = Vector2.Distance(position, a.transform.position);
+                float distB = Vector2.Distance(position, b.transform.position);
+                return distA.CompareTo(distB);
+            });
+
+            // 순차 타격 (비동기)
+            if (enemies.Count > 0)
+            {
+                PerformSequentialHitsAsync(enemies, _hitCts.Token).Forget();
+            }
+        }
+
+        // 순차 타격 (손에 걸리는 듯한 타격감 + 히트스탑)
+        private async UniTaskVoid PerformSequentialHitsAsync(List<EnemyUnit> enemies, CancellationToken ct)
+        {
+            float hitInterval = _settings.hitInterval;
+
+            foreach (EnemyUnit enemy in enemies)
+            {
+                if (ct.IsCancellationRequested) return;
+                if (enemy == null) continue;
+
+                // 데미지 적용
+                enemy.OnDamaged(_settings.attackDamage);
+
+                // 히트스탑 + 카메라쉐이크 + 이펙트 (적 위치에)
+                HitEffectManager.Instance?.PlayHitFeedback(enemy.transform.position);
+
+                // 다음 적까지 간격 (마지막 적이 아니면)
+                if (enemy != enemies[enemies.Count - 1])
+                {
+                    // realtime으로 대기 (히트스탑 중에도 진행)
+                    await UniTask.Delay((int)(hitInterval * 1000), DelayType.Realtime, cancellationToken: ct);
+                }
+            }
         }
 
         public override void Exit()
         {
             base.Exit();
+
+            // 순차 타격은 상태 전환 후에도 계속 진행 (Cancel하지 않음)
+            // 새 공격 시작 시 Enter()에서 이전 타격 취소됨
 
             // 회전 초기화
             _movement.ResetRotation();

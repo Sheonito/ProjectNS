@@ -14,6 +14,7 @@ namespace Percent111.ProjectNS.Player
         private bool _wasGrounded;
         private int _facingDirection = 1;
         private bool _jumpCutApplied;
+        private int _jumpCount; // 현재 점프 횟수
 
         // 생성자
         public PlayerMovement(Transform transform, PlayerMovementSettings settings)
@@ -84,6 +85,7 @@ namespace Percent111.ProjectNS.Player
             {
                 _velocity.y = 0;
                 _jumpCutApplied = false;
+                _jumpCount = 0; // 착지 시 점프 횟수 리셋
 
                 // 지면에 스냅 (착지할 때만, 거리가 유효할 때만)
                 if (!wasGrounded && hit.distance > 0.01f)
@@ -98,9 +100,12 @@ namespace Percent111.ProjectNS.Player
         {
             if (CanJump())
             {
-                _velocity.y = _settings.jumpForce;
+                // 더블 점프인 경우 힘 배율 적용
+                float jumpMultiplier = _jumpCount > 0 ? _settings.doubleJumpMultiplier : 1f;
+                _velocity.y = _settings.jumpForce * jumpMultiplier;
                 _jumpCutApplied = false;
                 _isGrounded = false;
+                _jumpCount++;
             }
         }
 
@@ -109,10 +114,13 @@ namespace Percent111.ProjectNS.Player
         {
             if (CanJump())
             {
-                _velocity.y = _settings.jumpForce * jumpMultiplier;
+                // 더블 점프인 경우 추가 배율 적용
+                float doubleJumpMult = _jumpCount > 0 ? _settings.doubleJumpMultiplier : 1f;
+                _velocity.y = _settings.jumpForce * jumpMultiplier * doubleJumpMult;
                 _velocity.x = forwardSpeed;
                 _jumpCutApplied = false;
                 _isGrounded = false;
+                _jumpCount++;
             }
         }
 
@@ -126,10 +134,10 @@ namespace Percent111.ProjectNS.Player
             }
         }
 
-        // 점프 가능 여부
+        // 점프 가능 여부 (지상이거나 더블 점프 횟수 남음)
         public bool CanJump()
         {
-            return _isGrounded;
+            return _isGrounded || _jumpCount < _settings.maxJumpCount;
         }
 
         // 수평 이동 처리

@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Percent111.ProjectNS.DI;
 using Percent111.ProjectNS.Enemy;
+using Percent111.ProjectNS.Event;
 using Percent111.ProjectNS.Player;
 using Percent111.ProjectNS.UI;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Percent111.ProjectNS.Battle
 {
@@ -50,6 +52,18 @@ namespace Percent111.ProjectNS.Battle
             await UniTask.WaitForSeconds(2);
             
             Initialize();
+        }
+
+        private void OnEnable()
+        {
+            EventBus.Subscribe<GameOverEvent>(OnGameOver);
+            EventBus.Subscribe<GameRestartEvent>(OnGameRestart);
+        }
+
+        private void OnDisable()
+        {
+            EventBus.Unsubscribe<GameOverEvent>(OnGameOver);
+            EventBus.Unsubscribe<GameRestartEvent>(OnGameRestart);
         }
 
         // 초기화
@@ -170,6 +184,25 @@ namespace Percent111.ProjectNS.Battle
         private void OnAllStagesCleared()
         {
             Debug.Log("BattleManager: All stages cleared!");
+        }
+
+        // 게임 오버 이벤트 핸들러
+        private void OnGameOver(GameOverEvent evt)
+        {
+            Debug.Log("BattleManager: Game Over!");
+
+            // 게임 오버 팝업 표시
+            PopupManager.Instance?.Push<GameOverPopup>();
+        }
+
+        // 게임 재시작 이벤트 핸들러
+        private void OnGameRestart(GameRestartEvent evt)
+        {
+            Debug.Log("BattleManager: Game Restart!");
+
+            // 현재 씬 재로드
+            string currentScene = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(currentScene);
         }
 
         // 플레이어 Transform 반환

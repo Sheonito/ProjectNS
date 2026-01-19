@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Percent111.ProjectNS.Event;
 using UnityEngine;
 
@@ -11,14 +12,20 @@ namespace Percent111.ProjectNS.Player
         [SerializeField] private PlayerStateSettings _stateSettings;
         [SerializeField] private Animator _animator;
 
+        [Header("Shield")]
+        [SerializeField] private GameObject _shieldVisual; // 방어막 시각 효과 (선택)
+        [SerializeField] private float _shieldInvincibleDuration = 1.5f; // 방어막 파괴 후 무적 시간
+
         private PlayerMovement _movement;
         private PlayerStateMachine _stateMachine;
         private PlayerAnimator _playerAnimator;
         private UIInputAction _inputAction;
         private bool _isInvincible;
+        private bool _hasShield; // 방어막 보유 여부
 
         // 무적 상태 여부 (투사체 통과 판정용)
         public bool IsInvincible => _isInvincible;
+        public bool HasShield => _hasShield;
 
         protected override void Awake()
         {
@@ -51,18 +58,57 @@ namespace Percent111.ProjectNS.Player
         private void SubscribeEvents()
         {
             EventBus.Subscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
+            EventBus.Subscribe<ShieldCollectedEvent>(OnShieldCollected);
         }
 
         // 이벤트 구독 해제
         private void UnsubscribeEvents()
         {
             EventBus.Unsubscribe<PlayerInvincibleEvent>(OnPlayerInvincible);
+            EventBus.Unsubscribe<ShieldCollectedEvent>(OnShieldCollected);
         }
 
         // 무적 상태 변경 이벤트 핸들러
         private void OnPlayerInvincible(PlayerInvincibleEvent evt)
         {
             _isInvincible = evt.IsInvincible;
+        }
+
+        // 방어막 획득 이벤트 핸들러
+        private void OnShieldCollected(ShieldCollectedEvent evt)
+        {
+            _hasShield = true;
+            if (_shieldVisual != null)
+            {
+                _shieldVisual.SetActive(true);
+            }
+            Debug.Log("Shield Acquired!");
+        }
+
+        // 방어막 파괴 처리
+        private void BreakShield()
+        {
+            _hasShield = false;
+            if (_shieldVisual != null)
+            {
+                _shieldVisual.SetActive(false);
+            }
+            
+            // 방어막 파괴 이벤트 발행
+            EventBus.Publish(this, new ShieldBrokenEvent());
+            
+            // 무적 시간 부여
+            StartShieldInvincibility().Forget();
+            
+            Debug.Log("Shield Broken! Invincible for " + _shieldInvincibleDuration + " seconds.");
+        }
+
+        // 방어막 파괴 후 무적 시간
+        private async UniTaskVoid StartShieldInvincibility()
+        {
+            _isInvincible = true;
+            await UniTask.Delay((int)(_shieldInvincibleDuration * 1000));
+            _isInvincible = false;
         }
 
         // PlayerMovement 생성 및 설정
@@ -127,6 +173,13 @@ namespace Percent111.ProjectNS.Player
                 return;
             }
 
+            // 방어막이 있으면 방어막 파괴 (데미지 무효)
+            if (_hasShield)
+            {
+                BreakShield();
+                return;
+            }
+
             ApplyDamage(damage);
 
             // HP에 따라 상태 전환
@@ -151,6 +204,23 @@ namespace Percent111.ProjectNS.Player
         private void OnDrawGizmosSelected()
         {
             _movement?.DrawGizmos();
+            DrawAttackRangeGizmos();
+        }
+
+        // 공격 범위 기즈모
+        private void DrawAttackRangeGizmos()
+        {
+            if (_stateSettings == null) return;
+
+            Vector3 position = transform.position;
+
+            // 일반 공격 범위 (노란색)
+            Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
+            Gizmos.DrawWireSphere(position, _stateSettings.attackRange);
+
+            // 다이브 공격 범위 (주황색)
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.3f);
+            Gizmos.DrawWireSphere(position, _stateSettings.diveAttackRange);
         }
     }
 }
