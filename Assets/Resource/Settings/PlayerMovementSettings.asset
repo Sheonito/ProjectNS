@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSpeed: 10
   airSpeed: 8
-  groundAcceleration: 40
+  groundAcceleration: 35
   groundDeceleration: 45
   airAcceleration: 20
   airDeceleration: 30
