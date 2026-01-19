@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Percent111.ProjectNS.Player
 {
@@ -15,6 +15,7 @@ namespace Percent111.ProjectNS.Player
         private int _facingDirection = 1;
         private bool _jumpCutApplied;
         private int _jumpCount; // 현재 점프 횟수
+        private float _coyoteTimer; // 코요테 타임 (지면 유예 시간)
 
         // 생성자
         public PlayerMovement(Transform transform, PlayerMovementSettings settings)
@@ -33,6 +34,7 @@ namespace Percent111.ProjectNS.Player
         public void UpdatePhysics()
         {
             CheckGround();
+            UpdateCoyoteTime();
             HandleHorizontalMovement();
             UpdateGravity();
             MoveCharacter();
@@ -40,6 +42,21 @@ namespace Percent111.ProjectNS.Player
             UpdateFacingDirection();
 
             _wasGrounded = _isGrounded;
+        }
+
+        // 코요테 타임 업데이트 (경사면 등에서 잠깐 공중에 뜰 때 유예)
+        private void UpdateCoyoteTime()
+        {
+            if (_isGrounded)
+            {
+                // 지면에 있으면 코요테 타임 리셋
+                _coyoteTimer = _settings.coyoteTime;
+            }
+            else if (_coyoteTimer > 0)
+            {
+                // 공중이면 코요테 타임 감소
+                _coyoteTimer -= Time.deltaTime;
+            }
         }
 
         // 지면 감지 (Raycast) + 땅 뚫기 방지
@@ -260,7 +277,8 @@ namespace Percent111.ProjectNS.Player
 
         // 외부 접근용 메서드
         public Vector2 GetVelocity() => _velocity;
-        public bool IsGrounded() => _isGrounded;
+        public bool IsGrounded() => _isGrounded || _coyoteTimer > 0; // 코요테 타임 적용
+        public bool IsActuallyGrounded() => _isGrounded; // 실제 지면 체크 (코요테 타임 무시)
         public int GetFacingDirection() => _facingDirection;
         public bool WasJustLanded() => _isGrounded && !_wasGrounded;
         public Vector3 GetPosition() => _transform.position;
@@ -385,6 +403,12 @@ namespace Percent111.ProjectNS.Player
         // 지면 레이어 반환 (State에서 직접 Raycast 시 사용)
         public LayerMask GetGroundLayer() => _settings.groundLayer;
         public float GetGroundCheckOffset() => _settings.groundCheckOffset;
+
+        // 모든 점프 횟수 소비 (점프 공격 등에서 사용)
+        public void ConsumeAllJumps()
+        {
+            _jumpCount = _settings.maxJumpCount;
+        }
 
         // Z축 회전 설정 (대각선 공격 등에서 사용)
         public void SetRotation(float angle)

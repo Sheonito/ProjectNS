@@ -27,6 +27,7 @@ namespace Percent111.ProjectNS.Battle
         protected override void OnSpawn(EnemyUnit item)
         {
             item.SetPlayerData(_playerData);
+            item.InitializePosition(); // 위치 설정 후 지면 체크 강제 실행
         }
 
         protected override void OnDespawn(EnemyUnit item)

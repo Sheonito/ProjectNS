@@ -259,9 +259,7 @@ namespace Percent111.ProjectNS.Battle
         {
             Debug.Log($"Stage {_currentStage} Time Up!");
 
-            // 남은 적 제거
-            ClearAllEnemies();
-
+            // 이전 스테이지 몬스터는 유지 (제거하지 않음)
             // 스테이지 클리어 처리 (내부에서 다음 스테이지 자동 이동)
             HandleStageClear();
         }

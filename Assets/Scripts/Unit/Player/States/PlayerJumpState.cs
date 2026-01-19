@@ -21,8 +21,8 @@ namespace Percent111.ProjectNS.Player
 
             _hasJumped = false;
 
-            // 점프 입력이 있고 점프 가능하면 점프 실행
-            if (_movement.CanJump())
+            // 점프 입력이 있고 점프 가능하면 점프 실행 (낙하 진입 시에는 점프 안 함)
+            if (IsJumpPressed() && _movement.CanJump())
             {
                 _movement.Jump();
                 _hasJumped = true;

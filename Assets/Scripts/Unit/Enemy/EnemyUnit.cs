@@ -202,6 +202,12 @@ namespace Percent111.ProjectNS.Enemy
             _movement.SetPlayerData(playerData);
         }
 
+        // 위치 초기화 (스폰 시 호출 - 지면 체크 강제 실행)
+        public void InitializePosition()
+        {
+            _movement?.ForceGroundCheck();
+        }
+
         // Separation 힘 업데이트 (StageManager에서 호출)
         public void UpdateSeparationForce(Vector2 force)
         {

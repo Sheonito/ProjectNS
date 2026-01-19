@@ -69,6 +69,7 @@ namespace Percent111.ProjectNS.Player
             if (_movement.CanJump())
             {
                 _movement.DiagonalJump(_settings.jumpAttackJumpMultiplier, _jumpDirection * _settings.jumpAttackForwardSpeed);
+                _movement.ConsumeAllJumps(); // 점프 공격 후 추가 점프 불가
                 _hasJumped = true;
                 PublishJumpEvent();
             }

@@ -37,6 +37,8 @@ namespace Percent111.ProjectNS.Player
         public int maxJumpCount = 2;
         [Tooltip("더블 점프 힘 배율")]
         public float doubleJumpMultiplier = 0.9f;
+        [Tooltip("코요테 타임 (땅에서 떨어진 후 점프/지면 판정 유예 시간)")]
+        public float coyoteTime = 0.1f;
 
         [Header("Ground Check")]
         [Tooltip("바닥 체크 거리")]

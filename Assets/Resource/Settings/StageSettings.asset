@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b852073269dbb7449862dfcaefc53a7, type: 3}
   m_Name: StageSettings
   m_EditorClassIdentifier: 
-  maxStage: 6
+  maxStage: 5
   stageDuration: 30
   baseEnemyCount: 5
   enemyIncreasePerStage: 2
