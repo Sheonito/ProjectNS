@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Percent111.ProjectNS.UI
 {
     // 게임 오버 팝업
-    public class GameOverPopup : PopupBase
+    public class GameOverPopup : PopupBase,IRestartable
     {
         [Header("Buttons")]
         [SerializeField] private Button _restartButton;
@@ -16,11 +16,10 @@ namespace Percent111.ProjectNS.UI
             base.Awake();
 
             // 버튼 이벤트 등록
-            _restartButton?.onClick.AddListener(OnRestartClicked);
+            _restartButton?.onClick.AddListener(ReStart);
         }
 
-        // 재시작 버튼 클릭
-        private void OnRestartClicked()
+        public void ReStart()
         {
             Hide();
             EventBus.Publish(this, new GameRestartEvent());
@@ -28,7 +27,7 @@ namespace Percent111.ProjectNS.UI
 
         private void OnDestroy()
         {
-            _restartButton?.onClick.RemoveListener(OnRestartClicked);
+            _restartButton?.onClick.RemoveListener(ReStart);
         }
     }
 }

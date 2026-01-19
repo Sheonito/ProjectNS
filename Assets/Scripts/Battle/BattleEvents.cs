@@ -10,7 +10,7 @@ namespace Percent111.ProjectNS.Battle
     {
         public Type GetPublishType()
         {
-            return typeof(GameOverPopup);
+            return typeof(IRestartable);
         }
     }
 
@@ -20,6 +20,15 @@ namespace Percent111.ProjectNS.Battle
         public Type GetPublishType()
         {
             return typeof(PlayerDeathState);
+        }
+    }
+
+    // 게임 클리어 이벤트
+    public class GameClearEvent : IEvent
+    {
+        public Type GetPublishType()
+        {
+            return typeof(BattleManager);
         }
     }
 }

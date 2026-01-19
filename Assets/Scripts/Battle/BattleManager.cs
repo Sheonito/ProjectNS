@@ -50,12 +50,14 @@ namespace Percent111.ProjectNS.Battle
         private void OnEnable()
         {
             EventBus.Subscribe<GameOverEvent>(OnGameOver);
+            EventBus.Subscribe<GameClearEvent>(OnGameClear);
             EventBus.Subscribe<GameRestartEvent>(OnGameRestart);
         }
 
         private void OnDisable()
         {
             EventBus.Unsubscribe<GameOverEvent>(OnGameOver);
+            EventBus.Unsubscribe<GameClearEvent>(OnGameClear);
             EventBus.Unsubscribe<GameRestartEvent>(OnGameRestart);
         }
 
@@ -176,6 +178,9 @@ namespace Percent111.ProjectNS.Battle
         private void OnAllStagesCleared()
         {
             Debug.Log("BattleManager: All stages cleared!");
+
+            // 게임 클리어 이벤트 발행
+            EventBus.Publish(this, new GameClearEvent());
         }
 
         // 게임 오버 이벤트 핸들러
@@ -187,14 +192,77 @@ namespace Percent111.ProjectNS.Battle
             PopupManager.Instance?.Push<GameOverPopup>();
         }
 
+        // 게임 클리어 이벤트 핸들러
+        private void OnGameClear(GameClearEvent evt)
+        {
+            Debug.Log("BattleManager: Game Clear!");
+
+            // 게임 클리어 팝업 표시
+            PopupManager.Instance?.Push<GameClearPopup>();
+        }
+
         // 게임 재시작 이벤트 핸들러
         private void OnGameRestart(GameRestartEvent evt)
         {
             Debug.Log("BattleManager: Game Restart!");
 
-            // 현재 씬 재로드
-            string currentScene = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(currentScene);
+            // 기존 데이터 정리 후 재시작
+            RestartBattleAsync().Forget();
+        }
+
+        // 전투 재시작 (비동기)
+        private async UniTaskVoid RestartBattleAsync()
+        {
+            // 기존 데이터 정리
+            CleanupForRestart();
+
+            // 재초기화 및 전투 시작
+            await Initialize();
+            StartBattle();
+        }
+
+        // 재시작을 위한 정리
+        private void CleanupForRestart()
+        {
+            // StageManager 정리
+            if (_stageManager != null)
+            {
+                _stageManager.UnsubscribeEvents();
+                _stageManager.OnStageStarted -= OnStageStarted;
+                _stageManager.OnStageCleared -= OnStageCleared;
+                _stageManager.OnAllStagesCleared -= OnAllStagesCleared;
+                _stageManager = null;
+            }
+
+            // 기존 플레이어 제거
+            if (_player != null)
+            {
+                Destroy(_player.gameObject);
+                _player = null;
+                _playerData = null;
+            }
+
+            // 적 풀 정리
+            _enemyPool?.ClearAll();
+            _enemyPool = null;
+
+            // 투사체 풀 정리
+            _projectilePool?.ClearAll();
+            DIResolver.UnregisterInstance<ProjectilePool>();
+            _projectilePool = null;
+
+            // 풀 부모 오브젝트 제거
+            if (_poolParent != null)
+            {
+                Destroy(_poolParent.gameObject);
+                _poolParent = null;
+            }
+
+            if (_projectilePoolParent != null)
+            {
+                Destroy(_projectilePoolParent.gameObject);
+                _projectilePoolParent = null;
+            }
         }
 
         // 플레이어 Transform 반환
