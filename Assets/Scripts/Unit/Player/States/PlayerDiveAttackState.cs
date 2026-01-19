@@ -185,14 +185,14 @@ namespace Percent111.ProjectNS.Player
             Vector2 attackCenter = position + new Vector2(_diveDirection * range * 0.3f, -range * 0.5f);
             Collider2D[] hits = Physics2D.OverlapCircleAll(attackCenter, range, _settings.enemyLayer);
 
-            // 1명만 타격 (가장 가까운 적)
+            // 1명만 타격 (가장 가까운 살아있는 적)
             float closestDistance = float.MaxValue;
             EnemyUnit closestEnemy = null;
 
             foreach (Collider2D hit in hits)
             {
                 EnemyUnit enemy = hit.GetComponent<EnemyUnit>();
-                if (enemy != null)
+                if (enemy != null && !enemy.IsDead)
                 {
                     float distance = Vector2.Distance(position, hit.transform.position);
                     if (distance < closestDistance)

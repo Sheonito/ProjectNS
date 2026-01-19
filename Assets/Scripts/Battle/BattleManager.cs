@@ -189,7 +189,7 @@ namespace Percent111.ProjectNS.Battle
             Debug.Log("BattleManager: Game Over!");
 
             // 게임 오버 팝업 표시
-            PopupManager.Instance?.Push<GameOverPopup>();
+            PopupManager.Instance.Push<GameOverPopup>();
         }
 
         // 게임 클리어 이벤트 핸들러
@@ -214,7 +214,7 @@ namespace Percent111.ProjectNS.Battle
         private async UniTaskVoid RestartBattleAsync()
         {
             // 기존 데이터 정리
-            CleanupForRestart();
+            ResetScene();
 
             // 재초기화 및 전투 시작
             await Initialize();
@@ -222,7 +222,7 @@ namespace Percent111.ProjectNS.Battle
         }
 
         // 재시작을 위한 정리
-        private void CleanupForRestart()
+        private void ResetScene()
         {
             // StageManager 정리
             if (_stageManager != null)
@@ -264,25 +264,7 @@ namespace Percent111.ProjectNS.Battle
                 _projectilePoolParent = null;
             }
         }
-
-        // 플레이어 Transform 반환
-        public Transform GetPlayerTransform()
-        {
-            return _player?.transform;
-        }
-
-        // 플레이어 반환
-        public PlayerUnit GetPlayer()
-        {
-            return _player;
-        }
-
-        // StageManager 반환
-        public StageManager GetStageManager()
-        {
-            return _stageManager;
-        }
-
+        
         // 정리
         private void OnDestroy()
         {

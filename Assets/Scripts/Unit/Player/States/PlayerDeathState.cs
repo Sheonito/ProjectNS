@@ -48,7 +48,7 @@ namespace Percent111.ProjectNS.Player
         public override void Execute()
         {
             base.Execute();
-
+            
             _deathTimer += Time.deltaTime;
 
             // 사망 애니메이션 완료 체크

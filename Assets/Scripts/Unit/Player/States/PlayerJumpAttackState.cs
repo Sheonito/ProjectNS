@@ -136,12 +136,12 @@ namespace Percent111.ProjectNS.Player
             Vector2 attackCenter = position + attackDirection * range * 0.5f;
             Collider2D[] hits = Physics2D.OverlapCircleAll(attackCenter, range, _settings.enemyLayer);
 
-            // 공격 방향에 있는 적만 수집 (뒤에 있는 적 제외)
+            // 공격 방향에 있는 살아있는 적만 수집 (뒤에 있는 적 제외, 죽은 적 제외)
             List<EnemyUnit> enemies = new List<EnemyUnit>();
             foreach (Collider2D hit in hits)
             {
                 EnemyUnit enemy = hit.GetComponent<EnemyUnit>();
-                if (enemy != null)
+                if (enemy != null && !enemy.IsDead)
                 {
                     // 적이 공격 방향에 있는지 확인 (수평 방향 기준)
                     Vector2 toEnemy = (Vector2)enemy.transform.position - position;
@@ -178,7 +178,7 @@ namespace Percent111.ProjectNS.Player
             foreach (EnemyUnit enemy in enemies)
             {
                 if (ct.IsCancellationRequested) return;
-                if (enemy == null) continue;
+                if (enemy == null || enemy.IsDead) continue;
 
                 // 데미지 적용
                 enemy.OnDamaged(_settings.attackDamage);

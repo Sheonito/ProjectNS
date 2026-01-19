@@ -201,17 +201,22 @@ namespace Percent111.ProjectNS.Player
                 _settings.enemyLayer
             );
 
-            // 1명만 타겟으로 지정
-            if (hits.Length > 0)
+            // 1명만 타겟으로 지정 (살아있는 적만)
+            foreach (Collider2D hit in hits)
             {
-                _targetEnemy = hits[0].GetComponent<EnemyUnit>();
+                EnemyUnit enemy = hit.GetComponent<EnemyUnit>();
+                if (enemy != null && !enemy.IsDead)
+                {
+                    _targetEnemy = enemy;
+                    break;
+                }
             }
         }
 
         // 타겟에게 데미지 적용 (타이밍에 호출)
         private void ApplyDamageToTarget()
         {
-            if (_targetEnemy != null)
+            if (_targetEnemy != null && !_targetEnemy.IsDead)
             {
                 _targetEnemy.OnDamaged(_settings.dashDamage);
             }

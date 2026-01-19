@@ -21,7 +21,7 @@ namespace Percent111.ProjectNS.UI
 
         public void ReStart()
         {
-            Hide();
+            PopupManager.Instance.Hide<GameOverPopup>();
             EventBus.Publish(this, new GameRestartEvent());
         }
 

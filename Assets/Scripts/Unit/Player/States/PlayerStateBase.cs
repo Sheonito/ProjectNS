@@ -1,3 +1,4 @@
+using Percent111.ProjectNS.Enemy;
 using Percent111.ProjectNS.Event;
 using Percent111.ProjectNS.FSM;
 using UnityEngine;
@@ -127,11 +128,19 @@ namespace Percent111.ProjectNS.Player
             return mouseWorld.x > playerPosition.x ? 1 : -1;
         }
 
-        // 공격 범위 내에 적이 있는지 확인
+        // 공격 범위 내에 살아있는 적이 있는지 확인
         protected bool IsEnemyInAttackRange(Vector2 playerPosition, float attackRange, LayerMask enemyLayer)
         {
-            Collider2D hit = Physics2D.OverlapCircle(playerPosition, attackRange, enemyLayer);
-            return hit != null;
+            Collider2D[] hits = Physics2D.OverlapCircleAll(playerPosition, attackRange, enemyLayer);
+            foreach (Collider2D hit in hits)
+            {
+                EnemyUnit enemy = hit.GetComponent<EnemyUnit>();
+                if (enemy != null && !enemy.IsDead)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
